@@ -1,0 +1,17 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --color-textPrimary: #0c1002;
+  --color-primary: #88ba00;
+  --color-headerBorder: #e1e1e1;
+  --color-danger: #d40000;
+  --color-navButton: #ffffff33;
+  --color-mainBg: #fbfcf9;
+  --font-dm: DM Sans Variable, sans-serif;
+  --font-rale: Raleway Variable, sans-serif;
+}
+
+.card-gradient {
+  background: linear-gradient(to top, #222222b2, #22222200);
+}
