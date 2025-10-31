@@ -10,7 +10,6 @@ import MobileApp from "./ui/MobileApp";
 import NewsBlock from "./ui/NewsBlock";
 
 import { brands } from "./lib/brands";
-import { stats } from "./lib/stats";
 import { types } from "./lib/types";
 import { whyUs } from "./lib/whyUs";
 
@@ -24,7 +23,6 @@ import logoMed from "@assets/home/logoMedium.png";
 import check1 from "@assets/home/check1.png";
 import check2 from "@assets/home/check2.png";
 import check3 from "@assets/home/check3.png";
-import user from "@/assets/header/user.png";
 
 import {
   MdOutlineKeyboardArrowLeft,
@@ -33,7 +31,9 @@ import {
 import { BsArrowUpRight } from "react-icons/bs";
 import LogoSection from "@/svgs/LogoSection";
 import GreenCheck from "@/svgs/GreenCheck";
-import Parentheses from "@/svgs/Parentheses";
+
+import StatsSection from "./ui/StatSection";
+import Reviews from "./ui/Reviews";
 
 const Home = () => {
   const swiperRef = useRef<SwiperType | null>(null);
@@ -48,7 +48,7 @@ const Home = () => {
   ];
 
   return (
-    <div>
+    <div className="pt-[75px]">
       <main className="mt-[75px] px-12 2xl:px-[118px]">
         <div className="relative">
           <Swiper
@@ -218,25 +218,17 @@ const Home = () => {
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
             aliquip ex ea commodo consequat. 
           </p>
-          <Button className="bg-transparent self-start text-white font-dm text-[15px] cursor-pointer rounded-xl w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25px] border border-white">
+          <Button
+            size="none"
+            className="bg-transparent self-start text-white font-dm text-[15px] cursor-pointer rounded-xl w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25px] border border-white"
+          >
             <div>Весь список</div>
             <BsArrowUpRight />
           </Button>
         </div>
       </div>
 
-      <div className="px-[140px] 2xl:px-[118px] border-b border-headerBorder">
-        <ul className="py-[60px] flex items-center justify-between w-full ">
-          {stats.map((s) => {
-            return (
-              <li key={s.num} className="flex flex-col gap-1.5 items-center">
-                <div className="text-[38px] font-dm font-bold ">{s.num}</div>
-                <div className="font-dm text-base">{s.text}</div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <StatsSection />
 
       <div className="mt-[75px] px-[100px] 2xl:px-[118px]">
         <div className="flex items-center justify-between">
@@ -377,7 +369,10 @@ const Home = () => {
                 <GreenCheck /> Lorem ipsum dolor sit amet
               </li>
             </ul>
-            <Button className="bg-primary self-start text-white font-dm text-[15px] cursor-pointer rounded-xl w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25p] mt-auto border border-white">
+            <Button
+              size="none"
+              className="bg-primary self-start text-white font-dm text-[15px] cursor-pointer rounded-xl w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25px] mt-auto border border-white"
+            >
               <div>Заказать оценку авто</div>
               <BsArrowUpRight />
             </Button>
@@ -386,99 +381,7 @@ const Home = () => {
       </div>
 
       <div className="bg-textPrimary py-[110px] px-[120px] 2xl:px-[200px] mt-[230px]">
-        <div className="flex items-center justify-between text-white">
-          <div className="font-rale text-[40px] font-bold">
-            Что говорят наши клиенты
-          </div>
-          <div className="flex items-center gap-2 font-dm font-medium">
-            Посмотреть все
-            <BsArrowUpRight />
-          </div>
-        </div>
-        <ul className="grid grid-cols-3 gap-7">
-          <li className="bg-white p-10 rounded-2xl">
-            <div className="flex items-center justify-between">
-              <div className="font-rale text-2xl font-bold">
-                Купил авто, все супер
-              </div>
-              <Parentheses />
-            </div>
-            <p className="mt-12 font-dm">
-              {" "}
-              “Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad.”
-            </p>
-
-            <div className="mt-12 flex items-center gap-3">
-              <div className="h-16 w-16 rounded-full">
-                <img
-                  src={user}
-                  alt=""
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </div>
-              <div>
-                <div className="font-dm font-medium">Floyd Alexander</div>
-                <div className="text-sm font-dm">Toyota Avalon 2022</div>
-              </div>
-            </div>
-          </li>
-          <li className="bg-white p-10 rounded-2xl">
-            <div className="flex items-center justify-between">
-              <div className="font-rale text-2xl font-bold">
-                Отличный сервис!
-              </div>
-              <Parentheses />
-            </div>
-            <p className="mt-12 font-dm">
-              {" "}
-              “Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad.”
-            </p>
-
-            <div className="mt-12 flex items-center gap-3">
-              <div className="h-16 w-16 rounded-full">
-                <img
-                  src={user}
-                  alt=""
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </div>
-              <div>
-                <div className="font-dm font-medium">Floyd Alexander</div>
-                <div className="text-sm font-dm">Toyota Avalon 2022</div>
-              </div>
-            </div>
-          </li>
-          <li className="bg-white p-10 rounded-2xl">
-            <div className="flex items-center justify-between">
-              <div className="font-rale text-2xl font-bold">Супер!!!</div>
-              <Parentheses />
-            </div>
-            <p className="mt-12 font-dm">
-              {" "}
-              “Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad.”
-            </p>
-
-            <div className="mt-12 flex items-center gap-3">
-              <div className="h-16 w-16 rounded-full">
-                <img
-                  src={user}
-                  alt=""
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </div>
-              <div>
-                <div className="font-dm font-medium">Floyd Alexander</div>
-                <div className="text-sm font-dm">Toyota Avalon 2022</div>
-              </div>
-            </div>
-          </li>
-        </ul>
+        <Reviews variant="white" />
       </div>
       <MobileApp />
       <NewsBlock />

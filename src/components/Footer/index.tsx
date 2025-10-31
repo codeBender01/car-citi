@@ -35,7 +35,7 @@ const Footer = () => {
                 placeholder="Э-почта"
                 className="bg-transparent border-none outline-none text-white placeholder:text-white font-dm text-[15px] flex-1"
               />
-              <Button className="bg-primary text-white font-dm text-[15px] font-medium px-[30px] py-5 rounded-xl">
+              <Button size="none" className="bg-primary text-white font-dm text-[15px] font-medium px-[30px] py-5 rounded-xl">
                 Подписаться
               </Button>
             </div>

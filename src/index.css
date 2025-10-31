@@ -4,14 +4,49 @@
 @theme {
   --color-textPrimary: #0c1002;
   --color-primary: #88ba00;
+  --color-greenPrimary: #9df500;
   --color-headerBorder: #e1e1e1;
   --color-danger: #d40000;
   --color-navButton: #ffffff33;
   --color-mainBg: #fbfcf9;
+  --color-grayBorder: #e1e1e1;
+  --color-paleBlue: #e9f2ff;
+  --color-textGray: #949494;
+  --color-whatsappGreen: #60c961;
   --font-dm: DM Sans Variable, sans-serif;
   --font-rale: Raleway Variable, sans-serif;
+  --text-base: 15px;
 }
 
 .card-gradient {
   background: linear-gradient(to top, #222222b2, #22222200);
+}
+
+.green-gradient {
+  background: linear-gradient(
+    to right,
+    #f7f7f7,
+    #c9face,
+    #c8fc73,
+    #e0ecf4,
+    #fcfcfc
+  );
+}
+
+.h1 {
+  font-size: 60px;
+  font-family: var(--font-rale);
+  font-weight: 700;
+}
+
+.h2 {
+  font-size: 48px;
+  font-family: var(--font-rale);
+  font-weight: 700;
+}
+
+@media screen and (min-width: 1600px) {
+  .h1 {
+    font-size: 70px;
+  }
 }

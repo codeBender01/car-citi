@@ -518,7 +518,7 @@ const SearchForm = () => {
         </div>
 
         <div className="w-[25%] mt-3">
-          <Button className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl w-[90%] flex items-center gap-2.5 py-[22.5px] font-medium px-[25px]">
+          <Button size="none" className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl w-[90%] flex items-center gap-2.5 py-[22.5px] font-medium px-[25px]">
             <CiSearch />
             <div>
               Поиск <span className="underline">9451</span> авто
@@ -530,7 +530,7 @@ const SearchForm = () => {
               <Checkbox
                 checked={recommended}
                 onCheckedChange={(checked) => setRecommended(checked === true)}
-                className="w-5 h-5 data-[state=checked]:!bg-[#0C1002] data-[state=checked]:!text-white data-[state=checked]:!border-[#0C1002] !border-[#0C1002]"
+                className="w-5 h-5 data-[state=checked]:bg-[#0C1002]! data-[state=checked]:text-white! data-[state=checked]:border-[#0C1002]! border-[#0C1002]!"
               />
               <label className="text-base font-rale text-textPrimary cursor-pointer">
                 Рекомендуемые
@@ -541,7 +541,7 @@ const SearchForm = () => {
               <Checkbox
                 checked={promo}
                 onCheckedChange={(checked) => setPromo(checked === true)}
-                className="w-5 h-5 data-[state=checked]:!bg-[#0C1002] data-[state=checked]:!text-white data-[state=checked]:!border-[#0C1002] !border-[#0C1002]"
+                className="w-5 h-5 data-[state=checked]:bg-[#0C1002]! data-[state=checked]:text-white! data-[state=checked]:border-[#0C1002]! border-[#0C1002]!"
               />
               <label className="text-base font-rale text-textPrimary cursor-pointer">
                 Акция
@@ -552,7 +552,7 @@ const SearchForm = () => {
               <Checkbox
                 checked={credit}
                 onCheckedChange={(checked) => setCredit(checked === true)}
-                className="w-5 h-5 data-[state=checked]:!bg-[#0C1002] data-[state=checked]:!text-white data-[state=checked]:!border-[#0C1002] !border-[#0C1002]"
+                className="w-5 h-5 data-[state=checked]:bg-[#0C1002]! data-[state=checked]:text-white! data-[state=checked]:border-[#0C1002]! border-[#0C1002]!"
               />
               <label className="text-base font-rale text-textPrimary cursor-pointer">
                 В кредит
@@ -563,7 +563,7 @@ const SearchForm = () => {
               <Checkbox
                 checked={tirePressure}
                 onCheckedChange={(checked) => setTirePressure(checked === true)}
-                className="w-5 h-5 data-[state=checked]:!bg-[#0C1002] data-[state=checked]:!text-white data-[state=checked]:!border-[#0C1002] !border-[#0C1002]"
+                className="w-5 h-5 data-[state=checked]:bg-[#0C1002]! data-[state=checked]:text-white! data-[state=checked]:border-[#0C1002]! border-[#0C1002]!"
               />
               <label className="text-base font-rale text-textPrimary cursor-pointer">
                 Контроля давления в шинах
