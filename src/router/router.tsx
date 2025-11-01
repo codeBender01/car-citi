@@ -2,11 +2,19 @@ import { useRoutes } from "react-router-dom";
 import { lazy } from "react";
 
 import ClientLayout from "../layouts/ClientLayout";
+import DashboardLayout from "@/layouts/DashboardLayout";
 
 import Home from "@/pages/Home";
+import Dashboard from "@/pages/Dashboard";
 
 const AboutUs = lazy(() => import("@pages/AboutUs"));
 const CarDetails = lazy(() => import("@pages/CarDetails"));
+const AllCars = lazy(() => import("@pages/AllCars"));
+const MyPosts = lazy(() => import("@pages/MyPosts"));
+const Favorites = lazy(() => import("@pages/Favorites"));
+const SavedSearch = lazy(() => import("@pages/SavedSearch"));
+const Messages = lazy(() => import("@pages/Messages"));
+const Profile = lazy(() => import("@pages/Profile"));
 
 export default function Router() {
   const routes = useRoutes([
@@ -25,6 +33,40 @@ export default function Router() {
         {
           path: "/car-details",
           element: <CarDetails />,
+        },
+        {
+          path: "/all-cars",
+          element: <AllCars />,
+        },
+      ],
+    },
+    {
+      path: "/dashboard",
+      element: <DashboardLayout />,
+      children: [
+        {
+          path: "",
+          element: <Dashboard />,
+        },
+        {
+          path: "posted",
+          element: <MyPosts />,
+        },
+        {
+          path: "favorites",
+          element: <Favorites />,
+        },
+        {
+          path: "saved-search",
+          element: <SavedSearch />,
+        },
+        {
+          path: "messages",
+          element: <Messages />,
+        },
+        {
+          path: "profile",
+          element: <Profile />,
         },
       ],
     },

@@ -84,6 +84,9 @@ const Header = () => {
           {navs.map((nav) => (
             <li
               key={nav.id}
+              onClick={() => {
+                navigate(nav.path);
+              }}
               className={`flex items-center gap-2.5 font-dm font-medium text-[15px] cursor-pointer hover:opacity-65 duration-150 transition-colors ${
                 isWhiteLogoPathname || isFullyScrolled
                   ? "text-white"

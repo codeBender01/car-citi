@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
+import { useNavigate } from "react-router-dom";
 
 import SearchForm from "./ui/SearchForm";
 import CarCard from "@/components/CarCard";
@@ -46,6 +47,8 @@ const Home = () => {
     { id: "recent" as const, label: "Недавние" },
     { id: "popular" as const, label: "Популярные" },
   ];
+
+  const navigate = useNavigate();
 
   return (
     <div className="pt-[75px]">
@@ -141,7 +144,12 @@ const Home = () => {
             <div className="font-rale text-[40px] text-textPrimary font-bold">
               Изучите все автомобили
             </div>
-            <div className="flex items-center gap-2 font-dm font-medium">
+            <div
+              onClick={() => {
+                navigate("/all-cars");
+              }}
+              className="flex items-center gap-2 font-dm font-medium"
+            >
               Посмотреть все
               <BsArrowUpRight />
             </div>

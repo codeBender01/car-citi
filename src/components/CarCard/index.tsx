@@ -5,10 +5,18 @@ import Speedometer from "@/svgs/Speedometer";
 import Calendar from "@/svgs/Calendar";
 
 import { BsArrowUpRight } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 const CarCard = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="rounded-2xl flex flex-col w-full max-w-[330px] bg-white shadow-md border border-headerBorder">
+    <div
+      onClick={() => {
+        navigate("/car-details");
+      }}
+      className="rounded-2xl flex flex-col w-full max-w-[330px] bg-white shadow-md border border-headerBorder"
+    >
       <div className="h-[220px]">
         <img src={car1} alt="" className="rounded-t-2xl" />
       </div>
