@@ -14,11 +14,13 @@ import user from "@assets/header/user.png";
 
 import { RiArrowDownSLine } from "react-icons/ri";
 import { FaRegBell } from "react-icons/fa";
+import { IoPersonOutline } from "react-icons/io5";
 
 import { Button } from "../ui/button";
 
 const Header = () => {
   const [isFullyScrolled, setIsFullyScrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,14 +37,28 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const checkAuth = () => {
+      const userToken = localStorage.getItem("userToken");
+      setIsLoggedIn(!!userToken);
+    };
+
+    checkAuth();
+
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
+  }, []);
+
   const isWhiteLogoPathname = useMemo(() => {
     return pathnames.some((p) => p === location.pathname);
   }, [location]);
 
+  const isAuthPathname = location.pathname === "/auth";
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 px-12 2xl:px-[118px] py-[25px] w-full border-b border-headerBorder flex items-center justify-between transition-colors duration-300 ${
-        isFullyScrolled ? "bg-[#000000]" : "bg-transparent"
+        isFullyScrolled || isAuthPathname ? "bg-[#000000]" : "bg-transparent"
       }`}
     >
       <div className="flex items-center">
@@ -109,36 +125,72 @@ const Header = () => {
           <Car className="size-5" />
         </Button>
 
-        <div className="flex items-center gap-[18px] ml-7">
-          <Messages
-            className={`w-7 h-7 cursor-pointer transition-colors duration-300 ${
-              isFullyScrolled || isWhiteLogoPathname ? "text-white" : ""
-            }`}
-            opacity={isFullyScrolled || isWhiteLogoPathname ? 1 : 0.25}
-          />
-          <Save
-            className={`w-6 h-6 cursor-pointer transition-colors duration-300 ${
-              isFullyScrolled || isWhiteLogoPathname ? "text-white" : ""
-            }`}
-            opacity={isFullyScrolled || isWhiteLogoPathname ? 1 : 0.25}
-          />
-          <div className="relative cursor-pointer ">
-            <FaRegBell
-              className={`w-6 h-6 ${
-                isFullyScrolled || isWhiteLogoPathname
-                  ? "text-white"
-                  : "text-gray-400"
+        {isLoggedIn ? (
+          <div className="flex items-center gap-[18px] ml-7">
+            <Messages
+              className={`w-7 h-7 cursor-pointer transition-colors duration-300 ${
+                isFullyScrolled || isWhiteLogoPathname ? "text-white" : ""
               }`}
+              opacity={isFullyScrolled || isWhiteLogoPathname ? 1 : 0.25}
             />
-            <div className="absolute top-0 right-0 bg-danger w-2.5 h-2.5 rounded-full text-white text-[8px] flex items-center justify-center">
-              1
+            <Save
+              className={`w-6 h-6 cursor-pointer transition-colors duration-300 ${
+                isFullyScrolled || isWhiteLogoPathname ? "text-white" : ""
+              }`}
+              opacity={isFullyScrolled || isWhiteLogoPathname ? 1 : 0.25}
+            />
+            <div className="relative cursor-pointer ">
+              <FaRegBell
+                className={`w-6 h-6 ${
+                  isFullyScrolled || isWhiteLogoPathname
+                    ? "text-white"
+                    : "text-gray-400"
+                }`}
+              />
+              <div className="absolute top-0 right-0 bg-danger w-2.5 h-2.5 rounded-full text-white text-[8px] flex items-center justify-center">
+                1
+              </div>
+            </div>
+
+            <div className="w-11 h-11 rounded-md">
+              <img src={user} alt="" />
             </div>
           </div>
+        ) : (
+          <div className="flex items-center gap-2 ml-7">
+            <IoPersonOutline className="size-5 text-textGraySec" />
 
-          <div className="w-11 h-11 rounded-md">
-            <img src={user} alt="" />
+            <span
+              className={`font-dm font-medium text-[15px] cursor-pointer hover:opacity-70 transition-all duration-300 ${
+                isFullyScrolled || isWhiteLogoPathname
+                  ? "text-white"
+                  : "text-textGraySec"
+              }`}
+              onClick={() => navigate("/auth")}
+            >
+              Логин
+            </span>
+            <span
+              className={`font-dm font-medium text-[15px] transition-colors duration-300 ${
+                isFullyScrolled || isWhiteLogoPathname
+                  ? "text-white"
+                  : "text-textGraySec"
+              }`}
+            >
+              |
+            </span>
+            <span
+              className={`font-dm font-medium text-[15px] cursor-pointer hover:opacity-70 transition-all duration-300 ${
+                isFullyScrolled || isWhiteLogoPathname
+                  ? "text-white"
+                  : "text-textGraySec"
+              }`}
+              onClick={() => navigate("/auth")}
+            >
+              Регистрация
+            </span>
           </div>
-        </div>
+        )}
 
         {/* Burger Menu */}
         <div className="flex items-center gap-[18px] ml-10 cursor-pointer">

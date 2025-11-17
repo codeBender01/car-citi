@@ -44,7 +44,9 @@ const Footer = () => {
 
       <footer
         className={`bg-black text-white ${
-          location.pathname === "/all-cars" ? "mt-0" : "mt-[200px]"
+          location.pathname === "/all-cars" || location.pathname === "/auth"
+            ? "mt-0"
+            : "mt-[200px]"
         } `}
       >
         {/* Newsletter Section */}

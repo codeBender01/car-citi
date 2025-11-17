@@ -36,6 +36,8 @@ import GreenCheck from "@/svgs/GreenCheck";
 import StatsSection from "./ui/StatSection";
 import Reviews from "./ui/Reviews";
 
+import { useGetPosts } from "@/api/posts";
+
 const Home = () => {
   const swiperRef = useRef<SwiperType | null>(null);
   const [activeTab, setActiveTab] = useState<
@@ -49,6 +51,8 @@ const Home = () => {
   ];
 
   const navigate = useNavigate();
+
+  const { data: posts } = useGetPosts();
 
   return (
     <div className="pt-[75px]">
@@ -119,7 +123,6 @@ const Home = () => {
             </SwiperSlide>
           </Swiper>
 
-          {/* Navigation Buttons */}
           <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between items-center px-8 z-10 pointer-events-none">
             <button
               onClick={() => swiperRef.current?.slidePrev()}
@@ -134,8 +137,6 @@ const Home = () => {
               <MdOutlineKeyboardArrowRight size={22} />
             </button>
           </div>
-
-          {/* Search Form */}
         </div>
         <SearchForm />
 
@@ -174,8 +175,8 @@ const Home = () => {
           </div>
 
           <div className="mt-[50px] grid grid-cols-4 gap-7">
-            {[...Array(8)].map((_, idx) => {
-              return <CarCard key={idx} />;
+            {posts?.data.rows.map((r, idx) => {
+              return <CarCard car={r} key={idx} />;
             })}
           </div>
         </div>

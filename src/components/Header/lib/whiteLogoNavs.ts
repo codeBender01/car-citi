@@ -1,1 +1,1 @@
-export const pathnames = ["/about"];
+export const pathnames = ["/about", "/auth"];

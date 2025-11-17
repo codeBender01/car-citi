@@ -15,6 +15,8 @@ const Favorites = lazy(() => import("@pages/Favorites"));
 const SavedSearch = lazy(() => import("@pages/SavedSearch"));
 const Messages = lazy(() => import("@pages/Messages"));
 const Profile = lazy(() => import("@pages/Profile"));
+const AddCar = lazy(() => import("@pages/AddCar"));
+const Auth = lazy(() => import("@pages/Auth"));
 
 export default function Router() {
   const routes = useRoutes([
@@ -38,6 +40,10 @@ export default function Router() {
           path: "/all-cars",
           element: <AllCars />,
         },
+        {
+          path: "/auth",
+          element: <Auth />,
+        },
       ],
     },
     {
@@ -47,6 +53,10 @@ export default function Router() {
         {
           path: "",
           element: <Dashboard />,
+        },
+        {
+          path: "add",
+          element: <AddCar />,
         },
         {
           path: "posted",
