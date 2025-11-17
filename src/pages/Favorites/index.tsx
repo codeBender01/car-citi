@@ -3,18 +3,16 @@ import Pagination from "@/components/Pagination";
 import { mockFavorites } from "./lib/mockFavorites";
 import { useState } from "react";
 
+import { useGetPosts } from "@/api/posts";
+
 const Favorites = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Pagination constants
   const ITEMS_PER_PAGE = 6;
   const totalItems = mockFavorites.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-  // Calculate paginated favorites
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedFavorites = mockFavorites.slice(startIndex, endIndex);
+  const { data: posts } = useGetPosts();
 
   return (
     <div className="p-[35px] 2xl:p-[60px]">
@@ -27,8 +25,8 @@ const Favorites = () => {
 
       <div className="rounded-2xl border border-headerBorder p-4">
         <div className="mt-[50px] grid grid-cols-3 2xl:grid-cols-4 gap-7">
-          {paginatedFavorites.map((favorite) => {
-            return <CarCard key={favorite.id} />;
+          {posts?.data.rows.map((favorite) => {
+            return <CarCard car={favorite} key={favorite.id} />;
           })}
         </div>
 

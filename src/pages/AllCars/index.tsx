@@ -3,7 +3,11 @@ import { FiChevronDown } from "react-icons/fi";
 import CarCard from "@/components/CarCard";
 import Filters from "./ui/Filters";
 
+import { useGetPosts } from "@/api/posts";
+
 const AllCars = () => {
+  const { data: posts } = useGetPosts();
+
   return (
     <div className="pt-[180px] px-20 2xl:px-[118px]">
       <div className="font-dm text-[15px] flex gap-1">
@@ -32,8 +36,8 @@ const AllCars = () => {
           </div>
 
           <div className="mt-[50px] grid grid-cols-3 gap-7">
-            {[...Array(15)].map((_, idx) => {
-              return <CarCard key={idx} />;
+            {posts?.data.rows.map((car, idx) => {
+              return <CarCard car={car} key={idx} />;
             })}
           </div>
         </div>

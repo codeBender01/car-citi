@@ -20,6 +20,8 @@ import CarCard from "@/components/CarCard";
 import CarChars from "./ui/CarCharacteristics";
 import { Button } from "@/components/ui/button";
 
+import { useGetPosts } from "@/api/posts";
+
 import user from "@assets/header/user.png";
 
 import { useState } from "react";
@@ -35,6 +37,8 @@ const CarDetails = () => {
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
+
+  const { data: posts } = useGetPosts();
 
   return (
     <div className="pt-[180px] px-20 2xl:px-[118px]">
@@ -253,8 +257,8 @@ const CarDetails = () => {
         </div>
 
         <div className="mt-[50px] grid grid-cols-4 gap-7">
-          {[...Array(4)].map((_, idx) => {
-            return <CarCard key={idx} />;
+          {posts?.data.rows.map((car, idx) => {
+            return <CarCard car={car} key={idx} />;
           })}
         </div>
 
