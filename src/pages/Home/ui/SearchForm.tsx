@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 import {
   Select,
@@ -7,8 +7,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  SearchableSelect,
+  SearchableSelectContent,
+  SearchableSelectGroup,
+  SearchableSelectItem,
+  SearchableSelectLabel,
+  SearchableSelectTrigger,
+  SearchableSelectValue,
+} from "@/components/ui/searchable-select";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+
+import { useGetRegions } from "@/api/regions/useGetRegions";
 
 import { CiSearch } from "react-icons/ci";
 
@@ -36,6 +47,30 @@ const SearchForm = () => {
   const [promo, setPromo] = useState(false);
   const [credit, setCredit] = useState(false);
   const [tirePressure, setTirePressure] = useState(false);
+  const [citySearch, setCitySearch] = useState("");
+
+  const { data: regions } = useGetRegions();
+
+  // Filter regions and cities based on search
+  const filteredRegions = useMemo(() => {
+    if (!regions?.data?.rows) return [];
+
+    if (!citySearch.trim()) return regions.data.rows;
+
+    const searchLower = citySearch.toLowerCase();
+    return regions.data.rows
+      .map((region) => ({
+        ...region,
+        cities: region.cities.filter((city) =>
+          city.name.toLowerCase().includes(searchLower)
+        ),
+      }))
+      .filter(
+        (region) =>
+          region.cities.length > 0 ||
+          region.name.toLowerCase().includes(searchLower)
+      );
+  }, [regions, citySearch]);
 
   const tabs = [
     { id: "all" as const, label: "Все" },
@@ -59,7 +94,6 @@ const SearchForm = () => {
   const carModels = ["Model 1", "Model 2", "Model 3", "Model 4"];
   const years = ["2024", "2023", "2022", "2021", "2020", "2019"];
   const bodyTypes = ["Седан", "Внедорожник", "Хэтчбек", "Купе", "Универсал"];
-  const cities = ["Москва", "Санкт-Петербург", "Казань", "Новосибирск"];
   const conditions = ["Отличное", "Хорошее", "Удовлетворительное"];
   const categories = ["Легковые", "Грузовые", "Мото", "Спецтехника"];
   const offerTypes = ["Продажа", "Аренда"];
@@ -75,9 +109,9 @@ const SearchForm = () => {
   const labels = ["Срочная продажа", "Новое поступление", "Хит продаж"];
 
   return (
-    <div className="mt-[-70px] relative z-30 bg-white/40 shadow-lg w-[80%] pb-10 rounded-2xl mx-auto">
+    <div className="lg:mt-[-70px] relative z-30 bg-black lg:bg-white/40 shadow-lg lg:w-[90%] pb-10 lg:rounded-2xl mx-auto">
       <div className="flex relative rounded-2xl backdrop-blur-md h-[70px]">
-        <div className="flex gap-8 bg-[#FFFFFF33] px-8 pt-4 w-[75%] rounded-tl-2xl">
+        <div className="flex justify-center lg:justify-start gap-8 lg:bg-[#FFFFFF33] px-8 pt-4 w-full lg:w-[75%] lg:rounded-tl-2xl">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -93,15 +127,15 @@ const SearchForm = () => {
           ))}
         </div>
 
-        <button className="ml-auto w-[25%] flex items-center justify-center font-rale font-medium text-[15px] text-white gap-2 hover:opacity-80 transition-opacity">
+        <button className="ml-auto w-[25%] hidden lg:flex items-center justify-center font-rale font-medium text-[15px] text-white gap-2 hover:opacity-80 transition-opacity">
           <div className="w-3.5 h-0.5 bg-white rounded-lg"></div>
           Расширенный поиск
         </button>
       </div>
 
       <div className="flex">
-        <div className="pt-2.5 pl-4 pr-6 w-[75%]">
-          <div className="grid grid-cols-4 gap-2.5">
+        <div className="p-[25px] lg:pt-2.5 pl-4 pr-6 bg-white lg:bg-transparent w-[90%] mx-auto rounded-2xl lg:rounded-none lg:w-[75%]">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-2.5">
             {/* Марка */}
             <Select value={brand} onValueChange={setBrand}>
               <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
@@ -193,9 +227,19 @@ const SearchForm = () => {
               </SelectContent>
             </Select>
 
+            <Button
+              size="none"
+              className="bg-primary text-white font-dm text-sm mt-5 lg:hidden cursor-pointer rounded-xl w-full flex items-center gap-2.5 py-5 font-medium px-[25px]"
+            >
+              <CiSearch />
+              <div>
+                Поиск <span className="underline">9451</span> авто
+              </div>
+            </Button>
+
             {/* Тип кузова */}
             <Select value={bodyType} onValueChange={setBodyType}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Тип кузова
@@ -217,31 +261,48 @@ const SearchForm = () => {
             </Select>
 
             {/* Город / Регион */}
-            <Select value={cityRegion} onValueChange={setCityRegion}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+            <SearchableSelect value={cityRegion} onValueChange={setCityRegion}>
+              <SearchableSelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Город / Регион
                   </span>
-                  <SelectValue placeholder="Выберите город" />
+                  <SearchableSelectValue placeholder="Выберите город" />
                 </div>
-              </SelectTrigger>
-              <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                {cities.map((city) => (
-                  <SelectItem
-                    key={city}
-                    value={city}
-                    className="text-base font-rale cursor-pointer"
-                  >
-                    {city}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              </SearchableSelectTrigger>
+              <SearchableSelectContent
+                className="rounded-xl bg-white border border-[#7B3FF2]/20"
+                onSearchChange={setCitySearch}
+                searchPlaceholder="Поиск города..."
+              >
+                {filteredRegions.length > 0 ? (
+                  filteredRegions.map((region) => (
+                    <SearchableSelectGroup key={region.id}>
+                      <SearchableSelectLabel className="text-gray-700 font-medium">
+                        {region.name}
+                      </SearchableSelectLabel>
+                      {region.cities.map((city) => (
+                        <SearchableSelectItem
+                          key={city.id}
+                          value={city.id}
+                          className="text-base font-rale cursor-pointer pl-6"
+                        >
+                          {city.name}
+                        </SearchableSelectItem>
+                      ))}
+                    </SearchableSelectGroup>
+                  ))
+                ) : (
+                  <div className="py-6 text-center text-sm text-gray-500">
+                    Город не найден
+                  </div>
+                )}
+              </SearchableSelectContent>
+            </SearchableSelect>
 
             {/* Состояние */}
             <Select value={condition} onValueChange={setCondition}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Состояние
@@ -264,7 +325,7 @@ const SearchForm = () => {
 
             {/* Категория */}
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Категория
@@ -287,7 +348,7 @@ const SearchForm = () => {
 
             {/* Тип предложения */}
             <Select value={offerType} onValueChange={setOfferType}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Тип предложения
@@ -310,7 +371,7 @@ const SearchForm = () => {
 
             {/* Тип привода */}
             <Select value={driveType} onValueChange={setDriveType}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Тип привода
@@ -333,7 +394,7 @@ const SearchForm = () => {
 
             {/* Пробег */}
             <Select value={mileage} onValueChange={setMileage}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Пробег
@@ -356,7 +417,7 @@ const SearchForm = () => {
 
             {/* Трансмиссия */}
             <Select value={transmission} onValueChange={setTransmission}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Трансмиссия
@@ -379,7 +440,7 @@ const SearchForm = () => {
 
             {/* Тип топлива */}
             <Select value={fuelType} onValueChange={setFuelType}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Тип топлива
@@ -402,7 +463,7 @@ const SearchForm = () => {
 
             {/* Объем двигателя */}
             <Select value={engineVolume} onValueChange={setEngineVolume}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Объем двигателя
@@ -425,7 +486,7 @@ const SearchForm = () => {
 
             {/* Цилиндры */}
             <Select value={cylinders} onValueChange={setCylinders}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Цилиндры
@@ -448,7 +509,7 @@ const SearchForm = () => {
 
             {/* Цвет */}
             <Select value={color} onValueChange={setColor}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Цвет
@@ -471,7 +532,7 @@ const SearchForm = () => {
 
             {/* Двери */}
             <Select value={doors} onValueChange={setDoors}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Двери
@@ -494,7 +555,7 @@ const SearchForm = () => {
 
             {/* Ярлык */}
             <Select value={label} onValueChange={setLabel}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                     Ярлык
@@ -517,8 +578,11 @@ const SearchForm = () => {
           </div>
         </div>
 
-        <div className="w-[25%] mt-3">
-          <Button size="none" className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl w-[90%] flex items-center gap-2.5 py-[22.5px] font-medium px-[25px]">
+        <div className="lg:block hidden w-[25%] mt-3">
+          <Button
+            size="none"
+            className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl w-[90%] flex items-center gap-2.5 py-[22.5px] font-medium px-[25px]"
+          >
             <CiSearch />
             <div>
               Поиск <span className="underline">9451</span> авто

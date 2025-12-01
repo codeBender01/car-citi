@@ -1,4 +1,5 @@
 import aboutUsHero from "@assets/aboutUs/Rectangle 4178.png";
+import heroMobile from "@assets/aboutUs/heroMobile.png";
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -23,8 +24,16 @@ import logoBlack from "@assets/images/logoBlack.png";
 import { questions } from "./lib/questions";
 import Faq from "./ui/Faq";
 
+import { useGetFaqs } from "@/api/faq/useGetFaqs";
+
+import LogoCar from "@/svgs/LogoCar";
+
 const AboutUs = () => {
   const [openQuestionId, setOpenQuestionId] = useState<null | number>(null);
+
+  const { data: faqs } = useGetFaqs();
+
+  
 
   const handleToggle = (id: number) => {
     if (openQuestionId && id === openQuestionId) {
@@ -39,20 +48,30 @@ const AboutUs = () => {
 
   return (
     <div>
-      <div
-        style={{
-          backgroundImage: `url(${aboutUsHero})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        className="h-[95vh] w-full flex items-start flex-col"
-      >
-        <div className="my-auto flex flex-col justify-start w-[55%] pl-12 2xl:pl-[180px] text-white gap-12">
-          <h1 className="h1 ">
+      <style>
+        {`
+          .hero-background {
+            background-image: url(${heroMobile});
+            background-size: contain;
+            background-position: bottom;
+            background-repeat: no-repeat;
+          }
+
+          @media (min-width: 1024px) {
+            .hero-background {
+            background-size: cover;
+              background-image: url(${aboutUsHero});
+            }
+          }
+        `}
+      </style>
+      <div className="hero-background bg-black h-[95vh] w-full flex items-center px-10 lg:items-start flex-col">
+        <div className="lg:my-auto my-[140px] flex flex-col lg:items-start items-center justify-start w-full lg:w-[55%] lg:pl-12 2xl:pl-[180px] text-white gap-12">
+          <h1 className="h1 lg:text-left text-center">
             <span className="text-greenPrimary">Автомаркетплейс №1</span>{" "}
             CarCiti— продавай легко, покупай уверенно.
           </h1>
-          <p className="font-dm text-[15px] w-[85%]">
+          <p className="font-dm text-[15px] w-[85%] lg:text-left text-center">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -69,14 +88,21 @@ const AboutUs = () => {
       </div>
       <StatsSection />
 
-      <div className="mt-[180px] px-[120px] 2xl:px-[118px] flex gap-5">
-        <div className="w-[60%]">
-          <div className="h2">
+      <div className="mt-[75px] rounded-t-2xl lg:bg-transparent bg-primary px-[30px] lg:mt-[180px] py-6  mx-4 md:px-12 xl:px-[120px] 2xl:px-[118px] flex xl:flex-row flex-col gap-5">
+        <LogoCar />
+        <div className="h2 text-white">продавай легко, покупай уверенно.</div>
+      </div>
+
+      <div className="lg:bg-transparent bg-[#0C1002] lg:mt-[180px] py-6 mx-4 px-[30px] md:px-12 xl:px-[120px] 2xl:px-[118px] flex xl:flex-row flex-col gap-5">
+        <div className="w-full xl:w-[60%]">
+          <div className="h2 text-white lg:text-textPrimary">
             Мы дорожим каждым клиентом и стремимся сделать их опыт приятным
           </div>
-          <GreenArrow />
+          <div className="xl:block hidden">
+            <GreenArrow />
+          </div>
         </div>
-        <div className="w-[40%] font-dm text-textPrimary flex flex-col gap-8">
+        <div className="w-full xl:w-[40%] font-dm text-white lg:text-textPrimary flex flex-col gap-8">
           <p>
             Lorem ipsum dolor sit amet consectetur. Convallis integer enim eget
             sit urna. Eu duis lectus amet vestibulum varius. Nibh tellus sit sit
@@ -97,8 +123,8 @@ const AboutUs = () => {
           </p>
         </div>
       </div>
-      <div className="my-12 px-[120px] 2xl:px-[118px] flex gap-4 h-[540px]">
-        <div className="flex flex-col justify-between w-[210px] gap-8">
+      <div className="lg:my-12 md:px-12 pb-6 lg:pb-0 xl:px-[120px] px-[30px] 2xl:px-[118px] flex lg:flex-row flex-col lg:bg-transparent bg-[#0C1002] mx-4 lg:mx-0 gap-4 lg:h-[540px]">
+        <div className="hidden lg:flex flex-col justify-between w-[210px] gap-8">
           <img src={motto} alt="motto" className="flex-1" />
           <img
             className="w-full h-[210px] rounded-2xl"
@@ -106,11 +132,11 @@ const AboutUs = () => {
             alt="mercedes"
           />
         </div>
-        <div className="h-full w-[45%]">
+        <div className="h-[400px] lg:h-full w-full lg:w-[45%]">
           <img
             src={manBmw}
             alt=""
-            className="object-cover h-full rounded-2xl"
+            className="object-cover h-full w-full rounded-2xl"
           />
         </div>
 
@@ -124,21 +150,29 @@ const AboutUs = () => {
             <img
               src={cabin}
               alt=""
-              className="w-[210px] h-[210px] rounded-2xl"
+              className="w-[210px] h-[210px] lg:block hidden rounded-2xl"
             />
-            <div>
-              <img src={keys} alt="" className="flex-1 h-[210px] rounded-2xl" />
+            <div className="w-full lg:w-auto lg:mt-0 mt-4">
+              <img
+                src={keys}
+                alt=""
+                className="flex-1 lg:w-auto w-full h-[210px] rounded-2xl"
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="px-[120px] 2xl:px-[118px] flex gap-5 items-center">
-        <div className="w-[60%]">
-          <div className="h2">Миссия и видение</div>
-          <GreenArrow />
+      <div className="lg:bg-transparent bg-[#0C1002] lg:rounded-0 rounded-b-2xl lg:mt-[180px] py-6 mx-4 px-[30px] md:px-12 xl:px-[120px] 2xl:px-[118px] flex xl:flex-row flex-col gap-5">
+        <div className="w-full xl:w-[60%]">
+          <div className="h2 text-white lg:text-textPrimary">
+            Миссия и видение
+          </div>
+          <div className="xl:block hidden">
+            <GreenArrow />
+          </div>
         </div>
-        <div className="w-[40%] font-dm text-textPrimary flex flex-col gap-8">
+        <div className="w-full xl:w-[40%] font-dm text-white lg:text-textPrimary flex flex-col gap-8">
           <p>
             Lorem ipsum dolor sit amet consectetur. Convallis integer enim eget
             sit urna. Eu duis lectus amet vestibulum varius. Nibh tellus sit sit
@@ -162,24 +196,26 @@ const AboutUs = () => {
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}
-        className="h-[730px] mt-[180px] relative px-[120px] 2xl:px-[118px] flex flex-col justify-center text-white"
+        className="h-[635px] md:h-[730px] mt-[180px] relative md:py-0 py-16 px-4 md:px-10 lg:px-[120px] 2xl:px-[118px] flex flex-col justify-end md:justify-center text-white"
       >
         <div
           className="absolute inset-0"
           style={{
-            background: "radial-gradient(circle, #00000000 0%, #000000 100%)",
+            background:
+              "radial-gradient(164.89% 73.75% at 47.09% 0.89%, rgba(0, 0, 0, 0.00) 0%, #000 100%)",
+            mixBlendMode: "luminosity",
           }}
         ></div>
         <div className="relative z-10">
           <div className="h1 relative">
             Мы представляем лучших <br /> автодилеров страны{" "}
           </div>
-          <div className="text-[40px] font-rale font-medium">
+          <div className="text-base md:text-[40px] font-rale font-medium">
             Для вашего качественного выбора
           </div>
           <Button
             size="none"
-            className="bg-transparent border w-[300px] hover:bg-textPrimary duration-200 border-white  mt-[60px] text-white font-dm text-[15px] cursor-pointer rounded-xl flex items-center gap-2.5 py-4"
+            className="bg-transparent border w-[300px] hover:bg-textPrimary duration-200 border-white  mt-[60px] text-white font-dm text-[15px] cursor-pointer rounded-xl hidden lg:flex items-center gap-2.5 py-4"
           >
             Узнать больше
             <BsArrowUpRight />
@@ -187,16 +223,16 @@ const AboutUs = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-16 mt-[180px] px-[120px] 2xl:px-[118px]">
+      <div className="flex flex-col gap-8 md:gap-16 mt-[75px] md:mt-[120px] lg:mt-[180px] px-4 md:px-10 lg:px-[120px] 2xl:px-[118px]">
         <div className="h2">Наша команда</div>
-        <div className="flex items-center gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 content-center lg:flex items-center gap-6">
           {[...Array(5)].map((_, i) => {
             return <UserCard key={i} />;
           })}
         </div>
       </div>
 
-      <div className="green-gradient mt-[180px] py-3.5 overflow-hidden whitespace-nowrap">
+      <div className="green-gradient mt-[75px] md:mt-[120px] lg:mt-[180px] py-3.5 overflow-hidden whitespace-nowrap">
         <div className="flex animate-scroll gap-20">
           {[...Array(10)].map((_, i) => {
             return (
@@ -211,18 +247,19 @@ const AboutUs = () => {
         </div>
       </div>
 
-      <div className="my-[180px] px-[120px] 2xl:px-[118px]">
-        <Reviews variant="black" />
+      <div className="mt-[75px] md:mt-[120px] lg:mt-[180px] px-10 lg:px-[120px] bg-textPrimary lg:py-[110px] py-6 2xl:px-[118px]">
+        <Reviews variant="white" headingClassName="text-white" />
       </div>
 
-      <div className="mt-[100px] mx-auto w-[70%] flex flex-col items-center">
-        <div className="text-[40px] font-dm font-bold">
+      <div className="mt-[75px] lg:mt-[100px] mx-auto w-[95%] lg:w-[70%] flex flex-col items-center">
+        <div className="text-[26px] md:text-[40px] font-dm font-bold">
           Часто задаваемые вопросы
         </div>
         <ul className="flex flex-col mt-[63px]">
           {questions.map((q, i) => {
             return (
               <Faq
+                key={i}
                 index={i}
                 question={q}
                 openId={openQuestionId}

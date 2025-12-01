@@ -5,12 +5,12 @@ import type { Swiper as SwiperType } from "swiper";
 import { useNavigate } from "react-router-dom";
 
 import SearchForm from "./ui/SearchForm";
+import CarsCarousel from "./ui/CarsCarousel";
+import BrandsSection from "./ui/BrandsSection";
 import CarCard from "@/components/CarCard";
 import { Button } from "@/components/ui/button";
 import MobileApp from "./ui/MobileApp";
 import NewsBlock from "./ui/NewsBlock";
-
-import { brands } from "./lib/brands";
 import { types } from "./lib/types";
 import { whyUs } from "./lib/whyUs";
 
@@ -41,13 +41,14 @@ import { useGetPosts } from "@/api/posts";
 const Home = () => {
   const swiperRef = useRef<SwiperType | null>(null);
   const [activeTab, setActiveTab] = useState<
-    "favorites" | "recent" | "popular"
+    "favorites" | "recent" | "popular" | "all"
   >("favorites");
 
   const tabs = [
     { id: "favorites" as const, label: "Избранное" },
     { id: "recent" as const, label: "Недавние" },
     { id: "popular" as const, label: "Популярные" },
+    { id: "all" as const, label: "Все", showOnSmall: true },
   ];
 
   const navigate = useNavigate();
@@ -56,8 +57,8 @@ const Home = () => {
 
   return (
     <div className="pt-[75px]">
-      <main className="mt-[75px] px-12 2xl:px-[118px]">
-        <div className="relative">
+      <main className=" mt-2 lg:mt-[75px] lg:px-12 2xl:px-[118px]">
+        <div className="relative ">
           <Swiper
             modules={[Navigation]}
             spaceBetween={0}
@@ -67,7 +68,7 @@ const Home = () => {
           >
             <SwiperSlide>
               <div
-                className="w-full h-[660px] rounded-2xl flex items-center justify-center text-center flex-col relative"
+                className="w-full h-[420px] lg:h-[660px] lg:rounded-2xl flex items-center justify-end md:justify-center text-center flex-col relative"
                 style={{
                   backgroundImage: `url(${hero})`,
                   backgroundPosition: "center",
@@ -75,48 +76,10 @@ const Home = () => {
                 }}
               >
                 <div className="absolute inset-0 bg-black/30 rounded-2xl" />
-                <div className="relative z-10 text-2xl text-primary font-rale">
+                <div className="relative z-10 text-[16px] md:text-xl lg:text-2xl text-primary font-rale">
                   Все самые новые и подержанные
                 </div>
-                <h1 className="relative z-10 text-[70px] text-white font-rale font-bold">
-                  марки автомобилей <br /> всегда только на carciti.com
-                </h1>
-              </div>
-            </SwiperSlide>
-
-            <SwiperSlide>
-              <div
-                className="w-full h-[660px] rounded-2xl flex items-center justify-center text-center flex-col relative"
-                style={{
-                  backgroundImage: `url(${hero})`,
-                  backgroundPosition: "center",
-                  backgroundSize: "cover",
-                }}
-              >
-                <div className="absolute inset-0 bg-black/30 rounded-2xl" />
-                <div className="relative z-10 text-2xl text-primary font-rale">
-                  Slide 2 - Все самые новые и подержанные
-                </div>
-                <h1 className="relative z-10 text-[70px] text-white font-rale font-bold">
-                  марки автомобилей <br /> всегда только на carciti.com
-                </h1>
-              </div>
-            </SwiperSlide>
-
-            <SwiperSlide>
-              <div
-                className="w-full h-[660px] rounded-2xl flex items-center justify-center text-center flex-col relative"
-                style={{
-                  backgroundImage: `url(${hero})`,
-                  backgroundPosition: "center",
-                  backgroundSize: "cover",
-                }}
-              >
-                <div className="absolute inset-0 bg-black/30 rounded-2xl" />
-                <div className="relative z-10 text-2xl text-primary font-rale">
-                  Slide 3 - Все самые новые и подержанные
-                </div>
-                <h1 className="relative z-10 text-[70px] text-white font-rale font-bold">
+                <h1 className="relative z-10 text-2xl md:text-[48px] mb-4 md:mb-0 lg:text-[70px] text-white font-rale font-bold">
                   марки автомобилей <br /> всегда только на carciti.com
                 </h1>
               </div>
@@ -140,16 +103,16 @@ const Home = () => {
         </div>
         <SearchForm />
 
-        <div className="mt-[200px] w-[90%] mx-auto">
+        <div className="mt-[72px] md:mt-[120px] xl:mt-[200px] w-[90%] mx-auto">
           <div className="flex items-center justify-between">
-            <div className="font-rale text-[40px] text-textPrimary font-bold">
+            <div className="font-rale text-[26px] md:text-[40px] text-textPrimary font-bold">
               Изучите все автомобили
             </div>
             <div
               onClick={() => {
                 navigate("/all-cars");
               }}
-              className="flex items-center gap-2 font-dm font-medium"
+              className="hidden md:flex items-center gap-2 font-dm font-medium"
             >
               Посмотреть все
               <BsArrowUpRight />
@@ -162,10 +125,13 @@ const Home = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className="relative cursor-pointer font-dm font-medium text-base text-textPrimary pb-4 transition-colors hover:text-textPrimary/80"
+                  className={`relative cursor-pointer font-dm font-medium text-base text-textPrimary pb-4 transition-colors hover:text-textPrimary/80 flex items-center gap-2 ${
+                    tab.showOnSmall ? "md:hidden" : ""
+                  }`}
                 >
                   {tab.label}
-                  {/* Animated underline */}
+                  {tab.id === "all" && <BsArrowUpRight />}
+
                   {activeTab === tab.id && (
                     <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary animate-in slide-in-from-bottom-1 duration-300" />
                   )}
@@ -174,51 +140,26 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="mt-[50px] grid grid-cols-4 gap-7">
+          <CarsCarousel posts={posts ? posts?.data.rows : []} />
+
+          <div className="mt-[50px] hidden md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
             {posts?.data.rows.map((r, idx) => {
               return <CarCard car={r} key={idx} />;
             })}
           </div>
         </div>
-        <div className="mt-[300px] mb-[150px] w-[90%] mx-auto">
-          <div className="flex items-center justify-between">
-            <div className="font-rale text-[40px] text-textPrimary font-bold">
-              Познакомьтесь с нашими брендами
-            </div>
-            <div className="flex items-center gap-2 font-dm font-medium">
-              Посмотреть все
-              <BsArrowUpRight />
-            </div>
-          </div>
-          <ul className="flex items-center justify-between mt-[95px] gap-7">
-            {brands.map((b) => {
-              return (
-                <li
-                  key={b.text}
-                  className="border border-headerBorder rounded-2xl flex-1 h-[135px] flex flex-col items-center justify-center gap-4 py-4 hover:border-primary text-textPrimary hover:text-primary duration-200 cursor-pointer"
-                >
-                  <img
-                    src={b.img}
-                    alt="car"
-                    className={`${
-                      b.text === "Audi" ? "mt-4" : ""
-                    } max-h-[65px] max-w-[99px]`}
-                  />
-                  <div className="text-lg font-dm font-medium mt-auto">
-                    {b.text}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        <BrandsSection />
       </main>
-      <div className="bg-textPrimary flex h-[600px]">
-        <div className="w-[50%] h-full">
-          <img src={land} alt="" className="object-cover h-full" />
+      <div className="bg-textPrimary flex flex-col md:flex-row md:h-[600px] mx-4 rounded-2xl md:mx-0">
+        <div className="w-full md:w-[50%] h-full">
+          <img
+            src={land}
+            alt=""
+            className="object-cover md:rounded-0 rounded-2xl h-full"
+          />
         </div>
-        <div className="w-[40%] mx-auto flex items-center flex-col justify-center gap-10 h-full text-white">
-          <div className="text-[40px] font-rale font-bold">
+        <div className="w-full md:w-[40%] mx-auto flex md:items-center flex-col px-[30px] md:px-0 md:py-0 py-[35px] justify-center gap-10 h-full text-white">
+          <div className="text-[26px] md:text-[40px] font-rale font-bold">
             Локальные автодилеры и лучшие предложения
           </div>
           <p className="font-dm text-base ">
@@ -229,7 +170,7 @@ const Home = () => {
           </p>
           <Button
             size="none"
-            className="bg-transparent self-start text-white font-dm text-[15px] cursor-pointer rounded-xl w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25px] border border-white"
+            className="bg-transparent self-start text-white font-dm text-[15px] cursor-pointer rounded-xl w-full md:w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25px] border border-white"
           >
             <div>Весь список</div>
             <BsArrowUpRight />
@@ -239,48 +180,49 @@ const Home = () => {
 
       <StatsSection />
 
-      <div className="mt-[75px] px-[100px] 2xl:px-[118px]">
+      <div className="mt-[60px] md:mt-[75px] px-4 md:px-10 lg:px-[100px] 2xl:px-[118px]">
         <div className="flex items-center justify-between">
-          <div className="font-rale text-[40px] text-textPrimary font-bold">
+          <div className="font-rale text-[26px] md:text-[40px] text-textPrimary font-bold">
             Поиск по типу
           </div>
-          <div className="flex items-center gap-2 font-dm font-medium">
+          <div className="hidden lg:flex items-center gap-2 font-dm font-medium">
             Посмотреть все
             <BsArrowUpRight />
           </div>
         </div>
 
-        <ul className="flex items-center justify-between gap-[25px] mt-10">
+        <ul className="flex lg:flex-row flex-col items-center justify-between gap-[25px] mt-10">
           {types.map((t) => {
             return (
               <li
                 key={t.type}
-                className="h-[300px] card-gradient flex-1 rounded-2xl px-[30px] py-[38px] text-white font-dm"
-                style={{
-                  backgroundImage: `url(${t.img})`,
-                  backgroundSize: "cover",
-                }}
+                className="h-[300px] bg-black! card-gradient lg:bg-none lg:w-auto w-full lg:block flex flex-row-reverse justify-between flex-1 rounded-2xl px-[30px] py-5 lg:py-[38px] text-white font-dm"
+                style={
+                  {
+                    "--bg-image": `url(${t.img})`,
+                    backgroundSize: "cover",
+                  } as React.CSSProperties
+                }
               >
                 <div>{t.num}</div>
-                <div>{t.type}</div>
+                <div className="flex items-center gap-2">
+                  <div className="flex lg:hidden">{t.icon}</div>
+                  {t.type}
+                </div>
               </li>
             );
           })}
         </ul>
 
-        <div className="mt-[120px]">
-          <div className="font-rale text-[40px] text-center text-textPrimary font-bold">
+        <div className="mt-[75px] md:mt-[120px]">
+          <div className="font-rale text-[26px] md:text-[40px] text-center text-textPrimary font-bold">
             Мы учитываем все аспекты <br /> при выборе нового авто:
           </div>
-          <ul className="mt-10 grid grid-cols-3 gap-4">
-            <li className="flex items-center justify-center">
-              <img
-                src={diag}
-                alt=""
-                className="w-full h-full object-cover rounded-2xl"
-              />
+          <ul className="mt-10 grid grid-cols-1 md:grid-cols-3 md:gap-4 md:min-h-[400px]">
+            <li className="h-[345px] md:h-full overflow-hidden md:rounded-2xl">
+              <img src={diag} alt="" className="w-full h-full object-cover" />
             </li>
-            <li className="flex flex-col justify-between bg-primary text-white p-5 rounded-2xl">
+            <li className="flex h-[345px] md:h-auto flex-col justify-between bg-primary text-white p-5 md:rounded-2xl">
               <div className="text-[32px] font-rale font-bold">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
               </div>
@@ -289,7 +231,7 @@ const Home = () => {
                 <BsArrowUpRight />
               </div>
             </li>
-            <li className="flex flex-col relative justify-between bg-black text-white p-5 rounded-2xl overflow-hidden">
+            <li className="flex h-[345px] md:h-auto flex-col relative justify-between bg-black text-white p-5 md:rounded-2xl overflow-hidden">
               <div className="text-[32px] font-rale font-bold relative z-10">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
               </div>
@@ -305,14 +247,14 @@ const Home = () => {
           </ul>
         </div>
 
-        <div className="mt-[300px] relative">
-          <div className="font-rale text-[40px] relative z-10 text-center text-textPrimary font-bold">
+        <div className="mt-[75px]  md:mt-[120px] lg:mt-[300px] relative">
+          <div className="font-rale text-[26px] md:text-[40px] relative z-10 text-center text-textPrimary font-bold">
             Почему выбирают нас?
           </div>
 
-          <div className="absolute bg-[#FBFCF9] w-[60%] h-[620px] top-[50%] -translate-y-1/2 left-[50%] -translate-x-1/2 "></div>
+          <div className="absolute bg-[#FBFCF9] w-[60%] h-[400px] md:h-[620px] top-[50%] -translate-y-1/2 left-[50%] -translate-x-1/2 "></div>
 
-          <ul className="grid grid-cols-4 gap-7 h-[300px] mt-[50px] relative z-10">
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7 h-auto lg:h-[300px] mt-[50px] relative z-10">
             {whyUs.map((w) => {
               return (
                 <li
@@ -330,9 +272,9 @@ const Home = () => {
           </ul>
         </div>
 
-        <div className="mt-[200px] relative flex justify-between">
+        <div className="mt-[200px] relative hidden lg:flex justify-between">
           <div className="flex w-[45%] gap-[45px]">
-            <div className="flex flex-col gap-[58px] w-[50%]">
+            <div className="hidden xl:flex flex-col gap-[58px] w-[50%]">
               <img
                 src={check1}
                 alt="check"
@@ -357,7 +299,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="w-[40%] flex flex-col">
+          <div className="w-[60%] xl:w-[40%] flex flex-col">
             <div className="font-rale text-[40px] text-textPrimary font-bold">
               Получите реальную цену за свой автомобиль
             </div>
@@ -380,7 +322,7 @@ const Home = () => {
             </ul>
             <Button
               size="none"
-              className="bg-primary self-start text-white font-dm text-[15px] cursor-pointer rounded-xl w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25px] mt-auto border border-white"
+              className="bg-primary self-start text-white font-dm mt-4 text-[15px] cursor-pointer rounded-xl w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25px] border border-white"
             >
               <div>Заказать оценку авто</div>
               <BsArrowUpRight />
@@ -389,7 +331,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="bg-textPrimary py-[110px] px-[120px] 2xl:px-[200px] mt-[230px]">
+      <div className="bg-textPrimary py-10 md:py-20 lg:py-[110px] mt-10 px-10 lg:px-[120px] 2xl:px-[200px] lg:mt-[230px]">
         <Reviews variant="white" />
       </div>
       <MobileApp />

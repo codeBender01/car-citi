@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { navs } from "./lib/navs";
 import { pathnames } from "./lib/whiteLogoNavs";
@@ -10,20 +10,26 @@ import LogoWhiteHeader from "@/svgs/LogoWhiteHeader";
 import Car from "@/svgs/Car";
 import Messages from "@/svgs/Messages";
 import Save from "@/svgs/Save";
-import user from "@assets/header/user.png";
 
 import { RiArrowDownSLine } from "react-icons/ri";
 import { FaRegBell } from "react-icons/fa";
 import { IoPersonOutline } from "react-icons/io5";
 
+import { useGetProfile } from "@/api/auth/useGetProfile";
+
 import { Button } from "../ui/button";
+import HeaderMenu from "./ui/HeaderMenu";
 
 const Header = () => {
   const [isFullyScrolled, setIsFullyScrolled] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const { data: profile } = useGetProfile();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,15 +44,29 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    const checkAuth = () => {
-      const userToken = localStorage.getItem("userToken");
-      setIsLoggedIn(!!userToken);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
     };
 
-    checkAuth();
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
 
-    window.addEventListener("storage", checkAuth);
-    return () => window.removeEventListener("storage", checkAuth);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 1024);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const isWhiteLogoPathname = useMemo(() => {
@@ -57,8 +77,10 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 px-12 2xl:px-[118px] py-[25px] w-full border-b border-headerBorder flex items-center justify-between transition-colors duration-300 ${
-        isFullyScrolled || isAuthPathname ? "bg-[#000000]" : "bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 px-12 2xl:px-[118px] py-[25px] w-full border-b border-headerBorder flex items-center justify-between transition-colors duration-300 max-lg:bg-black ${
+        isFullyScrolled || isAuthPathname || isMenuOpen
+          ? "bg-[#000000]"
+          : "bg-transparent"
       }`}
     >
       <div className="flex items-center">
@@ -73,14 +95,19 @@ const Header = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          {isWhiteLogoPathname || isFullyScrolled ? (
+          <div className="lg:hidden">
             <LogoWhiteHeader />
-          ) : (
-            <Logo />
-          )}
+          </div>
+          <div className="hidden lg:block">
+            {isWhiteLogoPathname || isFullyScrolled || isMenuOpen ? (
+              <LogoWhiteHeader />
+            ) : (
+              <Logo />
+            )}
+          </div>
         </div>
 
-        <div className="ml-12 flex items-center gap-2">
+        <div className=" ml-12 items-center gap-2 hidden xl:flex">
           <img src={rus} className="w-[26px] h-[26px] rounded-md" alt="" />
           <div
             className={`font-dm font-medium text-[15px] transition-colors duration-300 ${
@@ -94,8 +121,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="">
+      <nav className="hidden xl:block">
         <ul className="flex items-center gap-[30px]">
           {navs.map((nav) => (
             <li
@@ -117,31 +143,41 @@ const Header = () => {
       </nav>
 
       <div className="flex items-center">
-        <Button
-          size="none"
-          className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl flex items-center gap-2.5 py-4 px-[25px]"
-        >
-          Добавить
-          <Car className="size-5" />
-        </Button>
+        {profile ? (
+          <Button
+            size="none"
+            className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl hidden xl:flex items-center gap-2.5 py-4 px-[25px]"
+          >
+            Добавить
+            <Car className="size-5" />
+          </Button>
+        ) : null}
 
-        {isLoggedIn ? (
-          <div className="flex items-center gap-[18px] ml-7">
+        {profile ? (
+          <div className="hidden xl:flex items-center gap-[18px] ml-7">
             <Messages
-              className={`w-7 h-7 cursor-pointer transition-colors duration-300 ${
+              className={`w-7 h-7 cursor-pointer transition-colors duration-300 max-lg:text-white ${
                 isFullyScrolled || isWhiteLogoPathname ? "text-white" : ""
               }`}
-              opacity={isFullyScrolled || isWhiteLogoPathname ? 1 : 0.25}
+              opacity={
+                isFullyScrolled || isWhiteLogoPathname || isMobileView
+                  ? 1
+                  : 0.25
+              }
             />
             <Save
-              className={`w-6 h-6 cursor-pointer transition-colors duration-300 ${
+              className={`w-6 h-6 cursor-pointer transition-colors duration-300 max-lg:text-white ${
                 isFullyScrolled || isWhiteLogoPathname ? "text-white" : ""
               }`}
-              opacity={isFullyScrolled || isWhiteLogoPathname ? 1 : 0.25}
+              opacity={
+                isFullyScrolled || isWhiteLogoPathname || isMobileView
+                  ? 1
+                  : 0.25
+              }
             />
             <div className="relative cursor-pointer ">
               <FaRegBell
-                className={`w-6 h-6 ${
+                className={`w-6 h-6 max-lg:text-white ${
                   isFullyScrolled || isWhiteLogoPathname
                     ? "text-white"
                     : "text-gray-400"
@@ -152,12 +188,24 @@ const Header = () => {
               </div>
             </div>
 
-            <div className="w-11 h-11 rounded-md">
-              <img src={user} alt="" />
+            <div
+              className={`w-11 h-11 rounded-md flex items-center justify-center cursor-pointer transition-colors duration-200 ${
+                isFullyScrolled || isWhiteLogoPathname
+                  ? "bg-gray-700 hover:bg-gray-600"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+            >
+              <IoPersonOutline
+                className={`w-6 h-6 ${
+                  isFullyScrolled || isWhiteLogoPathname
+                    ? "text-white"
+                    : "text-gray-600"
+                }`}
+              />
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-2 ml-7">
+          <div className="hidden xl:flex items-center gap-2 ml-7">
             <IoPersonOutline className="size-5 text-textGraySec" />
 
             <span
@@ -192,33 +240,47 @@ const Header = () => {
           </div>
         )}
 
-        {/* Burger Menu */}
-        <div className="flex items-center gap-[18px] ml-10 cursor-pointer">
-          <div className="flex flex-col gap-1.5">
+        <div
+          ref={menuRef}
+          className="flex relative items-center gap-[18px] ml-10 cursor-pointer xl:hidden"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <div className="relative w-5 h-5">
             <div
-              className={`w-5 h-0.5 transition-colors duration-300 ${
-                isFullyScrolled || isWhiteLogoPathname
+              className={`absolute left-0 w-5 h-0.5 transition-all duration-300 max-lg:bg-white ${
+                isFullyScrolled || isWhiteLogoPathname || isMenuOpen
                   ? "bg-white"
                   : "bg-textPrimary"
+              } ${
+                isMenuOpen ? "top-1/2 -translate-y-1/2 rotate-45" : "top-[5px]"
               }`}
             ></div>
             <div
-              className={`w-5 h-0.5 transition-colors duration-300 ${
-                isFullyScrolled || isWhiteLogoPathname
+              className={`absolute left-0 w-5 h-0.5 transition-all duration-300 max-lg:bg-white ${
+                isFullyScrolled || isWhiteLogoPathname || isMenuOpen
                   ? "bg-white"
                   : "bg-textPrimary"
+              } ${
+                isMenuOpen
+                  ? "top-1/2 -translate-y-1/2 -rotate-45"
+                  : "top-[13px]"
               }`}
             ></div>
           </div>
           <span
-            className={`font-dm font-medium text-[15px] transition-colors duration-300 ${
-              isFullyScrolled || isWhiteLogoPathname
+            className={`font-dm font-medium text-[15px] transition-colors duration-300 max-lg:text-white ${
+              isFullyScrolled || isWhiteLogoPathname || isMenuOpen
                 ? "text-white"
                 : "text-textPrimary"
             }`}
           >
             Меню
           </span>
+
+          <HeaderMenu
+            userProfile={profile ? profile?.data : null}
+            isOpen={isMenuOpen}
+          />
         </div>
       </div>
     </header>

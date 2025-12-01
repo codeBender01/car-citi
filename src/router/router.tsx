@@ -3,6 +3,7 @@ import { lazy } from "react";
 
 import ClientLayout from "../layouts/ClientLayout";
 import DashboardLayout from "@/layouts/DashboardLayout";
+import AdminLayout from "@/layouts/AdminLayout";
 
 import Home from "@/pages/Home";
 import Dashboard from "@/pages/Dashboard";
@@ -17,6 +18,12 @@ const Messages = lazy(() => import("@pages/Messages"));
 const Profile = lazy(() => import("@pages/Profile"));
 const AddCar = lazy(() => import("@pages/AddCar"));
 const Auth = lazy(() => import("@pages/Auth"));
+
+// Admin pages
+const Categories = lazy(() => import("@pages/Admin/Categories"));
+const Regions = lazy(() => import("@pages/Admin/Regions"));
+const News = lazy(() => import("@pages/Admin/News"));
+const Feedbacks = lazy(() => import("@pages/Admin/Feedbacks"));
 
 export default function Router() {
   const routes = useRoutes([
@@ -77,6 +84,28 @@ export default function Router() {
         {
           path: "profile",
           element: <Profile />,
+        },
+      ],
+    },
+    {
+      path: "/admin",
+      element: <AdminLayout />,
+      children: [
+        {
+          path: "categories",
+          element: <Categories />,
+        },
+        {
+          path: "regions",
+          element: <Regions />,
+        },
+        {
+          path: "news",
+          element: <News />,
+        },
+        {
+          path: "feedbacks",
+          element: <Feedbacks />,
         },
       ],
     },

@@ -2,7 +2,7 @@ import user from "@assets/aboutUs/user.png";
 
 const UserCard = () => {
   return (
-    <div className="flex flex-col items-center max-w-[260px]">
+    <div className="flex flex-col items-center w-full lg:max-w-[260px]">
       <div className="relative group">
         <img src={user} alt="team" className="rounded-2xl" />
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-sm text-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">

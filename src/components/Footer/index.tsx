@@ -50,11 +50,11 @@ const Footer = () => {
         } `}
       >
         {/* Newsletter Section */}
-        <div className="px-12 2xl:px-[118px] py-12 border-b border-white/15">
-          <p className="text-[15px] font-dm mb-6">
+        <div className="px-4 md:px-8 lg:px-12 2xl:px-[118px] py-12 border-b border-white/15">
+          <p className="text-[15px] md:text-left text-center font-dm mb-6">
             Подписывайтесь на рассылку что бы быть в курсе всех событий и акций
           </p>
-          <div className="flex items-center justify-between">
+          <div className="flex lg:flex-row flex-col lg:gap-0 gap-6 lg:items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-3">
               <div className="w-[35px] h-[35px]">
@@ -69,7 +69,7 @@ const Footer = () => {
 
             {/* Newsletter Form */}
             <div className="relative">
-              <div className="bg-white/10 rounded-xl px-6 py-4 w-[450px] flex items-center justify-between">
+              <div className="bg-white/10 rounded-xl px-6 py-4 w-full md:w-[450px] flex items-center justify-between">
                 <input
                   type="email"
                   placeholder="Э-почта"
@@ -88,14 +88,13 @@ const Footer = () => {
 
         {/* Main Footer Content */}
         <div className="px-12 2xl:px-[118px] py-16">
-          <div className="grid grid-cols-6 gap-8">
-            {/* Contact Information */}
-            <div className="col-span-1">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-8">
+            <div className="col-span-2 md:col-span-1">
               <h3 className="text-[20px] font-dm font-medium mb-6">
                 Для связи
               </h3>
-              <div className="space-y-6">
-                <div className="flex items-start gap-3">
+              <div className="space-y-6 flex md:block flex-wrap">
+                <div className="flex items-start gap-3 w-full">
                   <MdLocationOn
                     className="text-white mt-1 shrink-0"
                     size={20}
@@ -127,7 +126,7 @@ const Footer = () => {
             </div>
 
             {/* Menu */}
-            <div className="col-span-1">
+            <div className="col-span-1 md:block hidden">
               <h3 className="text-[20px] font-dm font-medium mb-6">Меню</h3>
               <ul className="space-y-3 font-dm text-[15px]">
                 <li className="text-primary cursor-pointer hover:opacity-80">
@@ -221,11 +220,11 @@ const Footer = () => {
             </div>
 
             {/* Our App */}
-            <div className="col-span-1">
+            <div className="col-span-2 md:block flex items-center flex-col md:col-span-1">
               <h3 className="text-[20px] font-dm font-medium mb-6">
                 Наше приложение
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-4 w-[80%] md:w-[60%]">
                 <div className="bg-white/7 rounded-2xl px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-white/10 transition-colors">
                   <BsApple size={30} />
                   <div className="font-dm">
@@ -244,7 +243,7 @@ const Footer = () => {
             </div>
 
             {/* Social Networks */}
-            <div className="col-span-1">
+            <div className="col-span-2 md:col-span-1 md:block flex items-center flex-col">
               <h3 className="text-[20px] font-dm font-medium mb-6">
                 Наши соц. сети
               </h3>
@@ -264,8 +263,8 @@ const Footer = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="px-12 2xl:px-[118px] py-6 border-t border-white/15">
-          <div className="flex items-center justify-between">
+        <div className="px-4 md:px-8 lg:px-12 2xl:px-[118px] py-6 border-t border-white/15">
+          <div className="flex items-center md:flex-row flex-col md:gap-0 gap-4 justify-between">
             <p className="font-dm text-[15px] text-white/80">
               © 2025 Carciti.com. Все права защищены
             </p>
