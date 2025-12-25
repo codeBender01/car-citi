@@ -24,13 +24,13 @@ const CarImages = () => {
         slidesPerView={1}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         pagination={{ clickable: true }}
-        className="h-[550px] w-full rounded-2xl"
+        className="h-[340px] md:h-[440px] lg:h-[550px] w-full lg:rounded-2xl"
       >
         {serviceOptions.map((s) => {
           return (
             <SwiperSlide key={s.id}>
               <div
-                className="h-full w-full rounded-2xl"
+                className="h-full w-full lg:rounded-2xl"
                 style={{
                   backgroundImage: `url(${benz2})`,
                   backgroundPosition: "center",

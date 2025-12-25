@@ -21,3 +21,18 @@ export interface CheckOtpRes {
     refreshToken: string;
   };
 }
+
+export interface AdminSignInReq {
+  login: string;
+  password: string;
+}
+
+export interface AdminSignInResp {
+  token: string;
+  admin: {
+    id: string;
+    login: string;
+    created: string;
+    password: string;
+  };
+}

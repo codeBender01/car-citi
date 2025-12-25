@@ -1,31 +1,31 @@
 export const navs = [
   {
     id: 1,
-    title: "Домой",
+    titleKey: "nav.home",
     isDropdown: false,
     path: "/",
   },
   {
     id: 2,
-    title: "О компании",
+    titleKey: "nav.about",
     isDropdown: false,
     path: "/about",
   },
   {
     id: 3,
-    title: "Подобрать авто",
+    titleKey: "nav.findCar",
     isDropdown: true,
     path: "/",
   },
   {
     id: 4,
-    title: "Полезное",
+    titleKey: "nav.useful",
     isDropdown: true,
     path: "/",
   },
   {
     id: 5,
-    title: "Контакты",
+    titleKey: "nav.contacts",
     isDropdown: false,
     path: "/",
   },

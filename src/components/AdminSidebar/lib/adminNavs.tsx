@@ -3,6 +3,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { VscFeedback } from "react-icons/vsc";
 import { BiLogOut } from "react-icons/bi";
+import { FaQuestion } from "react-icons/fa";
 
 export const adminNavs = [
   {
@@ -24,6 +25,11 @@ export const adminNavs = [
     text: "Отзывы",
     icon: <VscFeedback className="w-5 h-5" />,
     path: "/admin/feedbacks",
+  },
+  {
+    text: "FAQ",
+    icon: <FaQuestion className="w-5 h-5" />,
+    path: "/admin/faq",
   },
   {
     text: "Выход",

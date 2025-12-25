@@ -42,14 +42,14 @@ const LeaveReviewForm = () => {
   };
 
   return (
-    <div className="bg-white border border-grayBorder p-10 mt-[30px] rounded-2xl font-dm flex flex-col gap-10">
-      <div className="text-[26px]">Оставить отзыв</div>
+    <div className="bg-white border border-grayBorder  mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm flex flex-col gap-6 md:gap-10">
+      <div className="text-[22px] md:text-[26px]">Оставить отзыв</div>
       <p className="font-dm text-base text-textPrimary">
         Ваш адрес электронной почты опубликован не будет. Поля, обязательные для
         заполнения, помечены *
       </p>
 
-      <ul className="grid grid-cols-2 gap-x-8 gap-y-6">
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         {ratings.map((r) => {
           const currentRating = getStarRating(r.id);
           return (
@@ -87,7 +87,7 @@ const LeaveReviewForm = () => {
       </ul>
 
       <form className="flex flex-col gap-5">
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="relative">
             <Input
               type="text"
@@ -151,7 +151,7 @@ const LeaveReviewForm = () => {
 
       <Button
         size="none"
-        className="text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] cursor-pointer rounded-xl flex items-center mt-10 gap-2.5 py-4 px-[25px] w-fit"
+        className="text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] cursor-pointer rounded-xl flex items-center mt-6 md:mt-10 gap-2.5 py-4 px-[25px] w-fit"
       >
         Оставить Отзыв
         <BsArrowUpRight />

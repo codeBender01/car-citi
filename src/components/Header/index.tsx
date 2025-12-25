@@ -1,15 +1,16 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { navs } from "./lib/navs";
 import { pathnames } from "./lib/whiteLogoNavs";
 
 import logoImage from "../../assets/header/logo.png";
-import rus from "@assets/header/rus.png";
 import Logo from "../../svgs/Logo";
 import LogoWhiteHeader from "@/svgs/LogoWhiteHeader";
 import Car from "@/svgs/Car";
 import Messages from "@/svgs/Messages";
 import Save from "@/svgs/Save";
+import { LanguageSwitcher } from "../LanguageSwitcher";
 
 import { RiArrowDownSLine } from "react-icons/ri";
 import { FaRegBell } from "react-icons/fa";
@@ -28,6 +29,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   const { data: profile } = useGetProfile();
 
@@ -107,17 +109,8 @@ const Header = () => {
           </div>
         </div>
 
-        <div className=" ml-12 items-center gap-2 hidden xl:flex">
-          <img src={rus} className="w-[26px] h-[26px] rounded-md" alt="" />
-          <div
-            className={`font-dm font-medium text-[15px] transition-colors duration-300 ${
-              isFullyScrolled || isWhiteLogoPathname
-                ? "text-white"
-                : "text-black"
-            }`}
-          >
-            Язык
-          </div>
+        <div className="ml-12 hidden xl:flex">
+          <LanguageSwitcher isDark={isFullyScrolled || isWhiteLogoPathname} />
         </div>
       </div>
 
@@ -135,7 +128,7 @@ const Header = () => {
                   : "text-black"
               }`}
             >
-              <span>{nav.title}</span>
+              <span>{t(nav.titleKey)}</span>
               {nav.isDropdown && <RiArrowDownSLine size={16} />}
             </li>
           ))}
@@ -148,7 +141,7 @@ const Header = () => {
             size="none"
             className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl hidden xl:flex items-center gap-2.5 py-4 px-[25px]"
           >
-            Добавить
+            {t('common.add')}
             <Car className="size-5" />
           </Button>
         ) : null}
@@ -216,7 +209,7 @@ const Header = () => {
               }`}
               onClick={() => navigate("/auth")}
             >
-              Логин
+              {t('common.login')}
             </span>
             <span
               className={`font-dm font-medium text-[15px] transition-colors duration-300 ${
@@ -235,7 +228,7 @@ const Header = () => {
               }`}
               onClick={() => navigate("/auth")}
             >
-              Регистрация
+              {t('common.registration')}
             </span>
           </div>
         )}
@@ -274,7 +267,7 @@ const Header = () => {
                 : "text-textPrimary"
             }`}
           >
-            Меню
+            {t('common.menu')}
           </span>
 
           <HeaderMenu

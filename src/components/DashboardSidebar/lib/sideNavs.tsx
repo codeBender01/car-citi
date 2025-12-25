@@ -9,42 +9,42 @@ import { BiLogOut } from "react-icons/bi";
 
 export const sideNavs = [
   {
-    text: "Дашборд",
+    textKey: "dashboard.dashboard",
     icon: <Home />,
     path: "/dashboard",
   },
   {
-    text: "Мои объявления",
+    textKey: "dashboard.myListings",
     icon: <MyPosts />,
     path: "/dashboard/posted",
   },
   {
-    text: "Добавлять объявления",
+    textKey: "dashboard.addListings",
     icon: <AddPost />,
     path: "/dashboard/add",
   },
   {
-    text: "Избранное",
+    textKey: "dashboard.favorites",
     icon: <CiBookmark />,
     path: "/dashboard/favorites",
   },
   {
-    text: "Сохранённые поиски",
+    textKey: "dashboard.savedSearches",
     icon: <RiSearchLine />,
     path: "/dashboard/saved-search",
   },
   {
-    text: "Сообщения",
+    textKey: "dashboard.messages",
     icon: <LuMessagesSquare />,
     path: "/dashboard/messages",
   },
   {
-    text: "Профиль",
+    textKey: "dashboard.profile",
     icon: <BsPersonSquare />,
     path: "/dashboard/profile",
   },
   {
-    text: "Выход",
+    textKey: "common.logout",
     icon: <BiLogOut />,
     path: "/",
   },

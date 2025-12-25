@@ -1,0 +1,272 @@
+{
+  "common": {
+    "all": "All",
+    "search": "Search",
+    "save": "Save",
+    "send": "Send",
+    "login": "Login",
+    "registration": "Registration",
+    "logout": "Logout",
+    "language": "Language",
+    "menu": "Menu",
+    "home": "Home",
+    "add": "Add",
+    "viewAll": "View All",
+    "learnMore": "Learn More",
+    "sortBy": "Sort By",
+    "new": "New",
+    "action": "Action",
+    "cancel": "Cancel"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "findCar": "Find Car",
+    "useful": "Useful",
+    "contacts": "Contacts",
+    "homePage": "Home Page",
+    "carsForSale": "Cars for Sale"
+  },
+  "home": {
+    "favorites": "Favorites",
+    "recent": "Recent",
+    "popular": "Popular",
+    "exploreAllCars": "Explore All Cars",
+    "searchByType": "Search by Type",
+    "whyChooseUs": "Why Choose Us?",
+    "getRealPrice": "Get Real Price for Your Car",
+    "weConsiderAllAspects": "We consider all aspects when choosing a new car:",
+    "freshBlogPosts": "Fresh Blog Posts",
+    "news": "News"
+  },
+  "whyUs": {
+    "fullCycle": "Full Cycle from A to Z",
+    "fullCycleDesc": "From selection to registration — we accompany the client at every stage.",
+    "onlyOnMarket": "Only Ones on the Market",
+    "onlyOnMarketDesc": "Who offer a full range of services for selling and buying cars.",
+    "noOverpayments": "No Overpayments",
+    "noOverpaymentsDesc": "Fair prices without hidden fees.",
+    "verifiedCars": "Only Verified Cars",
+    "verifiedCarsDesc": "Each car undergoes thorough inspection before listing."
+  },
+  "carTypes": {
+    "suv": "SUV",
+    "sedan": "Sedan",
+    "hatchback": "Hatchback",
+    "coupe": "Coupe",
+    "electricHybrid": "Electric and Hybrid",
+    "cars": "Cars"
+  },
+  "stats": {
+    "listings": "Listings",
+    "dealers": "Dealers",
+    "users": "Users",
+    "successfulDeals": "Successful Deals"
+  },
+  "about": {
+    "marketplaceNumber1": "Car Marketplace #1",
+    "tagline": "CarCiti — sell easily, buy confidently.",
+    "learn": "Learn",
+    "weValueClients": "We value every client and strive to make their experience pleasant",
+    "missionVision": "Mission and Vision",
+    "wePresentBestDealers": "We present the best car dealers in the country",
+    "forQualityChoice": "For Your Quality Choice",
+    "ourTeam": "Our Team",
+    "faq": "Frequently Asked Questions"
+  },
+  "faq": {
+    "q1": "How can I find and buy a car through your website?",
+    "a1": "Simply use our search, select a suitable car and contact the dealer.",
+    "q2": "What is CarCiti and how are you different from other platforms?",
+    "a2": "CarCiti is the #1 car marketplace offering a full cycle of services from selection to registration.",
+    "q3": "Which car dealers are represented on your platform?",
+    "a3": "Our platform features the best verified car dealers in the country.",
+    "q4": "How is the security of transactions guaranteed on CarCiti?",
+    "a4": "We verify every dealer and every car before listing on the platform.",
+    "q5": "Do you offer car loan or leasing services through your website?",
+    "a5": "Yes, we work with partners who offer car loan and leasing services."
+  },
+  "auth": {
+    "login": "Login",
+    "personalAccount": "Personal Account",
+    "businessAccount": "Business Account",
+    "phoneNumber": "Phone Number",
+    "otp": "OTP",
+    "signIn": "Sign In"
+  },
+  "filters": {
+    "regionCity": "Region / City",
+    "chooseCity": "Choose City",
+    "radius": "Radius",
+    "condition": "Condition",
+    "bodyType": "Body Type",
+    "brand": "Brand",
+    "model": "Model",
+    "minYear": "Min Year",
+    "maxYear": "Max Year",
+    "mileage": "Mileage",
+    "driveType": "Drive Type",
+    "transmission": "Transmission",
+    "fuelType": "Fuel Type",
+    "color": "Color",
+    "interiorColor": "Interior Color",
+    "doors": "Doors",
+    "cylinders": "Cylinders",
+    "characteristics": "Characteristics",
+    "showMore": "Show 8 More",
+    "saveSearchSettings": "Save Search Settings",
+    "searchResults": "Search Results",
+    "vehicles": "vehicles",
+    "showing": "Showing {{from}} to {{to}} of {{total}} vehicles"
+  },
+  "cities": {
+    "ashgabat": "Ashgabat",
+    "mary": "Mary",
+    "turkmenabat": "Turkmenabat",
+    "dashoguz": "Dashoguz",
+    "balkanabat": "Balkanabat",
+    "turkmenbashi": "Turkmenbashi",
+    "tejen": "Tejen",
+    "serdar": "Serdar"
+  },
+  "bodyTypes": {
+    "sedan": "Sedan",
+    "hatchback": "Hatchback",
+    "coupe": "Coupe",
+    "hybrid": "Hybrid"
+  },
+  "transmissionTypes": {
+    "automatic": "Automatic",
+    "manual": "Manual",
+    "cvt": "CVT"
+  },
+  "fuelTypes": {
+    "diesel": "Diesel",
+    "gasoline": "Gasoline",
+    "electric": "Electric"
+  },
+  "features": {
+    "panoramicRoof": "Panoramic Roof",
+    "bluetooth": "Bluetooth",
+    "heatedSteering": "Heated Steering Wheel",
+    "heatedSeats": "Heated Seats",
+    "carplay": "Apple CarPlay/Android Auto",
+    "airbagDriver": "SRS Airbag - Driver",
+    "abs": "ABS"
+  },
+  "carDetails": {
+    "description": "Description",
+    "features": "Features",
+    "technicalSpecs": "Technical Specifications",
+    "price": "Price",
+    "noNegotiation": "No Negotiation",
+    "makeOffer": "Make an Offer",
+    "consultant": "Consultant",
+    "writeToDealer": "Write to Dealer",
+    "contactWhatsapp": "Contact on WhatsApp",
+    "similarListings": "Similar Listings",
+    "moreDetails": "More Details"
+  },
+  "carFeatures": {
+    "conveniences": "Conveniences",
+    "heatedSeats": "Heated Seats",
+    "navigationSystem": "Navigation System",
+    "tirePressureMonitoring": "Tire Pressure Monitoring",
+    "heatedSteering": "Heated Steering Wheel",
+    "entertainment": "Entertainment",
+    "safety": "Safety",
+    "parkingSensors": "Parking Sensors",
+    "rearCamera": "Rear Camera",
+    "interiorExterior": "Interior / Exterior",
+    "chromeSpoiler": "Chrome Spoiler"
+  },
+  "technicalSpecs": {
+    "engineTransmission": "Engine and Transmission",
+    "dimensions": "Dimensions and Size",
+    "other": "Other"
+  },
+  "serviceOptions": {
+    "verifiedByExperts": "Verified by CarCiti Experts",
+    "scheduleTestDrive": "Schedule Test Drive",
+    "carBrochure": "Car Brochure",
+    "vinReport": "VIN Report"
+  },
+  "reviews": {
+    "customerReviews": "Customer Reviews of Dealer",
+    "overallRating": "Overall Rating",
+    "excellent": "Excellent",
+    "leaveReview": "Leave a Review",
+    "yourEmail": "Your email address will not be published. Required fields are marked *",
+    "name": "Name",
+    "email": "Email",
+    "title": "Title",
+    "message": "Message",
+    "submitReview": "Submit Review",
+    "helpful": "Helpful",
+    "notHelpful": "Not Helpful",
+    "viewMoreReviews": "View More Reviews",
+    "passedTestDrive": "Passed test drive! - it's fantastic!",
+    "goodCar": "Good Car"
+  },
+  "ratings": {
+    "comfort": "Comfort",
+    "interiorDesign": "Interior Design",
+    "performance": "Performance",
+    "priceQuality": "Price / Quality",
+    "appearance": "Appearance",
+    "reliability": "Reliability"
+  },
+  "dashboard": {
+    "dashboard": "Dashboard",
+    "myListings": "My Listings",
+    "savedSearches": "Saved Searches",
+    "newMessages": "New Messages",
+    "myFavorites": "My Favorites",
+    "addListings": "Add Listings",
+    "favorites": "Favorites",
+    "messages": "Messages",
+    "profile": "Profile"
+  },
+  "activities": {
+    "listingApproved": "Your listing has been approved",
+    "leftMessage": "left a message on",
+    "someoneSaved": "Someone saved your"
+  },
+  "addCar": {
+    "addListing": "Add Listing",
+    "carDetails": "Car Details",
+    "price": "Price",
+    "characteristics": "Characteristics",
+    "media": "Media",
+    "location": "Location"
+  },
+  "myPosts": {
+    "myListings": "My Listings",
+    "listings": "Listings",
+    "brand": "Brand",
+    "year": "Year",
+    "transmission": "Transmission",
+    "fuelType": "Fuel Type",
+    "noListingsYet": "You have no listings yet"
+  },
+  "profile": {
+    "profile": "Profile",
+    "avatar": "Avatar",
+    "avatarInfo": "Maximum file size - 1 MB, minimum size: 330x300. Suitable files - .jpg and .png.",
+    "images": "Images",
+    "address": "Address",
+    "location": "Location",
+    "longitude": "Longitude",
+    "latitude": "Latitude",
+    "description": "Description",
+    "name": "Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "website": "Website"
+  },
+  "faqAdmin": {
+    "addFaq": "Add faq"
+  }
+}

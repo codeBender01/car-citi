@@ -16,7 +16,6 @@ import CarImages from "./ui/CarImages";
 import Map from "./ui/Map";
 import Reviews from "./ui/Reviews";
 import LeaveReviewForm from "./ui/LeaveReviewForm";
-import CarCard from "@/components/CarCard";
 import CarChars from "./ui/CarCharacteristics";
 import { Button } from "@/components/ui/button";
 
@@ -28,6 +27,7 @@ import { useState } from "react";
 
 import { specifics } from "./lib/specifics";
 import { techChars } from "./lib/technicalChars";
+import CarsCarousel from "../Home/ui/CarsCarousel";
 
 const CarDetails = () => {
   const [expandedChars, setExpandedChars] = useState<number[]>([]);
@@ -41,18 +41,18 @@ const CarDetails = () => {
   const { data: posts } = useGetPosts();
 
   return (
-    <div className="pt-[180px] px-20 2xl:px-[118px]">
-      <div className="font-dm text-[15px] flex gap-1">
+    <div className="pt-8 lg:pt-[120px] xl:pt-[180px] px-0 lg:px-10 xl:px-20 2xl:px-[118px]">
+      <div className="font-dm text-[15px] hidden lg:flex gap-1">
         <span className="text-primary">Домашняя страница</span> /{" "}
         <span>Авто на продажу</span>
       </div>
-      <div className="h2 mt-5">Mercedes-Benz, C Class</div>
-      <p className="font-dm text-base">
+      <div className="lg:flex hidden h2 mt-5">Mercedes-Benz, C Class</div>
+      <p className="font-dm text-base lg:flex hidden">
         2.0 D5 PowerPulse Momentum 5dr AWD Geartronic Estate
       </p>
-      <div className="mt-5 flex justify-between">
-        <div className="w-[65%]">
-          <ul className="flex items-center gap-4 text-[13px] 2xl:text-base font-dm">
+      <div className="mt-5 flex justify-between gap-4 xl:gap-0">
+        <div className="w-full lg:w-[65%]">
+          <ul className="hidden lg:flex items-center 2xl:flex-nowrap flex-wrap gap-4 text-[13px] 2xl:text-base font-dm">
             {serviceOptions.map((s) => {
               return (
                 <li
@@ -66,9 +66,15 @@ const CarDetails = () => {
             })}
           </ul>
           <CarImages />
-          <div className="bg-white border border-grayBorder p-10 mt-[30px] rounded-2xl font-dm">
-            <div className="text-[26px]">Описание</div>
-            <p className="mt-10 text-base font-light">
+          <div className="px-6">
+            <div className="lg:hidden flex h2 mt-5">Mercedes-Benz, C Class</div>
+            <p className="font-dm text-base lg:hidden flex">
+              2.0 D5 PowerPulse Momentum 5dr AWD Geartronic Estate
+            </p>
+          </div>
+          <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
+            <div className="text-[22px] md:text-[26px]">Описание</div>
+            <p className="mt-6 lg:mt-10 text-base font-light">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
               ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -80,9 +86,9 @@ const CarDetails = () => {
               sunt in culpa qui officia deserunt mollit anim id est laborum.
             </p>
           </div>
-          <div className="bg-white border border-grayBorder p-10 mt-[30px] rounded-2xl font-dm">
-            <div className="text-[26px]">Особенности</div>
-            <div className="mt-10 flex justify-between">
+          <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
+            <div className="text-[22px] md:text-[26px]">Особенности</div>
+            <div className="mt-6 lg:mt-10 md:flex grid grid-cols-1 sm:grid-cols-2 md:gap-0 gap-8 justify-between">
               {specifics.map((s) => {
                 return (
                   <div className="" key={s.title}>
@@ -107,9 +113,11 @@ const CarDetails = () => {
               })}
             </div>
           </div>
-          <div className="bg-white border border-grayBorder p-10 mt-[30px] rounded-2xl font-dm">
-            <div className="text-[26px]">Технические характеристики</div>
-            <div className="mt-10 flex justify-between flex-col">
+          <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
+            <div className="text-[22px] md:text-[26px]">
+              Технические характеристики
+            </div>
+            <div className="mt-6 md:mt-10 flex justify-between flex-col">
               {techChars.map((c) => {
                 const isExpanded = expandedChars.includes(c.id);
                 return (
@@ -131,9 +139,9 @@ const CarDetails = () => {
                       />
                     </div>
                     <div
-                      className={`grid grid-cols-2 gap-x-12 gap-y-6 overflow-hidden transition-all duration-300 ${
+                      className={`grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 overflow-hidden transition-all duration-300 ${
                         isExpanded
-                          ? "mt-[30px] max-h-[500px] opacity-100"
+                          ? "mt-[15px] md:mt-[30px] max-h-[500px] opacity-100"
                           : "max-h-0 opacity-0"
                       }`}
                     >
@@ -171,7 +179,7 @@ const CarDetails = () => {
           <Reviews />
           <LeaveReviewForm />
         </div>
-        <div className="flex flex-col gap-[30px] self-stretch">
+        <div className="hidden lg:flex flex-col gap-[30px] self-stretch">
           <div className="flex items-center justify-end gap-7 font-dm text-base">
             <div className="flex items-center gap-2">
               Отправить
@@ -245,7 +253,7 @@ const CarDetails = () => {
           </div>
         </div>
       </div>
-      <div className="mt-[200px] w-full">
+      <div className="px-6 lg:px-0 mt-20 md:mt-[200px] w-full">
         <div className="flex items-center justify-between">
           <div className="font-rale text-[40px] text-textPrimary font-bold">
             Похожие объявления
@@ -256,10 +264,8 @@ const CarDetails = () => {
           </div>
         </div>
 
-        <div className="mt-[50px] grid grid-cols-4 gap-7">
-          {posts?.data.rows.map((car, idx) => {
-            return <CarCard car={car} key={idx} />;
-          })}
+        <div className="px-6 bg-amber-50">
+          <CarsCarousel posts={posts ? posts.data.rows : []} />
         </div>
 
         <div className="mt-[50px] flex items-center gap-10">

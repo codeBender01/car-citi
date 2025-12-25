@@ -1,0 +1,272 @@
+{
+  "common": {
+    "all": "Все",
+    "search": "Поиск",
+    "save": "Сохранить",
+    "send": "Отправить",
+    "login": "Логин",
+    "registration": "Регистрация",
+    "logout": "Выход",
+    "language": "Язык",
+    "menu": "Меню",
+    "home": "Домой",
+    "add": "Добавить",
+    "viewAll": "Посмотреть все",
+    "learnMore": "Узнать больше",
+    "sortBy": "Сортировать по",
+    "new": "Новые",
+    "action": "Действие",
+    "cancel": "Отмена"
+  },
+  "nav": {
+    "home": "Домой",
+    "about": "О компании",
+    "findCar": "Подобрать авто",
+    "useful": "Полезное",
+    "contacts": "Контакты",
+    "homePage": "Домашняя страница",
+    "carsForSale": "Авто на продажу"
+  },
+  "home": {
+    "favorites": "Избранное",
+    "recent": "Недавние",
+    "popular": "Популярные",
+    "exploreAllCars": "Изучите все автомобили",
+    "searchByType": "Поиск по типу",
+    "whyChooseUs": "Почему выбирают нас?",
+    "getRealPrice": "Получите реальную цену за свой автомобиль",
+    "weConsiderAllAspects": "Мы учитываем все аспекты при выборе нового авто:",
+    "freshBlogPosts": "Свежие записи в блоге",
+    "news": "Новости"
+  },
+  "whyUs": {
+    "fullCycle": "Полный цикл от А до Я",
+    "fullCycleDesc": "От подбора до постановки на учет — мы сопровождаем клиента на каждом этапе.",
+    "onlyOnMarket": "Единственные на рынке",
+    "onlyOnMarketDesc": "Кто предлагает полный спектр услуг для продажи и покупки авто.",
+    "noOverpayments": "Без переплат",
+    "noOverpaymentsDesc": "Честные цены без скрытых комиссий.",
+    "verifiedCars": "Только проверенные авто",
+    "verifiedCarsDesc": "Каждый автомобиль проходит тщательную проверку перед размещением."
+  },
+  "carTypes": {
+    "suv": "SUV",
+    "sedan": "Седан",
+    "hatchback": "Хэтчбек",
+    "coupe": "Купе",
+    "electricHybrid": "Электро и Гибридные",
+    "cars": "Авто"
+  },
+  "stats": {
+    "listings": "Объявлений",
+    "dealers": "Дилеров",
+    "users": "Пользователей",
+    "successfulDeals": "Успешных сделок"
+  },
+  "about": {
+    "marketplaceNumber1": "Автомаркетплейс №1",
+    "tagline": "CarCiti— продавай легко, покупай уверенно.",
+    "learn": "Узнать",
+    "weValueClients": "Мы дорожим каждым клиентом и стремимся сделать их опыт приятным",
+    "missionVision": "Миссия и видение",
+    "wePresentBestDealers": "Мы представляем лучших автодилеров страны",
+    "forQualityChoice": "Для вашего качественного выбора",
+    "ourTeam": "Наша команда",
+    "faq": "Часто задаваемые вопросы"
+  },
+  "faq": {
+    "q1": "Как я могу найти и купить автомобиль через ваш сайт?",
+    "a1": "Просто воспользуйтесь нашим поиском, выберите подходящий автомобиль и свяжитесь с дилером.",
+    "q2": "Что такое CarCiti и чем вы отличаетесь от других платформ?",
+    "a2": "CarCiti — это автомаркетплейс №1, предлагающий полный цикл услуг от подбора до постановки на учет.",
+    "q3": "Какие автодилеры представлены на вашей платформе?",
+    "a3": "На нашей платформе представлены лучшие проверенные автодилеры страны.",
+    "q4": "Как гарантируется безопасность сделок на CarCiti?",
+    "a4": "Мы проверяем каждого дилера и каждый автомобиль перед размещением на платформе.",
+    "q5": "Предлагаете ли вы услуги по автокредитованию или лизингу через ваш сайт?",
+    "a5": "Да, мы работаем с партнерами, которые предлагают услуги автокредитования и лизинга."
+  },
+  "auth": {
+    "login": "Вход",
+    "personalAccount": "Личный аккаунт",
+    "businessAccount": "Бизнес аккаунт",
+    "phoneNumber": "Номер телефона",
+    "otp": "OTP",
+    "signIn": "Войти"
+  },
+  "filters": {
+    "regionCity": "Регион / Город",
+    "chooseCity": "Выберите город",
+    "radius": "Радиус",
+    "condition": "Состояние",
+    "bodyType": "Тип кузова",
+    "brand": "Марка",
+    "model": "Модель",
+    "minYear": "Мин. год",
+    "maxYear": "Макс. год",
+    "mileage": "Пробег",
+    "driveType": "Тип привода",
+    "transmission": "Коробка передач",
+    "fuelType": "Тип топлива",
+    "color": "Цвет",
+    "interiorColor": "Цвет интерьера",
+    "doors": "Двери",
+    "cylinders": "Цилиндры",
+    "characteristics": "Характеристики",
+    "showMore": "Показать еще 8",
+    "saveSearchSettings": "Сохранить поисковые настройки",
+    "searchResults": "Результаты поиска",
+    "vehicles": "автомобилей",
+    "showing": "Показаны от {{from}} до {{to}} из {{total}} автомобилей"
+  },
+  "cities": {
+    "ashgabat": "Ашхабад",
+    "mary": "Мары",
+    "turkmenabat": "Туркменабат",
+    "dashoguz": "Дашогуз",
+    "balkanabat": "Балканабат",
+    "turkmenbashi": "Туркменбаши",
+    "tejen": "Теджен",
+    "serdar": "Сердар"
+  },
+  "bodyTypes": {
+    "sedan": "Седан",
+    "hatchback": "Хэтчбек",
+    "coupe": "Купе",
+    "hybrid": "Гибрид"
+  },
+  "transmissionTypes": {
+    "automatic": "Автомат",
+    "manual": "Ручная",
+    "cvt": "Вариатор"
+  },
+  "fuelTypes": {
+    "diesel": "Дизель",
+    "gasoline": "Бензин",
+    "electric": "Электрический"
+  },
+  "features": {
+    "panoramicRoof": "Панорамная крыша",
+    "bluetooth": "Bluetooth",
+    "heatedSteering": "Руль с подогревом",
+    "heatedSeats": "Сиденья с подогревом",
+    "carplay": "Apple CarPlay/Android Auto",
+    "airbagDriver": "SRS Airbag - водитель",
+    "abs": "ABS"
+  },
+  "carDetails": {
+    "description": "Описание",
+    "features": "Особенности",
+    "technicalSpecs": "Технические характеристики",
+    "price": "Цена",
+    "noNegotiation": "Без торга",
+    "makeOffer": "Сделайте Предложение",
+    "consultant": "Консультант",
+    "writeTo Dealer": "Написать дилеру",
+    "contactWhatsapp": "Связаться в Whatsapp",
+    "similarListings": "Похожие объявления",
+    "moreDetails": "Подробно"
+  },
+  "carFeatures": {
+    "conveniences": "Удобства",
+    "heatedSeats": "Сиденья с подогревом",
+    "navigationSystem": "Навигационная система",
+    "tirePressureMonitoring": "Контроль давления в шинах",
+    "heatedSteering": "Руль с подогревом",
+    "entertainment": "Развлечения",
+    "safety": "Безопасность",
+    "parkingSensors": "Парктроники",
+    "rearCamera": "Камера заднего вида",
+    "interiorExterior": "Интерьер / экстерьер",
+    "chromeSpoiler": "Спойлер хром."
+  },
+  "technicalSpecs": {
+    "engineTransmission": "Двигатель и трансмиссия",
+    "dimensions": "Размеры и габариты",
+    "other": "Другое"
+  },
+  "serviceOptions": {
+    "verifiedByExperts": "Проверено экспертами CarCiti",
+    "scheduleTestDrive": "Запланируйте тест-драйв",
+    "carBrochure": "Брошюра об авто",
+    "vinReport": "VIN репорт"
+  },
+  "reviews": {
+    "customerReviews": "Отзывы покупателей о дилере",
+    "overallRating": "Общая оценка",
+    "excellent": "Отлично",
+    "leaveReview": "Оставить отзыв",
+    "yourEmail": "Ваш адрес электронной почты опубликован не будет. Поля, обязательные для заполнения, помечены *",
+    "name": "Имя",
+    "email": "Почта",
+    "title": "Заголовок",
+    "message": "Сообщение",
+    "submitReview": "Оставить Отзыв",
+    "helpful": "Полезно",
+    "notHelpful": "Не полезно",
+    "viewMoreReviews": "Смотреть больше отзывов",
+    "passedTestDrive": "Прошел тест драйв! - это фантастика!",
+    "goodCar": "Хорошее авто"
+  },
+  "ratings": {
+    "comfort": "Комфорт",
+    "interiorDesign": "Внутреннее оформление",
+    "performance": "Производительность",
+    "priceQuality": "Цена / качество",
+    "appearance": "Внешний вид",
+    "reliability": "Надежность"
+  },
+  "dashboard": {
+    "dashboard": "Дашборд",
+    "myListings": "Мои объявления",
+    "savedSearches": "Сохранённые поиски",
+    "newMessages": "Новые сообщения",
+    "myFavorites": "Мои избранные",
+    "addListings": "Добавить объявления",
+    "favorites": "Избранное",
+    "messages": "Сообщения",
+    "profile": "Профиль"
+  },
+  "activities": {
+    "listingApproved": "Ваше объявление было одобрено",
+    "leftMessage": "оставил сообщение на",
+    "someoneSaved": "Кто-то сохранил ваш"
+  },
+  "addCar": {
+    "addListing": "Добавить объявления",
+    "carDetails": "Детали автомобиля",
+    "price": "Цена",
+    "characteristics": "Характеристики",
+    "media": "Медиа",
+    "location": "Местоположение"
+  },
+  "myPosts": {
+    "myListings": "Мои объявления",
+    "listings": "Объявления",
+    "brand": "Марка",
+    "year": "Год",
+    "transmission": "КП",
+    "fuelType": "Тип топлива",
+    "noListingsYet": "У вас пока нет объявлений"
+  },
+  "profile": {
+    "profile": "Профиль",
+    "avatar": "Аватар",
+    "avatarInfo": "Максимальный размер файла - 1 МБ, минимальный размер: 330x300. Подходящие файлы - .jpg и .png.",
+    "images": "Изображения",
+    "address": "Адрес",
+    "location": "Местоположение",
+    "longitude": "Долгота",
+    "latitude": "Широта",
+    "description": "Описание",
+    "name": "Имя",
+    "lastName": "Фамилия",
+    "email": "Email",
+    "phone": "Телефон",
+    "whatsapp": "Whatsapp",
+    "website": "Вебсайт"
+  },
+  "faqAdmin": {
+    "addFaq": "Добавить FAQ"
+  }
+}

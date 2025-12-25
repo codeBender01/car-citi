@@ -1,5 +1,6 @@
 import { Button } from "../ui/button";
 import { LuPlus } from "react-icons/lu";
+import { useTranslation } from "react-i18next";
 
 import { sideNavs } from "./lib/sideNavs";
 
@@ -8,6 +9,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 const DahsboardSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   return (
     <aside className="px-[30px] py-[60px] max-w-[300px]">
@@ -16,13 +18,13 @@ const DahsboardSidebar = () => {
         className="text-white bg-transparent hover:bg-white hover:text-darkGreen border border-white  font-dm text-[15px] cursor-pointer rounded-xl flex items-center gap-2.5 py-4 px-[25px] w-full"
       >
         <LuPlus />
-        Добавить объявление
+        {t('dashboard.addListings')}
       </Button>
       <ul className="mt-[25px] ">
         {sideNavs.map((n) => {
           return (
             <li
-              key={n.text}
+              key={n.textKey}
               onClick={() => {
                 navigate(n.path);
               }}
@@ -31,7 +33,7 @@ const DahsboardSidebar = () => {
               } py-[18px] px-5 flex items-center gap-3.5 text-white font-dm text-base text-nowrap rounded-2xl hover:bg-[#FFFFFF1A] duration-150 cursor-pointer`}
             >
               {n.icon}
-              {n.text}
+              {t(n.textKey)}
             </li>
           );
         })}

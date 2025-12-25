@@ -20,10 +20,12 @@ const AddCar = lazy(() => import("@pages/AddCar"));
 const Auth = lazy(() => import("@pages/Auth"));
 
 // Admin pages
+const AdminLogin = lazy(() => import("@pages/Admin/Login"));
 const Categories = lazy(() => import("@pages/Admin/Categories"));
 const Regions = lazy(() => import("@pages/Admin/Regions"));
 const News = lazy(() => import("@pages/Admin/News"));
 const Feedbacks = lazy(() => import("@pages/Admin/Feedbacks"));
+const Faq = lazy(() => import("@pages/Admin/Faq"));
 
 export default function Router() {
   const routes = useRoutes([
@@ -52,6 +54,10 @@ export default function Router() {
           element: <Auth />,
         },
       ],
+    },
+    {
+      path: "/admin/login",
+      element: <AdminLogin />,
     },
     {
       path: "/dashboard",
@@ -106,6 +112,10 @@ export default function Router() {
         {
           path: "feedbacks",
           element: <Feedbacks />,
+        },
+        {
+          path: "faq",
+          element: <Faq />,
         },
       ],
     },

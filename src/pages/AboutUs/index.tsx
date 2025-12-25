@@ -24,16 +24,10 @@ import logoBlack from "@assets/images/logoBlack.png";
 import { questions } from "./lib/questions";
 import Faq from "./ui/Faq";
 
-import { useGetFaqs } from "@/api/faq/useGetFaqs";
-
 import LogoCar from "@/svgs/LogoCar";
 
 const AboutUs = () => {
   const [openQuestionId, setOpenQuestionId] = useState<null | number>(null);
-
-  const { data: faqs } = useGetFaqs();
-
-  
 
   const handleToggle = (id: number) => {
     if (openQuestionId && id === openQuestionId) {

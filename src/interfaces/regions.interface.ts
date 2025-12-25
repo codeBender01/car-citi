@@ -12,3 +12,9 @@ export interface OneRegion {
   id: string;
   name: string;
 }
+
+export interface NewRegion {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+}

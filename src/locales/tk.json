@@ -1,0 +1,272 @@
+{
+  "common": {
+    "all": "Hemmesi",
+    "search": "Gözleg",
+    "save": "Ýatda sakla",
+    "send": "Iber",
+    "login": "Giriş",
+    "registration": "Hasaba alynmak",
+    "logout": "Çykmak",
+    "language": "Dil",
+    "menu": "Menýu",
+    "home": "Baş sahypa",
+    "add": "Goşmak",
+    "viewAll": "Hemmesini gör",
+    "learnMore": "Has giňişleýin",
+    "sortBy": "Tertiplemek",
+    "new": "Täze",
+    "action": "Hereket",
+    "cancel": "Ýatyr"
+  },
+  "nav": {
+    "home": "Baş sahypa",
+    "about": "Biz barada",
+    "findCar": "Awtoulag saýla",
+    "useful": "Peýdaly",
+    "contacts": "Habarlaşmak",
+    "homePage": "Baş sahypa",
+    "carsForSale": "Satylýan awtoulaglar"
+  },
+  "home": {
+    "favorites": "Halanlarym",
+    "recent": "Soňky",
+    "popular": "Meşhur",
+    "exploreAllCars": "Ähli awtoula glary öwren",
+    "searchByType": "Görnüşi boýunça gözleg",
+    "whyChooseUs": "Näme üçin bizi saýlamaly?",
+    "getRealPrice": "Awtoulagyňyz üçin hakyky bahany alyň",
+    "weConsiderAllAspects": "Täze awtoulag saýlanyňyzda ähli taraplary göz öňünde tutýarys:",
+    "freshBlogPosts": "Täze blog ýazgylary",
+    "news": "Habarlar"
+  },
+  "whyUs": {
+    "fullCycle": "A-dan Ż-ä çenli doly aýlaw",
+    "fullCycleDesc": "Saýlamakdan hasaba alşa çenli — müşderini her etapda goldaýarys.",
+    "onlyOnMarket": "Bazarda ýeke-täk",
+    "onlyOnMarketDesc": "Awtoulag satmak we satyn almak üçin doly hyzmat hödürleýän.",
+    "noOverpayments": "Artykmaç töleg ýok",
+    "noOverpaymentsDesc": "Gizlin komissiýasyz adalatly bahalar.",
+    "verifiedCars": "Diňe barlanlan awtoulaglar",
+    "verifiedCarsDesc": "Her awtoulag ýerleşdirilmezden ozal düýpli barlagdan geçýär."
+  },
+  "carTypes": {
+    "suv": "SUV",
+    "sedan": "Sedan",
+    "hatchback": "Hetçbek",
+    "coupe": "Kupe",
+    "electricHybrid": "Elektrik we Gibrid",
+    "cars": "Awtoulag"
+  },
+  "stats": {
+    "listings": "Yglanlar",
+    "dealers": "Dilerler",
+    "users": "Ulanyjylar",
+    "successfulDeals": "Üstünlikli geleşikler"
+  },
+  "about": {
+    "marketplaceNumber1": "№1 Awtoulag bazary",
+    "tagline": "CarCiti — aňsatlyk bilen sat, ynam bilen satyn al.",
+    "learn": "Öwren",
+    "weValueClients": "Her bir müşderimize gymmat berýäris we olaryň tejribesini ýakymly etmäge çalyşýarys",
+    "missionVision": "Missiýa we görüş",
+    "wePresentBestDealers": "Ýurduň iň gowy awtoulag dilerlerini hödürleýäris",
+    "forQualityChoice": "Hil saýlawyňyz üçin",
+    "ourTeam": "Biziň topar",
+    "faq": "Köp berilýän soraglar"
+  },
+  "faq": {
+    "q1": "Saýtyňyz arkaly awtoulag nädip tapyp, satyn alyp bilerin?",
+    "a1": "Gözlegimizden peýdalanyň, amatly awtoulagy saýlaň we diler bilen habarlaşyň.",
+    "q2": "CarCiti näme we beýleki platformalardan nähili tapawutlanýarsyňyz?",
+    "a2": "CarCiti — saýlamakdan hasaba alşa çenli doly aýlaw hyzmatlary hödürleýän №1 awtoulag bazary.",
+    "q3": "Platformaňyzda haýsy awtoulag dilerleri görkezilýär?",
+    "a3": "Platformamyzda ýurduň iň gowy barlanlan awtoulag dilerleri hödürlenýär.",
+    "q4": "CarCiti-de geleşikleriň howpsuzlygy nädip kepillendirilýär?",
+    "a4": "Platformada ýerleşdirilmezden ozal her diler we her awtoulag barlanýar.",
+    "q5": "Saýtyňyz arkaly awtoulag karzy ýa-da lizin g hyzmatlary hödürleýärsiňizmi?",
+    "a5": "Hawa, awtoulag karzy we lizing hyzmatlaryny hödürleýän hyzmatdaşlar bilen işleýäris."
+  },
+  "auth": {
+    "login": "Giriş",
+    "personalAccount": "Şahsy hasap",
+    "businessAccount": "Biznes hasap",
+    "phoneNumber": "Telefon belgisi",
+    "otp": "OTP",
+    "signIn": "Gir"
+  },
+  "filters": {
+    "regionCity": "Sebit / Şäher",
+    "chooseCity": "Şäheri saýla",
+    "radius": "Radius",
+    "condition": "Ýagdaýy",
+    "bodyType": "Beden görnüşi",
+    "brand": "Marka",
+    "model": "Model",
+    "minYear": "Min. ýyl",
+    "maxYear": "Maks. ýyl",
+    "mileage": "Geçilen ýol",
+    "driveType": "Sürüjilik görnüşi",
+    "transmission": "Geçiriji guty",
+    "fuelType": "Ýangyç görnüşi",
+    "color": "Reňk",
+    "interiorColor": "Içki reňk",
+    "doors": "Gapylar",
+    "cylinders": "Silindrler",
+    "characteristics": "Aýratynlyklar",
+    "showMore": "Ýene 8 görkez",
+    "saveSearchSettings": "Gözleg sazlamalaryny ýatda sakla",
+    "searchResults": "Gözleg netijeleri",
+    "vehicles": "awtoulag",
+    "showing": "{{total}} awtoulagyň {{from}}-den {{to}}-e çenli görkezilýär"
+  },
+  "cities": {
+    "ashgabat": "Aşgabat",
+    "mary": "Mary",
+    "turkmenabat": "Türkmenabat",
+    "dashoguz": "Daşoguz",
+    "balkanabat": "Balkanabat",
+    "turkmenbashi": "Türkmenbaşy",
+    "tejen": "Tejen",
+    "serdar": "Serdar"
+  },
+  "bodyTypes": {
+    "sedan": "Sedan",
+    "hatchback": "Hetçbek",
+    "coupe": "Kupe",
+    "hybrid": "Gibrid"
+  },
+  "transmissionTypes": {
+    "automatic": "Awtomat",
+    "manual": "El bilen",
+    "cvt": "Wariator"
+  },
+  "fuelTypes": {
+    "diesel": "Dizel",
+    "gasoline": "Benzin",
+    "electric": "Elektrik"
+  },
+  "features": {
+    "panoramicRoof": "Panorama üçegi",
+    "bluetooth": "Bluetooth",
+    "heatedSteering": "Ýyladylanrul",
+    "heatedSeats": "Ýyladylan oturgyçlar",
+    "carplay": "Apple CarPlay/Android Auto",
+    "airbagDriver": "SRS Airbag - sürüji",
+    "abs": "ABS"
+  },
+  "carDetails": {
+    "description": "Düşündiriş",
+    "features": "Aýratynlyklar",
+    "technicalSpecs": "Tehniki aýratynlyklar",
+    "price": "Baha",
+    "noNegotiation": "Söwda ýok",
+    "makeOffer": "Teklip ber",
+    "consultant": "Geňeşçi",
+    "writeToDealer": "Dilere ýaz",
+    "contactWhatsapp": "WhatsApp-da habarlaş",
+    "similarListings": "Meňzeş yglanlar",
+    "moreDetails": "Giňişleýin"
+  },
+  "carFeatures": {
+    "conveniences": "Amatlylar",
+    "heatedSeats": "Ýyladylan oturgyçlar",
+    "navigationSystem": "Nawigasiýa ulgamy",
+    "tirePressureMonitoring": "Tekerleriň basyşyny gözegçilik",
+    "heatedSteering": "Ýyladylan rul",
+    "entertainment": "Güýmenje",
+    "safety": "Howpsuzlyk",
+    "parkingSensors": "Parkirowka datçikleri",
+    "rearCamera": "Yzky kamera",
+    "interiorExterior": "Içki / daşky",
+    "chromeSpoiler": "Hrom spoýler"
+  },
+  "technicalSpecs": {
+    "engineTransmission": "Hereketlendiriji we geçiriji",
+    "dimensions": "Ölçegler we gabarydy",
+    "other": "Beýleki"
+  },
+  "serviceOptions": {
+    "verifiedByExperts": "CarCiti hünärmenleri tarapyndan barlandy",
+    "scheduleTestDrive": "Test sürüjisini meýilleşdir",
+    "carBrochure": "Awtoulag broşýurasy",
+    "vinReport": "VIN hasabaty"
+  },
+  "reviews": {
+    "customerReviews": "Müşderileriň diler barada synlary",
+    "overallRating": "Umumy baha",
+    "excellent": "Ajaýyp",
+    "leaveReview": "Syn galdyr",
+    "yourEmail": "Elektron poçta salgyňyz neşir edilmez. Hökmany meýdançalar * bilen bellenýär",
+    "name": "At",
+    "email": "Email",
+    "title": "Ady",
+    "message": "Habar",
+    "submitReview": "Syn iber",
+    "helpful": "Peýdaly",
+    "notHelpful": "Peýdaly däl",
+    "viewMoreReviews": "Has köp syn gör",
+    "passedTestDrive": "Test sürüjisinden geçdim! - bu ajaýyp!",
+    "goodCar": "Gowy awtoulag"
+  },
+  "ratings": {
+    "comfort": "Rahatlyk",
+    "interiorDesign": "Içki bezeg",
+    "performance": "Öndürijilik",
+    "priceQuality": "Baha / hil",
+    "appearance": "Daşky görnüş",
+    "reliability": "Ygtybarlylyk"
+  },
+  "dashboard": {
+    "dashboard": "Dolandyryş paneli",
+    "myListings": "Meniň yglanlarym",
+    "savedSearches": "Ýatda saklanan gözlegler",
+    "newMessages": "Täze hatlar",
+    "myFavorites": "Meniň halanlarym",
+    "addListings": "Yglan goş",
+    "favorites": "Halanlarym",
+    "messages": "Hatlar",
+    "profile": "Profil"
+  },
+  "activities": {
+    "listingApproved": "Iglanyňyz tassyklandy",
+    "leftMessage": "habar galdyrdy",
+    "someoneSaved": "Kimdir biri siziň ýatda saklady"
+  },
+  "addCar": {
+    "addListing": "Yglan goş",
+    "carDetails": "Awtoulag maglumatlary",
+    "price": "Baha",
+    "characteristics": "Aýratynlyklar",
+    "media": "Media",
+    "location": "Ýerleşýän ýeri"
+  },
+  "myPosts": {
+    "myListings": "Meniň yglanlarym",
+    "listings": "Yglanlar",
+    "brand": "Marka",
+    "year": "Ýyl",
+    "transmission": "Geçiriji",
+    "fuelType": "Ýangyç görnüşi",
+    "noListingsYet": "Heniz iglanyňyz ýok"
+  },
+  "profile": {
+    "profile": "Profil",
+    "avatar": "Awatar",
+    "avatarInfo": "Faýlyň iň uly ölçegi - 1 MB, iň kiçi ölçegi: 330x300. Laýyk faýllar - .jpg we .png.",
+    "images": "Suratlar",
+    "address": "Salgy",
+    "location": "Ýerleşýän ýeri",
+    "longitude": "Uzynlyk",
+    "latitude": "Giňlik",
+    "description": "Düşündiriş",
+    "name": "At",
+    "lastName": "Familiýa",
+    "email": "Email",
+    "phone": "Telefon",
+    "whatsapp": "WhatsApp",
+    "website": "Web sahypa"
+  },
+  "faqAdmin": {
+    "addFaq": "FAQ goşmak"
+  }
+}
