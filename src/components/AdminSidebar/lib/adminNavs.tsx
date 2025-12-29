@@ -34,6 +34,6 @@ export const adminNavs = [
   {
     text: "Выход",
     icon: <BiLogOut className="w-5 h-5" />,
-    path: "/",
+    path: "/home",
   },
 ];

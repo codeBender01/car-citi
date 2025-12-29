@@ -1,10 +1,9 @@
+import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
-import { useGetRegionsAdmin } from "@/api/regions/useGetRegionsAdmin";
-import { useRemoveRegion } from "@/api/regions/useRemoveRegion";
-import { useAddRegion } from "@/api/regions/useAddRegion";
+import { useGetOneRegion } from "@/api/regions/useGetOneRegion";
+import { useAddCityToTheRegion } from "@/api/regions/useAddCityToTheRegion";
+import { useRemoveCity } from "@/api/regions/useRemoveCity";
 import {
   Table,
   TableBody,
@@ -13,63 +12,57 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AddRegionModal } from "./ui/AddRegionModal";
+import { AddCityModal } from "./ui/AddCityModal";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
-import { BiSolidCity } from "react-icons/bi";
 import { Button } from "@/components/ui/button";
-import type { NewRegion } from "@/interfaces/regions.interface";
+import type { NewCity } from "@/interfaces/regions.interface";
 
-const Regions = () => {
-  const { i18n } = useTranslation();
+const Cities = () => {
+  const { id } = useParams();
   const { toast } = useToast();
-  const navigate = useNavigate();
-  const removeRegion = useRemoveRegion();
-  const addRegion = useAddRegion();
-  const { data: regions } = useGetRegionsAdmin(i18n.language);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newRegion, setNewRegion] = useState({
+  const [newCity, setNewCity] = useState<NewCity>({
     nameTk: "",
     nameRu: "",
-    id: "",
+    regionId: id as string,
   });
 
-  const handleEdit = (regionObj: NewRegion) => {
-    setNewRegion({
-      id: regionObj.id,
-      nameRu: regionObj.nameRu,
-      nameTk: regionObj.nameTk,
+  const { data: region } = useGetOneRegion(id as string);
+  const addCity = useAddCityToTheRegion();
+  const deleteCity = useRemoveCity();
+
+  const handleEdit = (cityObj: NewCity) => {
+    setNewCity({
+      id: cityObj.id,
+      nameRu: cityObj.nameRu,
+      nameTk: cityObj.nameTk,
+      regionId: id as string,
     });
     setIsModalOpen(true);
   };
 
-  console.log(regions);
-
-  const handleAddRegion = async (e: React.FormEvent, regionObj?: NewRegion) => {
+  const handleAddCity = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (regionObj) {
-      setIsModalOpen(true);
-      setNewRegion({ ...regionObj });
-    }
-    const res = await addRegion.mutateAsync(newRegion);
+    const res = await addCity.mutateAsync(newCity);
 
     if (res.data) {
       toast({
-        title: "Регион создан",
-        description: "Новый регион успешно добавлен",
+        title: "Город создан",
+        description: "Новый город успешно добавлен",
         duration: 1000,
       });
     }
 
-    setNewRegion({ id: "", nameTk: "", nameRu: "" });
+    setNewCity({ nameTk: "", nameRu: "", regionId: id as string });
     setIsModalOpen(false);
   };
 
-  const handleDelete = async (regionId: string) => {
-    const res = await removeRegion.mutateAsync(regionId);
+  const handleDelete = async (cityId: string) => {
+    const res = await deleteCity.mutateAsync(cityId);
 
     if (res.data) {
       toast({
-        title: "Регион удален",
+        title: "Город удален",
         variant: "success",
         duration: 1000,
       });
@@ -86,66 +79,64 @@ const Regions = () => {
     <div className="p-[35px] 2xl:p-[60px]">
       <div className="font-dm text-textSecondary flex items-start justify-between">
         <div>
-          <div className="text-[32px] font-bold">Регионы</div>
+          <div className="text-[32px] font-bold">Города</div>
           <p className="text-textSecondary text-base">
-            Управление регионами и локациями
+            Управление городами региона:{" "}
+            <strong>{region?.data?.name || "Загрузка..."}</strong>
           </p>
         </div>
+
         <button
           onClick={() => setIsModalOpen(true)}
           className="px-6 py-2.5 text-white font-medium rounded-lg transition-all hover:opacity-90 active:scale-95 cursor-pointer"
           style={{ backgroundColor: "#88ba00" }}
         >
-          Добавить регион
+          Добавить город
         </button>
       </div>
 
-      <AddRegionModal
-        formData={newRegion}
-        setFormData={setNewRegion}
+      <AddCityModal
+        formData={newCity}
+        setFormData={setNewCity}
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        onSubmit={handleAddRegion}
+        onSubmit={handleAddCity}
       />
+
       <div className="mt-10">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead className="font-semibold">Название (тм)</TableHead>
               <TableHead className="font-semibold">Название (ру)</TableHead>
-              <TableHead className="font-semibold">Города</TableHead>
+              <TableHead className="font-semibold">Регион</TableHead>
               <TableHead className="font-semibold text-right">
                 Действия
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {regions?.data?.rows?.map((region) => (
+            {region?.data?.cities?.map((city) => (
               <TableRow
-                key={region.id}
+                key={city.id}
                 className="transition-all duration-200 hover:bg-primary/10"
               >
-                <TableCell className="font-medium">{region.nameTk}</TableCell>
-                <TableCell className="font-medium">{region.nameRu}</TableCell>
+                <TableCell className="font-medium">{city.name}</TableCell>
+                <TableCell className="font-medium">{city.name}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">
-                  {region.cities?.map((city) => city.name).join(", ") ||
-                    "Нет городов"}
+                  {region?.data?.name || "Нет региона"}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
                     <Button
-                      onClick={() => {
-                        navigate("/admin/regions/" + region.id);
-                      }}
-                      className="p-2 text-textPrimary hover:bg-gray-300 bg-transparent rounded-lg transition-colors"
-                      title="Удалить"
-                    >
-                      <BiSolidCity className="w-4 h-4" />
-                    </Button>
-                    <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleEdit(region);
+                        handleEdit({
+                          id: city.id,
+                          nameTk: city.name,
+                          nameRu: city.name,
+                          regionId: city.regionId,
+                        });
                       }}
                       className="p-2 text-blue-600 hover:bg-blue-50 bg-transparent rounded-lg transition-colors"
                       title="Редактировать"
@@ -155,7 +146,7 @@ const Regions = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(region.id);
+                        handleDelete(city.id);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"
@@ -173,4 +164,4 @@ const Regions = () => {
   );
 };
 
-export default Regions;
+export default Cities;

@@ -27,7 +27,7 @@ const AdminSidebar = () => {
                 navigate(n.path);
               }}
               className={`${
-                location.pathname === n.path ? "bg-[#FFFFFF1A]" : ""
+                location.pathname.includes(n.path) ? "bg-[#FFFFFF1A]" : ""
               } py-[18px] px-5 flex items-center gap-3.5 text-white font-dm text-base text-nowrap rounded-2xl hover:bg-[#FFFFFF1A] duration-150 cursor-pointer`}
             >
               {n.icon}

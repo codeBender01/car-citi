@@ -11,10 +11,26 @@ export interface OneRegion {
   }[];
   id: string;
   name: string;
+  nameTk: string;
+  nameRu: string;
 }
 
 export interface NewRegion {
   id: string;
   nameTk: string;
   nameRu: string;
+}
+
+export interface City {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+  regionId: string;
+}
+
+export interface NewCity {
+  id?: string;
+  nameTk: string;
+  nameRu: string;
+  regionId: string;
 }
