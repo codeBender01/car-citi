@@ -1,10 +1,5 @@
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
-import { useGetRegionsAdmin } from "@/api/regions/useGetRegionsAdmin";
-import { useRemoveRegion } from "@/api/regions/useRemoveRegion";
-import { useAddRegion } from "@/api/regions/useAddRegion";
 import {
   Table,
   TableBody,
@@ -13,61 +8,69 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AddRegionModal } from "./ui/AddRegionModal";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
-import { BiSolidCity } from "react-icons/bi";
 import { Button } from "@/components/ui/button";
-import type { NewRegion } from "@/interfaces/regions.interface";
 
-const Regions = () => {
-  const { i18n } = useTranslation();
+import { useGetAllNewsTags } from "@/api/news/useGetAllNewsTags";
+import { useAddNewsTag } from "@/api/news/useAddNewsTag";
+import { useRemoveNewsTag } from "@/api/news/useRemoveNewsTag";
+import { AddNewsTagModal } from "./ui/AddNewsTagModal";
+import type { NewNewsTag } from "@/interfaces/news.interface";
+
+const NewsTags = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
-  const removeRegion = useRemoveRegion();
-  const addRegion = useAddRegion();
-  const { data: regions } = useGetRegionsAdmin(i18n.language);
+  const { data: tags } = useGetAllNewsTags();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newRegion, setNewRegion] = useState({
+  const [newTag, setNewTag] = useState<NewNewsTag>({
+    id: "",
     nameTk: "",
     nameRu: "",
-    id: "",
   });
 
-  const handleEdit = (regionObj: NewRegion) => {
-    setNewRegion({
-      id: regionObj.id,
-      nameRu: regionObj.nameRu,
-      nameTk: regionObj.nameTk,
+  const addNewsTag = useAddNewsTag();
+  const removeNewsTag = useRemoveNewsTag();
+
+  const handleEdit = (tagObj: NewNewsTag) => {
+    setNewTag({
+      id: tagObj.id,
+      nameTk: tagObj.nameTk,
+      nameRu: tagObj.nameRu,
     });
     setIsModalOpen(true);
   };
 
-  const handleAddRegion = async (e: React.FormEvent, regionObj?: NewRegion) => {
+  const handleSubmitTag = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (regionObj) {
-      setIsModalOpen(true);
-      setNewRegion({ ...regionObj });
-    }
-    const res = await addRegion.mutateAsync(newRegion);
+    const res = await addNewsTag.mutateAsync(newTag);
 
     if (res.data) {
       toast({
-        title: "Регион создан",
-        description: "Новый регион успешно добавлен",
+        title: "Тэг создан",
+        description: "Новый тэг успешно добавлен",
+        duration: 1000,
+      });
+      setNewTag({
+        id: "",
+        nameTk: "",
+        nameRu: "",
+      });
+      setIsModalOpen(false);
+    } else {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось создать тэг",
+        variant: "destructive",
         duration: 1000,
       });
     }
-
-    setNewRegion({ id: "", nameTk: "", nameRu: "" });
-    setIsModalOpen(false);
   };
 
-  const handleDelete = async (regionId: string) => {
-    const res = await removeRegion.mutateAsync(regionId);
+  const handleDelete = async (tagId: string) => {
+    const res = await removeNewsTag.mutateAsync(tagId);
 
     if (res.data) {
       toast({
-        title: "Регион удален",
+        title: "Тэг удален",
         variant: "success",
         duration: 1000,
       });
@@ -84,66 +87,54 @@ const Regions = () => {
     <div className="p-[35px] 2xl:p-[60px]">
       <div className="font-dm text-textSecondary flex items-start justify-between">
         <div>
-          <div className="text-[32px] font-bold">Регионы</div>
+          <div className="text-[32px] font-bold">Тэги новостей</div>
           <p className="text-textSecondary text-base">
-            Управление регионами и локациями
+            Управление тэгами новостей
           </p>
         </div>
+
         <button
           onClick={() => setIsModalOpen(true)}
           className="px-6 py-2.5 text-white font-medium rounded-lg transition-all hover:opacity-90 active:scale-95 cursor-pointer"
           style={{ backgroundColor: "#88ba00" }}
         >
-          Добавить регион
+          Добавить тэг
         </button>
       </div>
 
-      <AddRegionModal
-        formData={newRegion}
-        setFormData={setNewRegion}
+      <AddNewsTagModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        onSubmit={handleAddRegion}
+        formData={newTag}
+        setFormData={setNewTag}
+        onSubmit={handleSubmitTag}
       />
+
       <div className="mt-10">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead className="font-semibold">Название (тм)</TableHead>
               <TableHead className="font-semibold">Название (ру)</TableHead>
-              <TableHead className="font-semibold">Города</TableHead>
               <TableHead className="font-semibold text-right">
                 Действия
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {regions?.data?.rows?.map((region) => (
+            {tags?.data?.rows?.map((tag) => (
               <TableRow
-                key={region.id}
+                key={tag.id}
                 className="transition-all duration-200 hover:bg-primary/10"
               >
-                <TableCell className="font-medium">{region.nameTk}</TableCell>
-                <TableCell className="font-medium">{region.nameRu}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {region.cities?.map((city) => city.name).join(", ") ||
-                    "Нет городов"}
-                </TableCell>
+                <TableCell className="font-medium">{tag.nameTk}</TableCell>
+                <TableCell className="font-medium">{tag.nameRu}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
                     <Button
-                      onClick={() => {
-                        navigate("/admin/regions/" + region.id);
-                      }}
-                      className="p-2 text-textPrimary hover:bg-gray-300 bg-transparent rounded-lg transition-colors"
-                      title="Удалить"
-                    >
-                      <BiSolidCity className="w-4 h-4" />
-                    </Button>
-                    <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleEdit(region);
+                        handleEdit(tag);
                       }}
                       className="p-2 text-blue-600 hover:bg-blue-50 bg-transparent rounded-lg transition-colors"
                       title="Редактировать"
@@ -153,7 +144,7 @@ const Regions = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(region.id);
+                        handleDelete(tag.id);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"
@@ -171,4 +162,4 @@ const Regions = () => {
   );
 };
 
-export default Regions;
+export default NewsTags;

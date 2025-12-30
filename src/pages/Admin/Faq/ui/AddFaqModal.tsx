@@ -1,3 +1,4 @@
+import { type Dispatch, type SetStateAction } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -15,32 +16,30 @@ import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
-import { useAddFaq } from "@/api/faq/useAddFaq";
+import type { NewFaq } from "@/interfaces/faq.interface";
 
-export default function AddFaqModal() {
+interface AddFaqModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  formData: NewFaq;
+  setFormData: Dispatch<SetStateAction<NewFaq>>;
+  onSubmit: (e: React.FormEvent) => void;
+  isPending?: boolean;
+}
+
+export default function AddFaqModal({
+  open,
+  onOpenChange,
+  formData,
+  setFormData,
+  onSubmit,
+  isPending,
+}: AddFaqModalProps) {
   const { t } = useTranslation();
 
-  const [faq, setFaq] = useState({
-    id: "",
-    titleTk: "",
-    titleRu: "",
-    descriptionTk: "",
-    descriptionRu: "",
-  });
-
-  const addFaq = useAddFaq();
-
-  const handleSubmitFaq = async () => {
-    const res = await addFaq.mutateAsync(faq);
-
-    if (res.data) {
-    }
-  };
-
   return (
-    <Dialog>
-      <form action="">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <form onSubmit={onSubmit}>
         <DialogTrigger asChild>
           <Button className="text-white text-lg p-5! cursor-pointer">
             {t("common.add")}
@@ -55,18 +54,18 @@ export default function AddFaqModal() {
               <LabeledInput
                 label="Имя (тм)"
                 onChange={(e) => {
-                  setFaq({ ...faq, titleTk: e.target.value });
+                  setFormData({ ...formData, titleTk: e.target.value });
                 }}
-                value={faq.titleTk}
+                value={formData.titleTk}
               />
             </div>
             <div className="grid gap-3">
               <LabeledInput
                 onChange={(e) => {
-                  setFaq({ ...faq, titleRu: e.target.value });
+                  setFormData({ ...formData, titleRu: e.target.value });
                 }}
                 label="Имя (ру)"
-                value={faq.titleRu}
+                value={formData.titleRu}
               />
             </div>
             <div className="grid gap-3">
@@ -74,9 +73,9 @@ export default function AddFaqModal() {
                 <Textarea
                   id="descTk"
                   onChange={(e) => {
-                    setFaq({ ...faq, descriptionTk: e.target.value });
+                    setFormData({ ...formData, descriptionTk: e.target.value });
                   }}
-                  value={faq.descriptionTk}
+                  value={formData.descriptionTk}
                   className="w-full h-[200px] px-5 py-4 rounded-xl border border-grayBorder bg-white font-dm text-[15px] text-textPrimary resize-none peer"
                 />
                 <Label
@@ -92,8 +91,9 @@ export default function AddFaqModal() {
                 <Textarea
                   id="descRu"
                   onChange={(e) => {
-                    setFaq({ ...faq, descriptionRu: e.target.value });
+                    setFormData({ ...formData, descriptionRu: e.target.value });
                   }}
+                  value={formData.descriptionRu}
                   className="w-full h-[200px] px-5 py-4 rounded-xl border border-grayBorder bg-white font-dm text-[15px] text-textPrimary resize-none peer"
                 />
                 <Label
@@ -109,12 +109,8 @@ export default function AddFaqModal() {
             <DialogClose asChild>
               <Button variant="outline">{t("common.cancel")}</Button>
             </DialogClose>
-            <Button
-              onClick={handleSubmitFaq}
-              type="submit"
-              className="text-white"
-            >
-              {addFaq.isPending && <Spinner />}
+            <Button type="submit" onClick={onSubmit} className="text-white">
+              {isPending && <Spinner />}
               {t("common.save")}
             </Button>
           </DialogFooter>

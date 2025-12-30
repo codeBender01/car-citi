@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { LuPlus } from "react-icons/lu";
+import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 
 import { adminNavs } from "./lib/adminNavs";
 
@@ -8,6 +10,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 const AdminSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+  const toggleDropdown = (text: string) => {
+    setOpenDropdown(openDropdown === text ? null : text);
+  };
 
   return (
     <aside className="px-[30px] py-[60px] max-w-[300px]">
@@ -20,18 +27,54 @@ const AdminSidebar = () => {
       </Button>
       <ul className="mt-[25px]">
         {adminNavs.map((n) => {
+          const hasSubPaths = n.subPaths && n.subPaths.length > 0;
+          const isOpen = openDropdown === n.text;
+
           return (
-            <li
-              key={n.text}
-              onClick={() => {
-                navigate(n.path);
-              }}
-              className={`${
-                location.pathname.includes(n.path) ? "bg-[#FFFFFF1A]" : ""
-              } py-[18px] px-5 flex items-center gap-3.5 text-white font-dm text-base text-nowrap rounded-2xl hover:bg-[#FFFFFF1A] duration-150 cursor-pointer`}
-            >
-              {n.icon}
-              {n.text}
+            <li key={n.text}>
+              <div
+                onClick={() => {
+                  if (hasSubPaths) {
+                    toggleDropdown(n.text);
+                  } else {
+                    navigate(n.path);
+                  }
+                }}
+                className={`${
+                  location.pathname.includes(n.path) ? "bg-[#FFFFFF1A]" : ""
+                } py-[18px] px-5 flex items-center justify-between text-white font-dm text-base text-nowrap rounded-2xl hover:bg-[#FFFFFF1A] duration-150 cursor-pointer`}
+              >
+                <div className="flex items-center gap-3.5">
+                  {n.icon}
+                  {n.text}
+                </div>
+                {hasSubPaths && (
+                  <span className="ml-auto">
+                    {isOpen ? (
+                      <IoChevronUp className="w-4 h-4" />
+                    ) : (
+                      <IoChevronDown className="w-4 h-4" />
+                    )}
+                  </span>
+                )}
+              </div>
+              {hasSubPaths && isOpen && (
+                <ul className="ml-9 mt-2 space-y-1">
+                  {n.subPaths?.map((subPath) => (
+                    <li
+                      key={subPath.path}
+                      onClick={() => navigate(subPath.path)}
+                      className={`${
+                        location.pathname === subPath.path
+                          ? "bg-[#FFFFFF1A]"
+                          : ""
+                      } py-2 px-4 text-white/80 font-dm text-sm rounded-lg hover:bg-[#FFFFFF1A] hover:text-white duration-150 cursor-pointer`}
+                    >
+                      {subPath.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
           );
         })}

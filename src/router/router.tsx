@@ -25,6 +25,8 @@ const Categories = lazy(() => import("@pages/Admin/Categories"));
 const Regions = lazy(() => import("@pages/Admin/Regions"));
 const Cities = lazy(() => import("@pages/Admin/Cities"));
 const News = lazy(() => import("@pages/Admin/News"));
+const NewsCategories = lazy(() => import("@pages/Admin/News/Categories"));
+const NewsTags = lazy(() => import("@pages/Admin/News/Tags"));
 const Feedbacks = lazy(() => import("@pages/Admin/Feedbacks"));
 const Faq = lazy(() => import("@pages/Admin/Faq"));
 
@@ -115,8 +117,16 @@ export default function Router() {
           element: <Cities />,
         },
         {
-          path: "news",
+          path: "news/index",
           element: <News />,
+        },
+        {
+          path: "news/categories",
+          element: <NewsCategories />,
+        },
+        {
+          path: "news/tags",
+          element: <NewsTags />,
         },
         {
           path: "feedbacks",
