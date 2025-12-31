@@ -14,11 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 
 const Faq = () => {
-  const { data: faqs } = useGetFaqsAdmin();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  const { data: faqs } = useGetFaqsAdmin(currentPage, pageSize);
   const { toast } = useToast();
   const addFaq = useAddFaq();
   const removeFaq = useRemoveFaq();
@@ -158,6 +161,16 @@ const Faq = () => {
             ))}
           </TableBody>
         </Table>
+
+        {faqs?.data && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil((faqs.data.count || 0) / pageSize)}
+            totalCount={faqs.data.count || 0}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   );

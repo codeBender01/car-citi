@@ -1,10 +1,10 @@
 import React from "react";
-import { MdOutlineCategory } from "react-icons/md";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { VscFeedback } from "react-icons/vsc";
 import { BiLogOut } from "react-icons/bi";
 import { FaQuestion } from "react-icons/fa";
+import { IoCarSport } from "react-icons/io5";
 
 interface SubPath {
   name: string;
@@ -20,9 +20,31 @@ interface AdminNav {
 
 export const adminNavs: AdminNav[] = [
   {
-    text: "Категории",
-    icon: <MdOutlineCategory className="w-5 h-5" />,
-    path: "/admin/categories",
+    text: "Характеристики автомобиля",
+    icon: <IoCarSport className="w-5 h-5" />,
+    path: "/admin/car-specs",
+    subPaths: [
+      {
+        name: "Категории",
+        path: "/admin/car-specs/categories",
+      },
+      {
+        name: "Состояние",
+        path: "/admin/car-specs/condition",
+      },
+      {
+        name: "Тип привода",
+        path: "/admin/car-specs/drive-type",
+      },
+      {
+        name: "Трансмиссия",
+        path: "/admin/car-specs/transmission",
+      },
+      {
+        name: "Тип топлива",
+        path: "/admin/car-specs/fuel-type",
+      },
+    ],
   },
   {
     text: "Регионы",

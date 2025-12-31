@@ -17,7 +17,7 @@ const AdminSidebar = () => {
   };
 
   return (
-    <aside className="px-[30px] py-[60px] max-w-[300px]">
+    <aside className="px-[30px] py-[60px] max-w-[340px]">
       <Button
         size="none"
         className="text-white bg-transparent hover:bg-white hover:text-darkGreen border border-white font-dm text-[15px] cursor-pointer rounded-xl flex items-center gap-2.5 py-4 px-[25px] w-full"
@@ -44,9 +44,11 @@ const AdminSidebar = () => {
                   location.pathname.includes(n.path) ? "bg-[#FFFFFF1A]" : ""
                 } py-[18px] px-5 flex items-center justify-between text-white font-dm text-base text-nowrap rounded-2xl hover:bg-[#FFFFFF1A] duration-150 cursor-pointer`}
               >
-                <div className="flex items-center gap-3.5">
+                <div className="flex items-center gap-2.5">
                   {n.icon}
-                  {n.text}
+                  <div className="overflow-hidden whitespace-nowrap text-ellipsis max-w-[80%]">
+                    {n.text}
+                  </div>
                 </div>
                 {hasSubPaths && (
                   <span className="ml-auto">

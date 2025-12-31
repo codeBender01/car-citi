@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Pagination } from "@/components/ui/pagination";
 import { AddRegionModal } from "./ui/AddRegionModal";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { BiSolidCity } from "react-icons/bi";
@@ -25,7 +26,9 @@ const Regions = () => {
   const navigate = useNavigate();
   const removeRegion = useRemoveRegion();
   const addRegion = useAddRegion();
-  const { data: regions } = useGetRegionsAdmin(i18n.language);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  const { data: regions } = useGetRegionsAdmin(i18n.language, currentPage, pageSize);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newRegion, setNewRegion] = useState({
     nameTk: "",
@@ -166,6 +169,16 @@ const Regions = () => {
             ))}
           </TableBody>
         </Table>
+
+        {regions?.data && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil((regions.data.count || 0) / pageSize)}
+            totalCount={regions.data.count || 0}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   );

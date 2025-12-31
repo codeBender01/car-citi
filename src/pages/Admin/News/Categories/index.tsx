@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 
@@ -19,7 +20,9 @@ import type { NewNewsCategory } from "@/interfaces/news.interface";
 
 const NewsCategories = () => {
   const { toast } = useToast();
-  const { data: categories } = useGetAllNewsCategory();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  const { data: categories } = useGetAllNewsCategory(currentPage, pageSize);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newCategory, setNewCategory] = useState<NewNewsCategory>({
     id: "",
@@ -159,6 +162,16 @@ const NewsCategories = () => {
             ))}
           </TableBody>
         </Table>
+
+        {categories?.data && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil((categories.data.count || 0) / pageSize)}
+            totalCount={categories.data.count || 0}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   );

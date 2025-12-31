@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 
@@ -19,7 +20,9 @@ import type { NewNewsTag } from "@/interfaces/news.interface";
 
 const NewsTags = () => {
   const { toast } = useToast();
-  const { data: tags } = useGetAllNewsTags();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  const { data: tags } = useGetAllNewsTags(currentPage, pageSize);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTag, setNewTag] = useState<NewNewsTag>({
     id: "",
@@ -157,6 +160,16 @@ const NewsTags = () => {
             ))}
           </TableBody>
         </Table>
+
+        {tags?.data && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil((tags.data.count || 0) / pageSize)}
+            totalCount={tags.data.count || 0}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   );

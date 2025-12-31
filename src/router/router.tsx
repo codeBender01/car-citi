@@ -29,6 +29,11 @@ const NewsCategories = lazy(() => import("@pages/Admin/News/Categories"));
 const NewsTags = lazy(() => import("@pages/Admin/News/Tags"));
 const Feedbacks = lazy(() => import("@pages/Admin/Feedbacks"));
 const Faq = lazy(() => import("@pages/Admin/Faq"));
+const CarCategories = lazy(() => import("@pages/Admin/CarSpecs/Categories"));
+const CarConditions = lazy(() => import("@pages/Admin/CarSpecs/Condition"));
+const DriveTypes = lazy(() => import("@pages/Admin/CarSpecs/DriveType"));
+const Transmissions = lazy(() => import("@pages/Admin/CarSpecs/Transmission"));
+const FuelTypes = lazy(() => import("@pages/Admin/CarSpecs/FuelType"));
 
 export default function Router() {
   const routes = useRoutes([
@@ -135,6 +140,26 @@ export default function Router() {
         {
           path: "faq",
           element: <Faq />,
+        },
+        {
+          path: "car-specs/categories",
+          element: <CarCategories />,
+        },
+        {
+          path: "car-specs/condition",
+          element: <CarConditions />,
+        },
+        {
+          path: "car-specs/drive-type",
+          element: <DriveTypes />,
+        },
+        {
+          path: "car-specs/transmission",
+          element: <Transmissions />,
+        },
+        {
+          path: "car-specs/fuel-type",
+          element: <FuelTypes />,
         },
       ],
     },

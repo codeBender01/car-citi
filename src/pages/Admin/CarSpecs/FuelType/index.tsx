@@ -1,9 +1,5 @@
-import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useGetOneRegion } from "@/api/regions/useGetOneRegion";
-import { useAddCityToTheRegion } from "@/api/regions/useAddCityToTheRegion";
-import { useRemoveCity } from "@/api/regions/useRemoveCity";
 import {
   Table,
   TableBody,
@@ -13,81 +9,78 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
-import { AddCityModal } from "./ui/AddCityModal";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
-import type { NewCity } from "@/interfaces/regions.interface";
+import { AddFuelTypeModal } from "./ui/AddFuelTypeModal";
 
-const Cities = () => {
-  const { id } = useParams();
+interface FuelType {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+}
+
+interface NewFuelType {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+}
+
+const FuelTypes = () => {
   const { toast } = useToast();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
-  const [newCity, setNewCity] = useState<NewCity>({
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newFuelType, setNewFuelType] = useState<NewFuelType>({
+    id: "",
     nameTk: "",
     nameRu: "",
-    regionId: id as string,
   });
 
-  const { data: region } = useGetOneRegion(id as string, currentPage, pageSize);
+  // Temporary data - replace with actual API call
+  const fuelTypes: FuelType[] = [];
+  const totalCount = 0;
 
-  console.log(region);
-  const addCity = useAddCityToTheRegion();
-  const deleteCity = useRemoveCity();
-
-  const handleEdit = (cityObj: NewCity) => {
-    setNewCity({
-      id: cityObj.id,
-      nameRu: cityObj.nameRu,
-      nameTk: cityObj.nameTk,
-      regionId: id as string,
+  const handleEdit = (fuelTypeObj: FuelType) => {
+    setNewFuelType({
+      id: fuelTypeObj.id,
+      nameTk: fuelTypeObj.nameTk,
+      nameRu: fuelTypeObj.nameRu,
     });
     setIsModalOpen(true);
   };
 
-  const handleAddCity = async (e: React.FormEvent) => {
+  const handleSubmitFuelType = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await addCity.mutateAsync(newCity);
-
-    if (res.data) {
-      toast({
-        title: "Город создан",
-        description: "Новый город успешно добавлен",
-        duration: 1000,
-      });
-    }
-
-    setNewCity({ nameTk: "", nameRu: "", regionId: id as string });
+    // TODO: Implement API call
+    toast({
+      title: "Тип топлива создан",
+      description: "Новый тип топлива успешно добавлен",
+      duration: 1000,
+    });
+    setNewFuelType({
+      id: "",
+      nameTk: "",
+      nameRu: "",
+    });
     setIsModalOpen(false);
   };
 
-  const handleDelete = async (cityId: string) => {
-    const res = await deleteCity.mutateAsync(cityId);
-
-    if (res.data) {
-      toast({
-        title: "Город удален",
-        variant: "success",
-        duration: 1000,
-      });
-    } else {
-      toast({
-        title: "Ошибка",
-        variant: "destructive",
-        duration: 1000,
-      });
-    }
+  const handleDelete = async (fuelTypeId: string) => {
+    // TODO: Implement API call
+    toast({
+      title: "Тип топлива удален",
+      variant: "success",
+      duration: 1000,
+    });
   };
 
   return (
     <div className="p-[35px] 2xl:p-[60px]">
       <div className="font-dm text-textSecondary flex items-start justify-between">
         <div>
-          <div className="text-[32px] font-bold">Города</div>
+          <div className="text-[32px] font-bold">Тип топлива</div>
           <p className="text-textSecondary text-base">
-            Управление городами региона:{" "}
-            <strong>{region?.data?.name || "Загрузка..."}</strong>
+            Управление типами топлива автомобилей
           </p>
         </div>
 
@@ -96,16 +89,16 @@ const Cities = () => {
           className="px-6 py-2.5 text-white font-medium rounded-lg transition-all hover:opacity-90 active:scale-95 cursor-pointer"
           style={{ backgroundColor: "#88ba00" }}
         >
-          Добавить город
+          Добавить тип топлива
         </button>
       </div>
 
-      <AddCityModal
-        formData={newCity}
-        setFormData={setNewCity}
+      <AddFuelTypeModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        onSubmit={handleAddCity}
+        formData={newFuelType}
+        setFormData={setNewFuelType}
+        onSubmit={handleSubmitFuelType}
       />
 
       <div className="mt-10">
@@ -114,34 +107,25 @@ const Cities = () => {
             <TableRow className="hover:bg-transparent">
               <TableHead className="font-semibold">Название (тм)</TableHead>
               <TableHead className="font-semibold">Название (ру)</TableHead>
-              <TableHead className="font-semibold">Регион</TableHead>
               <TableHead className="font-semibold text-right">
                 Действия
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {region?.data?.cities?.map((city) => (
+            {fuelTypes?.map((fuelType) => (
               <TableRow
-                key={city.id}
+                key={fuelType.id}
                 className="transition-all duration-200 hover:bg-primary/10"
               >
-                <TableCell className="font-medium">{city.name}</TableCell>
-                <TableCell className="font-medium">{city.name}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {region?.data?.name || "Нет региона"}
-                </TableCell>
+                <TableCell className="font-medium">{fuelType.nameTk}</TableCell>
+                <TableCell className="font-medium">{fuelType.nameRu}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleEdit({
-                          id: city.id,
-                          nameTk: city.name,
-                          nameRu: city.name,
-                          regionId: city.regionId,
-                        });
+                        handleEdit(fuelType);
                       }}
                       className="p-2 text-blue-600 hover:bg-blue-50 bg-transparent rounded-lg transition-colors"
                       title="Редактировать"
@@ -151,7 +135,7 @@ const Cities = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(city.id);
+                        handleDelete(fuelType.id);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"
@@ -165,11 +149,11 @@ const Cities = () => {
           </TableBody>
         </Table>
 
-        {region?.data?.cities && region.data.cities.length > 0 && (
+        {totalCount > 0 && (
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(region.data.cities.length / pageSize)}
-            totalCount={region.data.cities.length}
+            totalPages={Math.ceil(totalCount / pageSize)}
+            totalCount={totalCount}
             pageSize={pageSize}
             onPageChange={setCurrentPage}
           />
@@ -179,4 +163,4 @@ const Cities = () => {
   );
 };
 
-export default Cities;
+export default FuelTypes;

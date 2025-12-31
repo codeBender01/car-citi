@@ -1,3 +1,5 @@
+import type { Image } from "./file.interface";
+
 export interface NewNewsCategory {
   id: string;
   nameTk: string;
@@ -32,4 +34,15 @@ export interface OneNewsTag {
   id: string;
   nameTk: string;
   nameRu: string;
+}
+
+export interface NewNews {
+  id: string;
+  image: Image;
+  titleTk: string;
+  titleRu: string;
+  descriptionTk: string;
+  descriptionRu: string;
+  tagIds: string[];
+  categoryIds: string[];
 }

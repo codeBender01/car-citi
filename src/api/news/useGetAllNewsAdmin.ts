@@ -3,27 +3,23 @@ import { useQuery } from "@tanstack/react-query";
 import type { ApiResponse } from "@/interfaces/apiResponse.interface";
 
 import { apiClient } from "..";
-import type { FaqsAdmin } from "@/interfaces/faq.interface";
+import type { NewsCategories } from "@/interfaces/news.interface";
 
-export const useGetFaqsAdmin = (page: number = 1, pageSize: number = 10) => {
+export const useGetNewsAdmin = () => {
   const token = localStorage.getItem("adminAccessToken");
   return useQuery({
-    queryFn: async (): Promise<ApiResponse<FaqsAdmin>> => {
-      const { data } = await apiClient.get<ApiResponse<FaqsAdmin>>(
-        `${BASE_URL}/faq/admin-all`,
+    queryFn: async (): Promise<ApiResponse<NewsCategories>> => {
+      const { data } = await apiClient.get<ApiResponse<NewsCategories>>(
+        `${BASE_URL}/news/admin-all`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-          },
-          params: {
-            page,
-            pageSize,
           },
         }
       );
       return data;
     },
-    queryKey: ["getAllFaqsAdmin", page, pageSize],
+    queryKey: ["getAllNewsAdmin"],
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

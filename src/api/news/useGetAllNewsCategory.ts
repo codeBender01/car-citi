@@ -5,7 +5,10 @@ import type { ApiResponse } from "@/interfaces/apiResponse.interface";
 import { apiClient } from "..";
 import type { NewsCategories } from "@/interfaces/news.interface";
 
-export const useGetAllNewsCategory = () => {
+export const useGetAllNewsCategory = (
+  page: number = 1,
+  pageSize: number = 10
+) => {
   const token = localStorage.getItem("adminAccessToken");
   return useQuery({
     queryFn: async (): Promise<ApiResponse<NewsCategories>> => {
@@ -15,11 +18,15 @@ export const useGetAllNewsCategory = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params: {
+            page,
+            pageSize,
+          },
         }
       );
       return data;
     },
-    queryKey: ["getAllNewsCategories"],
+    queryKey: ["getAllNewsCategories", page, pageSize],
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

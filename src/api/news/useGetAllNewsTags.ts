@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { ApiResponse } from "@/interfaces/apiResponse.interface";
 import type { NewsTags } from "@/interfaces/news.interface";
 
-export const useGetAllNewsTags = () => {
+export const useGetAllNewsTags = (page: number = 1, pageSize: number = 10) => {
   return useQuery({
     queryFn: async (): Promise<ApiResponse<NewsTags>> => {
       const token = localStorage.getItem("adminAccessToken");
@@ -14,11 +14,15 @@ export const useGetAllNewsTags = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params: {
+            page,
+            pageSize,
+          },
         }
       );
       return data;
     },
-    queryKey: ["getAllNewsTags"],
+    queryKey: ["getAllNewsTags", page, pageSize],
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
