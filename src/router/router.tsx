@@ -34,6 +34,9 @@ const CarConditions = lazy(() => import("@pages/Admin/CarSpecs/Condition"));
 const DriveTypes = lazy(() => import("@pages/Admin/CarSpecs/DriveType"));
 const Transmissions = lazy(() => import("@pages/Admin/CarSpecs/Transmission"));
 const FuelTypes = lazy(() => import("@pages/Admin/CarSpecs/FuelType"));
+const SaleTypes = lazy(() => import("@pages/Admin/CarSpecs/SaleType"));
+const Characteristics = lazy(() => import("@pages/Admin/CarSpecs/Characteristics"));
+const Colors = lazy(() => import("@pages/Admin/CarSpecs/Color"));
 
 export default function Router() {
   const routes = useRoutes([
@@ -160,6 +163,18 @@ export default function Router() {
         {
           path: "car-specs/fuel-type",
           element: <FuelTypes />,
+        },
+        {
+          path: "car-specs/sale-type",
+          element: <SaleTypes />,
+        },
+        {
+          path: "car-specs/characteristics",
+          element: <Characteristics />,
+        },
+        {
+          path: "car-specs/color",
+          element: <Colors />,
         },
       ],
     },

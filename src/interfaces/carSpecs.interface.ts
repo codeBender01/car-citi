@@ -108,3 +108,59 @@ export interface CarSpecsTransmissionsList {
   count: number;
   rows: OneCarTransmission[];
 }
+
+export interface NewCarSaleType {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+}
+
+export interface OneCarSaleType {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+  name: string;
+}
+
+export interface CarSpecsSaleTypesList {
+  count: number;
+  rows: OneCarSaleType[];
+}
+
+export interface NewCarCharacteristic {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+}
+
+export interface OneCarCharacteristic {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+  name: string;
+}
+
+export interface CarSpecsCharacteristicsList {
+  count: number;
+  rows: OneCarCharacteristic[];
+}
+
+export interface NewCarColor {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+  hex: string;
+}
+
+export interface OneCarColor {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+  name: string;
+  hex: string;
+}
+
+export interface CarSpecsColorsList {
+  count: number;
+  rows: OneCarColor[];
+}

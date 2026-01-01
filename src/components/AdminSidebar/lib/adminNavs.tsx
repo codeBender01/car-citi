@@ -44,6 +44,18 @@ export const adminNavs: AdminNav[] = [
         name: "Тип топлива",
         path: "/admin/car-specs/fuel-type",
       },
+      {
+        name: "Тип продажи",
+        path: "/admin/car-specs/sale-type",
+      },
+      {
+        name: "Характеристики",
+        path: "/admin/car-specs/characteristics",
+      },
+      {
+        name: "Цвет",
+        path: "/admin/car-specs/color",
+      },
     ],
   },
   {

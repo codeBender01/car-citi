@@ -9,38 +9,38 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
-interface NewTransmission {
+interface NewSaleType {
   id: string;
   nameTk: string;
   nameRu: string;
 }
 
-interface AddTransmissionModalProps {
+interface AddSaleTypeModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  formData: NewTransmission;
-  setFormData: Dispatch<SetStateAction<NewTransmission>>;
+  formData: NewSaleType;
+  setFormData: Dispatch<SetStateAction<NewSaleType>>;
   onSubmit: (e: React.FormEvent) => void;
 }
 
-export const AddTransmissionModal = ({
+export const AddSaleTypeModal = ({
   open,
   onOpenChange,
   formData,
   setFormData,
   onSubmit,
-}: AddTransmissionModalProps) => {
+}: AddSaleTypeModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {formData.id ? "Редактировать трансмиссию" : "Добавить трансмиссию"}
+            {formData.id ? "Редактировать тип продажи" : "Добавить тип продажи"}
           </DialogTitle>
           <DialogDescription>
             {formData.id
-              ? "Обновите тип трансмиссии"
-              : "Создайте новый тип трансмиссии для автомобилей"}
+              ? "Обновите тип продажи"
+              : "Создайте новый тип продажи для автомобилей"}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit}>

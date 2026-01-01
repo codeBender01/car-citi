@@ -1,0 +1,224 @@
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Pagination } from "@/components/ui/pagination";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { Button } from "@/components/ui/button";
+import { AddColorModal } from "./ui/AddColorModal";
+
+import { useGetCarSpecsColors } from "@/api/carSpecs/useGetCarSpecsColors";
+import { useAddCarSpecsColor } from "@/api/carSpecs/useAddCarSpecsColor";
+import { useRemoveCarSpecsColor } from "@/api/carSpecs/useRemoveCarSpecsColor";
+import type {
+  NewCarColor,
+  OneCarColor,
+} from "@/interfaces/carSpecs.interface";
+
+const Colors = () => {
+  const { toast } = useToast();
+  const addColor = useAddCarSpecsColor();
+  const removeColor = useRemoveCarSpecsColor();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newColor, setNewColor] = useState<NewCarColor>({
+    id: "",
+    nameTk: "",
+    nameRu: "",
+    hex: "#000000",
+  });
+
+  const { data: colors } = useGetCarSpecsColors(
+    currentPage,
+    pageSize
+  );
+
+  const handleEdit = (colorObj: OneCarColor) => {
+    setNewColor({
+      id: colorObj.id,
+      nameTk: colorObj.nameTk,
+      nameRu: colorObj.nameRu,
+      hex: colorObj.hex,
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleSubmitColor = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await addColor.mutateAsync(newColor);
+
+      if (res.data) {
+        toast({
+          title: newColor.id
+            ? "Цвет обновлен"
+            : "Цвет создан",
+          description: newColor.id
+            ? "Цвет успешно обновлен"
+            : "Новый цвет успешно добавлен",
+          duration: 1000,
+        });
+        setNewColor({
+          id: "",
+          nameTk: "",
+          nameRu: "",
+          hex: "#000000",
+        });
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: newColor.id
+          ? "Не удалось обновить цвет"
+          : "Не удалось создать цвет",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleDelete = async (colorId: string) => {
+    try {
+      await removeColor.mutateAsync(colorId);
+      toast({
+        title: "Цвет удален",
+        description: "Цвет успешно удален",
+        variant: "success",
+        duration: 1000,
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить цвет",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
+  return (
+    <div className="p-[35px] 2xl:p-[60px]">
+      <div className="font-dm text-textSecondary flex items-start justify-between">
+        <div>
+          <div className="text-[32px] font-bold">Цвета</div>
+          <p className="text-textSecondary text-base">
+            Управление цветами автомобилей
+          </p>
+        </div>
+
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="px-6 py-2.5 text-white font-medium rounded-lg transition-all hover:opacity-90 active:scale-95 cursor-pointer"
+          style={{ backgroundColor: "#88ba00" }}
+        >
+          Добавить цвет
+        </button>
+      </div>
+
+      <AddColorModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        formData={newColor}
+        setFormData={setNewColor}
+        onSubmit={handleSubmitColor}
+      />
+
+      <div className="mt-10">
+        <div className="overflow-x-auto rounded-lg border">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="font-semibold min-w-[100px]">
+                  Цвет
+                </TableHead>
+                <TableHead className="font-semibold min-w-[150px]">
+                  Название (тм)
+                </TableHead>
+                <TableHead className="font-semibold min-w-[150px]">
+                  Название (ру)
+                </TableHead>
+                <TableHead className="font-semibold min-w-[120px]">
+                  HEX
+                </TableHead>
+                <TableHead className="font-semibold text-right min-w-[120px]">
+                  Действия
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {colors?.data.rows?.map((color) => (
+                <TableRow
+                  key={color.id}
+                  className="transition-all duration-200 hover:bg-primary/10"
+                >
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-8 h-8 rounded-md border-2 border-gray-300"
+                        style={{ backgroundColor: color.hex }}
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">
+                    {color.nameTk}
+                  </TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">
+                    {color.nameRu}
+                  </TableCell>
+                  <TableCell className="font-mono text-sm whitespace-nowrap">
+                    {color.hex}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(color);
+                        }}
+                        className="p-2 text-blue-600 hover:bg-blue-50 bg-transparent rounded-lg transition-colors"
+                        title="Редактировать"
+                      >
+                        <FiEdit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(color.id);
+                        }}
+                        className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
+                        title="Удалить"
+                      >
+                        <FiTrash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {colors && colors.data.count > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(colors.data.count / pageSize)}
+            totalCount={colors.data.count}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Colors;
