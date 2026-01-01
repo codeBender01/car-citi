@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import {
   Table,
@@ -10,8 +11,13 @@ import {
 } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { MdOutlineCategory } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import { AddCarCategoryModal } from "./ui/AddCarCategoryModal";
+
+import { useAddCarSpecsCategory } from "@/api/carSpecs/useAddCarSpecsCategory";
+import { useGetCarSpecsCategories } from "@/api/carSpecs/useGetCarSpecsCategories";
+import { useRemoveCarSpecsCategory } from "@/api/carSpecs/useRemoveCarSpecsCategory";
 
 interface CarCategory {
   id: string;
@@ -26,7 +32,11 @@ interface NewCarCategory {
 }
 
 const CarCategories = () => {
+  const navigate = useNavigate();
   const { toast } = useToast();
+  const addCategory = useAddCarSpecsCategory();
+  const removeCategory = useRemoveCarSpecsCategory();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,10 +45,9 @@ const CarCategories = () => {
     nameTk: "",
     nameRu: "",
   });
+  const { data: categories } = useGetCarSpecsCategories(currentPage, pageSize);
 
-  // Temporary data - replace with actual API call
-  const categories: CarCategory[] = [];
-  const totalCount = 0;
+  console.log(categories);
 
   const handleEdit = (categoryObj: CarCategory) => {
     setNewCategory({
@@ -51,27 +60,49 @@ const CarCategories = () => {
 
   const handleSubmitCategory = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement API call
-    toast({
-      title: "Категория создана",
-      description: "Новая категория успешно добавлена",
-      duration: 1000,
-    });
-    setNewCategory({
-      id: "",
-      nameTk: "",
-      nameRu: "",
-    });
-    setIsModalOpen(false);
+    try {
+      const res = await addCategory.mutateAsync(newCategory);
+
+      if (res.data.name) {
+        toast({
+          title: "Категория создана",
+          description: "Новая категория успешно добавлена",
+          duration: 1000,
+        });
+        setNewCategory({
+          id: "",
+          nameTk: "",
+          nameRu: "",
+        });
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось создать категорию",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
   };
 
   const handleDelete = async (categoryId: string) => {
-    // TODO: Implement API call
-    toast({
-      title: "Категория удалена",
-      variant: "success",
-      duration: 1000,
-    });
+    try {
+      await removeCategory.mutateAsync(categoryId);
+      toast({
+        title: "Категория удалена",
+        description: "Категория успешно удалена",
+        variant: "success",
+        duration: 1000,
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить категорию",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
   };
 
   return (
@@ -107,21 +138,37 @@ const CarCategories = () => {
             <TableRow className="hover:bg-transparent">
               <TableHead className="font-semibold">Название (тм)</TableHead>
               <TableHead className="font-semibold">Название (ру)</TableHead>
+              <TableHead className="font-semibold">Подкатегории</TableHead>
               <TableHead className="font-semibold text-right">
                 Действия
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {categories?.map((category) => (
+            {categories?.data.rows?.map((category) => (
               <TableRow
                 key={category.id}
                 className="transition-all duration-200 hover:bg-primary/10"
               >
                 <TableCell className="font-medium">{category.nameTk}</TableCell>
                 <TableCell className="font-medium">{category.nameRu}</TableCell>
+                <TableCell className="font-medium">
+                  {category.subcategories && category.subcategories.length > 0
+                    ? category.subcategories.map((sub) => sub.nameRu).join(", ")
+                    : "-"}
+                </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/admin/car-specs/categories/${category.id}`);
+                      }}
+                      className="p-2 text-green-600 hover:bg-green-50 bg-transparent rounded-lg transition-colors"
+                      title="Подкатегории"
+                    >
+                      <MdOutlineCategory className="w-4 h-4" />
+                    </Button>
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -149,11 +196,11 @@ const CarCategories = () => {
           </TableBody>
         </Table>
 
-        {totalCount > 0 && (
+        {categories && categories.data.count > 0 && (
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(totalCount / pageSize)}
-            totalCount={totalCount}
+            totalPages={Math.ceil(categories.data.count / pageSize)}
+            totalCount={categories.data.count}
             pageSize={pageSize}
             onPageChange={setCurrentPage}
           />

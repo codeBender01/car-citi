@@ -13,34 +13,28 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { AddFuelTypeModal } from "./ui/AddFuelTypeModal";
 
-interface FuelType {
-  id: string;
-  nameTk: string;
-  nameRu: string;
-}
-
-interface NewFuelType {
-  id: string;
-  nameTk: string;
-  nameRu: string;
-}
+import { useGetCarSpecsFuelTypes } from "@/api/carSpecs/useGetCarSpecsFuelTypes";
+import { useAddCarSpecsFuelType } from "@/api/carSpecs/useAddCarSpecsFuelType";
+import { useRemoveCarSpecsFuelType } from "@/api/carSpecs/useRemoveCarSpecsFuelType";
+import type { NewCarFuelType, OneCarFuelType } from "@/interfaces/carSpecs.interface";
 
 const FuelTypes = () => {
   const { toast } = useToast();
+  const addFuelType = useAddCarSpecsFuelType();
+  const removeFuelType = useRemoveCarSpecsFuelType();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newFuelType, setNewFuelType] = useState<NewFuelType>({
+  const [newFuelType, setNewFuelType] = useState<NewCarFuelType>({
     id: "",
     nameTk: "",
     nameRu: "",
   });
 
-  // Temporary data - replace with actual API call
-  const fuelTypes: FuelType[] = [];
-  const totalCount = 0;
+  const { data: fuelTypes } = useGetCarSpecsFuelTypes(currentPage, pageSize);
 
-  const handleEdit = (fuelTypeObj: FuelType) => {
+  const handleEdit = (fuelTypeObj: OneCarFuelType) => {
     setNewFuelType({
       id: fuelTypeObj.id,
       nameTk: fuelTypeObj.nameTk,
@@ -51,27 +45,53 @@ const FuelTypes = () => {
 
   const handleSubmitFuelType = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement API call
-    toast({
-      title: "Тип топлива создан",
-      description: "Новый тип топлива успешно добавлен",
-      duration: 1000,
-    });
-    setNewFuelType({
-      id: "",
-      nameTk: "",
-      nameRu: "",
-    });
-    setIsModalOpen(false);
+    try {
+      const res = await addFuelType.mutateAsync(newFuelType);
+
+      if (res.data) {
+        toast({
+          title: newFuelType.id ? "Тип топлива обновлен" : "Тип топлива создан",
+          description: newFuelType.id
+            ? "Тип топлива успешно обновлен"
+            : "Новый тип топлива успешно добавлен",
+          duration: 1000,
+        });
+        setNewFuelType({
+          id: "",
+          nameTk: "",
+          nameRu: "",
+        });
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: newFuelType.id
+          ? "Не удалось обновить тип топлива"
+          : "Не удалось создать тип топлива",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
   };
 
   const handleDelete = async (fuelTypeId: string) => {
-    // TODO: Implement API call
-    toast({
-      title: "Тип топлива удален",
-      variant: "success",
-      duration: 1000,
-    });
+    try {
+      await removeFuelType.mutateAsync(fuelTypeId);
+      toast({
+        title: "Тип топлива удален",
+        description: "Тип топлива успешно удален",
+        variant: "success",
+        duration: 1000,
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить тип топлива",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
   };
 
   return (
@@ -102,58 +122,68 @@ const FuelTypes = () => {
       />
 
       <div className="mt-10">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="font-semibold">Название (тм)</TableHead>
-              <TableHead className="font-semibold">Название (ру)</TableHead>
-              <TableHead className="font-semibold text-right">
-                Действия
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {fuelTypes?.map((fuelType) => (
-              <TableRow
-                key={fuelType.id}
-                className="transition-all duration-200 hover:bg-primary/10"
-              >
-                <TableCell className="font-medium">{fuelType.nameTk}</TableCell>
-                <TableCell className="font-medium">{fuelType.nameRu}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEdit(fuelType);
-                      }}
-                      className="p-2 text-blue-600 hover:bg-blue-50 bg-transparent rounded-lg transition-colors"
-                      title="Редактировать"
-                    >
-                      <FiEdit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(fuelType.id);
-                      }}
-                      className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
-                      title="Удалить"
-                    >
-                      <FiTrash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </TableCell>
+        <div className="overflow-x-auto rounded-lg border">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="font-semibold min-w-[150px]">
+                  Название (тм)
+                </TableHead>
+                <TableHead className="font-semibold min-w-[150px]">
+                  Название (ру)
+                </TableHead>
+                <TableHead className="font-semibold text-right min-w-[120px]">
+                  Действия
+                </TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {fuelTypes?.data.rows?.map((fuelType) => (
+                <TableRow
+                  key={fuelType.id}
+                  className="transition-all duration-200 hover:bg-primary/10"
+                >
+                  <TableCell className="font-medium whitespace-nowrap">
+                    {fuelType.nameTk}
+                  </TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">
+                    {fuelType.nameRu}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(fuelType);
+                        }}
+                        className="p-2 text-blue-600 hover:bg-blue-50 bg-transparent rounded-lg transition-colors"
+                        title="Редактировать"
+                      >
+                        <FiEdit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(fuelType.id);
+                        }}
+                        className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
+                        title="Удалить"
+                      >
+                        <FiTrash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
-        {totalCount > 0 && (
+        {fuelTypes && fuelTypes.data.count > 0 && (
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(totalCount / pageSize)}
-            totalCount={totalCount}
+            totalPages={Math.ceil(fuelTypes.data.count / pageSize)}
+            totalCount={fuelTypes.data.count}
             pageSize={pageSize}
             onPageChange={setCurrentPage}
           />

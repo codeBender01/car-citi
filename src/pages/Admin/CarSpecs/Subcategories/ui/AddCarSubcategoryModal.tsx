@@ -8,35 +8,36 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import type { NewCarCondition } from "@/interfaces/carSpecs.interface";
+import type { NewCarSpecsSubcategory } from "@/interfaces/carSpecs.interface";
 
-interface AddConditionModalProps {
+interface AddCarSubcategoryModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  formData: NewCarCondition;
-  setFormData: Dispatch<SetStateAction<NewCarCondition>>;
+  formData: NewCarSpecsSubcategory;
+  setFormData: Dispatch<SetStateAction<NewCarSpecsSubcategory>>;
   onSubmit: (e: React.FormEvent) => void;
 }
 
-export const AddConditionModal = ({
+export const AddCarSubcategoryModal = ({
   open,
   onOpenChange,
   formData,
   setFormData,
   onSubmit,
-}: AddConditionModalProps) => {
+}: AddCarSubcategoryModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {formData.id ? "Редактировать состояние" : "Добавить состояние автомобиля"}
+            {formData.id
+              ? "Редактировать подкатегорию"
+              : "Добавить подкатегорию"}
           </DialogTitle>
           <DialogDescription>
             {formData.id
-              ? "Обновите данные состояния"
-              : "Создайте новое состояние для автомобилей"}
+              ? "Обновите данные подкатегории"
+              : "Создайте новую подкатегорию для категории"}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit}>
@@ -69,36 +70,6 @@ export const AddConditionModal = ({
                 }
                 placeholder="Введите название на русском"
                 required
-              />
-            </div>
-            <div className="grid gap-2">
-              <label htmlFor="descriptionTk" className="text-sm font-medium">
-                Описание (Turkmen)
-              </label>
-              <Textarea
-                id="descriptionTk"
-                value={formData.descriptionTk}
-                onChange={(e) =>
-                  setFormData({ ...formData, descriptionTk: e.target.value })
-                }
-                placeholder="Введите описание на туркменском"
-                required
-                rows={3}
-              />
-            </div>
-            <div className="grid gap-2">
-              <label htmlFor="descriptionRu" className="text-sm font-medium">
-                Описание (Русский)
-              </label>
-              <Textarea
-                id="descriptionRu"
-                value={formData.descriptionRu}
-                onChange={(e) =>
-                  setFormData({ ...formData, descriptionRu: e.target.value })
-                }
-                placeholder="Введите описание на русском"
-                required
-                rows={3}
               />
             </div>
           </div>

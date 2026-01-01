@@ -1,15 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../index";
 import type { ApiResponse } from "@/interfaces/apiResponse.interface";
-import type { NewNews } from "@/interfaces/news.interface";
+import type {
+  NewCarCondition,
+  OneCarCondition,
+} from "@/interfaces/carSpecs.interface";
 
-export const useAddNews = () => {
+export const useAddCarSpecsCondition = () => {
   const queryClient = useQueryClient();
   const token = localStorage.getItem("adminAccessToken");
   return useMutation({
-    mutationFn: async (payload: NewNews): Promise<ApiResponse<any>> => {
+    mutationFn: async (
+      payload: NewCarCondition
+    ): Promise<ApiResponse<OneCarCondition>> => {
       const { data } = await apiClient.post(
-        "/car-specs/admin-category-upsert",
+        "/car-specs/admin-car-condition-upsert",
         payload,
         {
           headers: {
@@ -19,9 +24,9 @@ export const useAddNews = () => {
       );
       return data;
     },
-    mutationKey: ["addNews"],
+    mutationKey: ["addCarSpecsCondition"],
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getAllNewsAdmin"] });
+      queryClient.invalidateQueries({ queryKey: ["getAllConditions"] });
     },
   });
 };

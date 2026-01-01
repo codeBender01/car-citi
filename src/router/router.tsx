@@ -21,7 +21,6 @@ const Auth = lazy(() => import("@pages/Auth"));
 
 // Admin pages
 const AdminLogin = lazy(() => import("@pages/Admin/Login"));
-const Categories = lazy(() => import("@pages/Admin/Categories"));
 const Regions = lazy(() => import("@pages/Admin/Regions"));
 const Cities = lazy(() => import("@pages/Admin/Cities"));
 const News = lazy(() => import("@pages/Admin/News"));
@@ -30,6 +29,7 @@ const NewsTags = lazy(() => import("@pages/Admin/News/Tags"));
 const Feedbacks = lazy(() => import("@pages/Admin/Feedbacks"));
 const Faq = lazy(() => import("@pages/Admin/Faq"));
 const CarCategories = lazy(() => import("@pages/Admin/CarSpecs/Categories"));
+const CarSubcategories = lazy(() => import("@pages/Admin/CarSpecs/Subcategories"));
 const CarConditions = lazy(() => import("@pages/Admin/CarSpecs/Condition"));
 const DriveTypes = lazy(() => import("@pages/Admin/CarSpecs/DriveType"));
 const Transmissions = lazy(() => import("@pages/Admin/CarSpecs/Transmission"));
@@ -110,10 +110,6 @@ export default function Router() {
       element: <AdminLayout />,
       children: [
         {
-          path: "categories",
-          element: <Categories />,
-        },
-        {
           path: "regions",
           element: <Regions />,
         },
@@ -144,6 +140,10 @@ export default function Router() {
         {
           path: "car-specs/categories",
           element: <CarCategories />,
+        },
+        {
+          path: "car-specs/categories/:categoryId",
+          element: <CarSubcategories />,
         },
         {
           path: "car-specs/condition",

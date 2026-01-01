@@ -13,65 +13,94 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { AddConditionModal } from "./ui/AddConditionModal";
 
-interface Condition {
-  id: string;
-  nameTk: string;
-  nameRu: string;
-}
-
-interface NewCondition {
-  id: string;
-  nameTk: string;
-  nameRu: string;
-}
+import { useGetCarSpecsConditions } from "@/api/carSpecs/useGetCarSpecsConditions";
+import { useAddCarSpecsCondition } from "@/api/carSpecs/useAddCarSpecsCondition";
+import { useRemoveCarSpecsCondition } from "@/api/carSpecs/useRemoveCarSpecsCondition";
+import type {
+  NewCarCondition,
+  OneCarCondition,
+} from "@/interfaces/carSpecs.interface";
 
 const CarConditions = () => {
   const { toast } = useToast();
+  const addCondition = useAddCarSpecsCondition();
+  const removeCondition = useRemoveCarSpecsCondition();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newCondition, setNewCondition] = useState<NewCondition>({
+  const [newCondition, setNewCondition] = useState<NewCarCondition>({
     id: "",
     nameTk: "",
     nameRu: "",
+    descriptionTk: "",
+    descriptionRu: "",
   });
 
-  // Temporary data - replace with actual API call
-  const conditions: Condition[] = [];
-  const totalCount = 0;
+  const { data: conditions } = useGetCarSpecsConditions(currentPage, pageSize);
 
-  const handleEdit = (conditionObj: Condition) => {
+  const handleEdit = (conditionObj: OneCarCondition) => {
     setNewCondition({
       id: conditionObj.id,
       nameTk: conditionObj.nameTk,
       nameRu: conditionObj.nameRu,
+      descriptionTk: conditionObj.descriptionTk,
+      descriptionRu: conditionObj.descriptionRu,
     });
     setIsModalOpen(true);
   };
 
   const handleSubmitCondition = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement API call
-    toast({
-      title: "Состояние создано",
-      description: "Новое состояние успешно добавлено",
-      duration: 1000,
-    });
-    setNewCondition({
-      id: "",
-      nameTk: "",
-      nameRu: "",
-    });
-    setIsModalOpen(false);
+    try {
+      const res = await addCondition.mutateAsync(newCondition);
+
+      if (res.data) {
+        toast({
+          title: newCondition.id ? "Состояние обновлено" : "Состояние создано",
+          description: newCondition.id
+            ? "Состояние успешно обновлено"
+            : "Новое состояние успешно добавлено",
+          duration: 1000,
+        });
+        setNewCondition({
+          id: "",
+          nameTk: "",
+          nameRu: "",
+          descriptionTk: "",
+          descriptionRu: "",
+        });
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: newCondition.id
+          ? "Не удалось обновить состояние"
+          : "Не удалось создать состояние",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
   };
 
   const handleDelete = async (conditionId: string) => {
-    // TODO: Implement API call
-    toast({
-      title: "Состояние удалено",
-      variant: "success",
-      duration: 1000,
-    });
+    try {
+      await removeCondition.mutateAsync(conditionId);
+      toast({
+        title: "Состояние удалено",
+        description: "Состояние успешно удалено",
+        variant: "success",
+        duration: 1000,
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить состояние",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
   };
 
   return (
@@ -102,58 +131,84 @@ const CarConditions = () => {
       />
 
       <div className="mt-10">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="font-semibold">Название (тм)</TableHead>
-              <TableHead className="font-semibold">Название (ру)</TableHead>
-              <TableHead className="font-semibold text-right">
-                Действия
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {conditions?.map((condition) => (
-              <TableRow
-                key={condition.id}
-                className="transition-all duration-200 hover:bg-primary/10"
-              >
-                <TableCell className="font-medium">{condition.nameTk}</TableCell>
-                <TableCell className="font-medium">{condition.nameRu}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEdit(condition);
-                      }}
-                      className="p-2 text-blue-600 hover:bg-blue-50 bg-transparent rounded-lg transition-colors"
-                      title="Редактировать"
-                    >
-                      <FiEdit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(condition.id);
-                      }}
-                      className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
-                      title="Удалить"
-                    >
-                      <FiTrash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </TableCell>
+        <div className="overflow-x-auto rounded-lg border">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="font-semibold min-w-[150px]">
+                  Название (тм)
+                </TableHead>
+                <TableHead className="font-semibold min-w-[150px]">
+                  Название (ру)
+                </TableHead>
+                <TableHead className="font-semibold min-w-[200px]">
+                  Описание (тм)
+                </TableHead>
+                <TableHead className="font-semibold min-w-[200px]">
+                  Описание (ру)
+                </TableHead>
+                <TableHead className="font-semibold text-right min-w-[120px]">
+                  Действия
+                </TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {conditions?.data.rows?.map((condition) => (
+                <TableRow
+                  key={condition.id}
+                  className="transition-all duration-200 hover:bg-primary/10"
+                >
+                  <TableCell className="font-medium whitespace-nowrap">
+                    {condition.nameTk}
+                  </TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">
+                    {condition.nameRu}
+                  </TableCell>
+                  <TableCell className="text-sm text-gray-600 max-w-xs truncate">
+                    <div className="line-clamp-2">
+                      {condition.descriptionTk}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-sm text-gray-600 max-w-xs truncate">
+                    <div className="line-clamp-2">
+                      {condition.descriptionRu}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(condition);
+                        }}
+                        className="p-2 text-blue-600 hover:bg-blue-50 bg-transparent rounded-lg transition-colors"
+                        title="Редактировать"
+                      >
+                        <FiEdit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(condition.id);
+                        }}
+                        className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
+                        title="Удалить"
+                      >
+                        <FiTrash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
-        {totalCount > 0 && (
+        {conditions && conditions.data.count > 0 && (
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(totalCount / pageSize)}
-            totalCount={totalCount}
+            totalPages={Math.ceil(conditions.data.count / pageSize)}
+            totalCount={conditions.data.count}
             pageSize={pageSize}
             onPageChange={setCurrentPage}
           />
