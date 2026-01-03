@@ -23,7 +23,7 @@ const AdminLoginForm = () => {
 
       if (res.data) {
         localStorage.setItem("adminAccessToken", res.data.token);
-        navigate("/admin/categories");
+        navigate("/admin");
       }
     }
   };

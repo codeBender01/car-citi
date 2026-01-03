@@ -5,6 +5,7 @@ import { VscFeedback } from "react-icons/vsc";
 import { BiLogOut } from "react-icons/bi";
 import { FaQuestion } from "react-icons/fa";
 import { IoCarSport } from "react-icons/io5";
+import { TbBrandToyota } from "react-icons/tb";
 
 interface SubPath {
   name: string;
@@ -57,6 +58,11 @@ export const adminNavs: AdminNav[] = [
         path: "/admin/car-specs/color",
       },
     ],
+  },
+  {
+    text: "Марки машин",
+    icon: <TbBrandToyota className="w-5 h-5" />,
+    path: "/admin/car-marks",
   },
   {
     text: "Регионы",
