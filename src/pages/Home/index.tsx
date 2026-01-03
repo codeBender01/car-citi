@@ -36,7 +36,8 @@ import GreenCheck from "@/svgs/GreenCheck";
 import StatsSection from "./ui/StatSection";
 import Reviews from "./ui/Reviews";
 
-import { useGetPosts } from "@/api/posts";
+import { useGetHomeClient } from "@/api/home/useGetHomeClient";
+import { BASE_URL } from "@/api";
 
 const Home = () => {
   const swiperRef = useRef<SwiperType | null>(null);
@@ -51,9 +52,27 @@ const Home = () => {
     { id: "all" as const, label: "Все", showOnSmall: true },
   ];
 
+  const { data: homeData } = useGetHomeClient();
+
   const navigate = useNavigate();
 
-  const { data: posts } = useGetPosts();
+  const getActiveCars = () => {
+    if (!homeData?.data) return [];
+
+    switch (activeTab) {
+      case "favorites":
+        return homeData.data.carFavorites || [];
+      case "recent":
+        return homeData.data.carRecent || [];
+      case "popular":
+        return homeData.data.carPopular || [];
+
+      default:
+        return [];
+    }
+  };
+
+  const activeCars = getActiveCars();
 
   return (
     <div className="pt-[75px]">
@@ -66,24 +85,47 @@ const Home = () => {
             loop={true}
             onSwiper={(swiper) => (swiperRef.current = swiper)}
           >
-            <SwiperSlide>
-              <div
-                className="w-full h-[420px] lg:h-[660px] lg:rounded-2xl flex items-center justify-end md:justify-center text-center flex-col relative"
-                style={{
-                  backgroundImage: `url(${hero})`,
-                  backgroundPosition: "center",
-                  backgroundSize: "cover",
-                }}
-              >
-                <div className="absolute inset-0 bg-black/30 rounded-2xl" />
-                <div className="relative z-10 text-[16px] md:text-xl lg:text-2xl text-primary font-rale">
-                  Все самые новые и подержанные
+            {homeData?.data?.banners && homeData.data.banners.length > 0 ? (
+              homeData.data.banners.map((banner) => (
+                <SwiperSlide key={banner.id}>
+                  <div
+                    className="w-full h-[420px] lg:h-[660px] lg:rounded-2xl flex items-center justify-end md:justify-center text-center flex-col relative"
+                    style={{
+                      backgroundImage: `url(${BASE_URL}/${banner.image.url})`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-black/30 rounded-2xl" />
+                    <div className="relative z-10 text-[16px] md:text-xl lg:text-2xl text-primary font-rale">
+                      Все самые новые и подержанные
+                    </div>
+                    <h1 className="relative z-10 text-2xl md:text-[48px] mb-4 md:mb-0 lg:text-[70px] text-white font-rale font-bold">
+                      марки автомобилей <br /> всегда только на carciti.com
+                    </h1>
+                  </div>
+                </SwiperSlide>
+              ))
+            ) : (
+              <SwiperSlide>
+                <div
+                  className="w-full h-[420px] lg:h-[660px] lg:rounded-2xl flex items-center justify-end md:justify-center text-center flex-col relative"
+                  style={{
+                    backgroundImage: `url(${hero})`,
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <div className="absolute inset-0 bg-black/30 rounded-2xl" />
+                  <div className="relative z-10 text-[16px] md:text-xl lg:text-2xl text-primary font-rale">
+                    Все самые новые и подержанные
+                  </div>
+                  <h1 className="relative z-10 text-2xl md:text-[48px] mb-4 md:mb-0 lg:text-[70px] text-white font-rale font-bold">
+                    марки автомобилей <br /> всегда только на carciti.com
+                  </h1>
                 </div>
-                <h1 className="relative z-10 text-2xl md:text-[48px] mb-4 md:mb-0 lg:text-[70px] text-white font-rale font-bold">
-                  марки автомобилей <br /> всегда только на carciti.com
-                </h1>
-              </div>
-            </SwiperSlide>
+              </SwiperSlide>
+            )}
           </Swiper>
 
           <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between items-center px-8 z-10 pointer-events-none">
@@ -140,15 +182,15 @@ const Home = () => {
             </div>
           </div>
 
-          <CarsCarousel posts={posts ? posts?.data.rows : []} />
+          <CarsCarousel posts={activeCars} />
 
           <div className="mt-[50px] hidden md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
-            {posts?.data.rows.map((r, idx) => {
+            {activeCars.map((r, idx) => {
               return <CarCard car={r} key={idx} />;
             })}
           </div>
         </div>
-        <BrandsSection />
+        <BrandsSection carMarks={homeData?.data?.carMarks} />
       </main>
       <div className="bg-textPrimary flex flex-col md:flex-row md:h-[600px] mx-4 rounded-2xl md:mx-0">
         <div className="w-full md:w-[50%] h-full">
@@ -178,7 +220,7 @@ const Home = () => {
         </div>
       </div>
 
-      <StatsSection />
+      <StatsSection counts={homeData?.data?.counts} />
 
       <div className="mt-[60px] md:mt-[75px] px-4 md:px-10 lg:px-[100px] 2xl:px-[118px]">
         <div className="flex items-center justify-between">
@@ -191,27 +233,47 @@ const Home = () => {
           </div>
         </div>
 
-        <ul className="flex lg:flex-row flex-col items-center justify-between gap-[25px] mt-10">
-          {types.map((t) => {
-            return (
-              <li
-                key={t.type}
-                className="h-[300px] bg-black! card-gradient lg:bg-none lg:w-auto w-full lg:block flex flex-row-reverse justify-between flex-1 rounded-2xl px-[30px] py-5 lg:py-[38px] text-white font-dm"
-                style={
-                  {
-                    "--bg-image": `url(${t.img})`,
-                    backgroundSize: "cover",
-                  } as React.CSSProperties
-                }
-              >
-                <div>{t.num}</div>
-                <div className="flex items-center gap-2">
-                  <div className="flex lg:hidden">{t.icon}</div>
-                  {t.type}
-                </div>
-              </li>
-            );
-          })}
+        <ul className="flex lg:grid grid-cols-5 flex-col items-center justify-between gap-[25px] mt-10">
+          {homeData?.data?.carCategories &&
+          homeData.data.carCategories.length > 0
+            ? homeData.data.carCategories.map((category, idx) => (
+                <li
+                  key={category.mark.id}
+                  className="h-[300px] bg-black! card-gradient lg:bg-none lg:w-auto w-full lg:block flex flex-row-reverse justify-between flex-1 rounded-2xl px-[30px] py-5 lg:py-[38px] text-white font-dm"
+                  style={
+                    {
+                      "--bg-image": `url(${
+                        types[idx % types.length]?.img || types[0].img
+                      })`,
+                      backgroundSize: "cover",
+                      backgroundRepeat: "no-repeat",
+                    } as React.CSSProperties
+                  }
+                >
+                  <div>{category.count}</div>
+                  <div className="flex items-center gap-2">
+                    {category.mark.name}
+                  </div>
+                </li>
+              ))
+            : types.map((t) => (
+                <li
+                  key={t.type}
+                  className="h-[300px] bg-black! card-gradient lg:bg-none lg:w-auto w-full lg:block flex flex-row-reverse justify-between flex-1 rounded-2xl px-[30px] py-5 lg:py-[38px] text-white font-dm"
+                  style={
+                    {
+                      "--bg-image": `url(${t.img})`,
+                      backgroundSize: "cover",
+                    } as React.CSSProperties
+                  }
+                >
+                  <div>{t.num}</div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex lg:hidden">{t.icon}</div>
+                    {t.type}
+                  </div>
+                </li>
+              ))}
         </ul>
 
         <div className="mt-[75px] md:mt-[120px]">

@@ -11,9 +11,10 @@ import CarCard from "@/components/CarCard";
 
 import "swiper/css";
 import type { OnePost } from "@/interfaces/posts.interface";
+import type { HomeCarModel } from "@/interfaces/home.interface";
 
 interface CarsCarouselProps {
-  posts?: OnePost[];
+  posts?: (OnePost | HomeCarModel)[];
 }
 
 const CarsCarousel = ({ posts }: CarsCarouselProps) => {

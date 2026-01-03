@@ -32,7 +32,7 @@ const DashboardHeader = () => {
                 key={nav.id}
                 className={`flex items-center gap-2.5 text-white font-dm font-medium text-[15px] cursor-pointer hover:opacity-65 duration-150 transition-colors `}
               >
-                <span>{nav.title}</span>
+                <span>{nav.titleKey}</span>
                 {nav.isDropdown && <RiArrowDownSLine size={16} />}
               </li>
             ))}
