@@ -5,9 +5,59 @@ import PriceInputs from "./ui/PriceInputs";
 import CharacteristicsForm from "./ui/CharacteristicsForm";
 import MediaForm from "./ui/MediaForm";
 import LocationForm from "./ui/LocationForm";
+import type { NewPostReq } from "@/interfaces/posts.interface";
 
 const AddCar = () => {
   const [activeTab, setActiveTab] = useState(0);
+
+  const [formData, setFormData] = useState<NewPostReq>({
+    tags: [],
+    engineVolume: 0,
+    doors: 0,
+    regionId: "",
+    saleTypeId: "",
+    cityId: "",
+    carMarkId: "",
+    carModelId: "",
+    issueYear: "",
+    subcategoryId: "",
+    carConditionId: "",
+    fuelTypeId: "",
+    driveTypeId: "",
+    transmissionId: "",
+    colorId: "",
+    mileage: "",
+    carEquipment: "",
+    damage: "",
+    categoryId: "",
+    phone: "",
+    title: "",
+    cylinders: "",
+    vin: "",
+    carPrice: {
+      price: 0,
+      prefixPrice: "",
+      suffixPrice: "",
+      customPrice: "",
+    },
+    carImages: {
+      images: [],
+      reports: [],
+      videoUrl: "",
+    },
+    carMap: {
+      address: "",
+      location: "",
+      mapUrl: "",
+      latitude: "",
+      longitude: "",
+    },
+    carCharacteristics: {
+      characteristicId: "",
+      characteristicItemId: "",
+      checked: false,
+    },
+  });
 
   const tabs = [
     "Детали автомобиля",
@@ -20,17 +70,16 @@ const AddCar = () => {
   return (
     <div className="p-[35px] 2xl:p-[60px]">
       <div className="font-dm text-textSecondary mb-10">
-        <div className="text-[32px] font-bold">Добавить объявления</div>
-        <p className="text-textSecondary text-base">
-          Lorem ipsum dolor sit amet, consectetur.
-        </p>
+        <div className="text-[32px] font-bold">Добавить объявление</div>
       </div>
 
       <div className="border rounded-2xl p-[30px] border-grayBorder">
         <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
 
         <div className="mt-8">
-          {activeTab === 0 && <CarDetailsForm />}
+          {activeTab === 0 && (
+            <CarDetailsForm formData={formData} setFormData={setFormData} />
+          )}
 
           {activeTab === 1 && <PriceInputs />}
 

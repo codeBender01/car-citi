@@ -5,7 +5,7 @@ import type { ApiResponse } from "@/interfaces/apiResponse.interface";
 
 export const useGetPosts = ({ regionId }: PostsFilters = {}) => {
   return useQuery<ApiResponse<PostsList>>({
-    queryKey: ["posts", regionId],
+    queryKey: ["getAllPosts", regionId],
     queryFn: async () => {
       const { data } = await apiClient.get("/posts/all", {
         params: {

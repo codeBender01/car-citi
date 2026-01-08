@@ -88,7 +88,7 @@ const Header = () => {
       <div className="flex items-center">
         <div
           className="flex items-center gap-3 cursor-pointer"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
         >
           <div className="w-[35px] h-[35px] ">
             <img
@@ -138,10 +138,11 @@ const Header = () => {
       <div className="flex items-center">
         {profile ? (
           <Button
+            onClick={() => [navigate("/dashboard")]}
             size="none"
             className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl hidden xl:flex items-center gap-2.5 py-4 px-[25px]"
           >
-            {t('common.add')}
+            {t("common.add")}
             <Car className="size-5" />
           </Button>
         ) : null}
@@ -209,7 +210,7 @@ const Header = () => {
               }`}
               onClick={() => navigate("/auth")}
             >
-              {t('common.login')}
+              {t("common.login")}
             </span>
             <span
               className={`font-dm font-medium text-[15px] transition-colors duration-300 ${
@@ -228,7 +229,7 @@ const Header = () => {
               }`}
               onClick={() => navigate("/auth")}
             >
-              {t('common.registration')}
+              {t("common.registration")}
             </span>
           </div>
         )}
@@ -267,7 +268,7 @@ const Header = () => {
                 : "text-textPrimary"
             }`}
           >
-            {t('common.menu')}
+            {t("common.menu")}
           </span>
 
           <HeaderMenu

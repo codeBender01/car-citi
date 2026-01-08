@@ -45,3 +45,58 @@ export interface OnePost {
   };
   viewed: false;
 }
+
+export interface NewPostReq {
+  tags?: string[];
+  engineVolume: number;
+  doors: number;
+  regionId: string;
+  saleTypeId: string;
+  cityId: string;
+  carMarkId: string;
+  carModelId: string;
+  issueYear: string;
+  subcategoryId: string;
+  carConditionId: string;
+  fuelTypeId: string;
+  driveTypeId: string;
+  transmissionId: string;
+  colorId: string;
+  mileage: string;
+  carEquipment: string;
+  damage: string;
+  categoryId: string;
+  phone: string;
+  title: string;
+  cylinders: string;
+  vin: string;
+  carPrice: {
+    price: number;
+    prefixPrice: string;
+    suffixPrice: string;
+    customPrice: string;
+  };
+  carImages: {
+    images: {
+      url: string;
+      hashblur: string;
+    }[];
+    reports: {
+      url: string;
+      name: string;
+    }[];
+    videoUrl: string;
+  };
+  carMap: {
+    address: string;
+    location: string;
+    mapUrl: string;
+    latitude: string;
+    longitude: string;
+  };
+  carCharacteristics: {
+    characteristicId: string;
+    characteristicItemId: string;
+    checked: boolean;
+  };
+}

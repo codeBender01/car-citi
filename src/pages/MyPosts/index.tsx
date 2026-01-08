@@ -18,15 +18,14 @@ const MyPosts = () => {
   const [selectedCar, setSelectedCar] = useState("Audi A3");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Pagination constants
   const ITEMS_PER_PAGE = 3;
   const totalItems = mockPosts.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-  // Calculate paginated posts
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const paginatedPosts = mockPosts.slice(startIndex, endIndex);
+
   return (
     <div className="p-[35px] 2xl:p-[60px]">
       <div className="font-dm text-textSecondary mb-10">

@@ -218,11 +218,11 @@
   },
   "dashboard": {
     "dashboard": "Dolandyryş paneli",
-    "myListings": "Meniň yglanlarym",
+    "myListings": "Meniň postlarym",
     "savedSearches": "Ýatda saklanan gözlegler",
     "newMessages": "Täze hatlar",
     "myFavorites": "Meniň halanlarym",
-    "addListings": "Yglan goş",
+    "addListings": "Post goşmak",
     "favorites": "Halanlarym",
     "messages": "Hatlar",
     "profile": "Profil"
@@ -241,7 +241,7 @@
     "location": "Ýerleşýän ýeri"
   },
   "myPosts": {
-    "myListings": "Meniň yglanlarym",
+    "myListings": "Meniň postlarym",
     "listings": "Yglanlar",
     "brand": "Marka",
     "year": "Ýyl",

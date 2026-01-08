@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   Select,
@@ -23,7 +24,15 @@ import { useGetRegions } from "@/api/regions/useGetRegions";
 
 import { CiSearch } from "react-icons/ci";
 
+import { useGetCarSpecsConditionsClient } from "@/api/carSpecsClient/useGetCarConditionsClient";
+import { useGetDriveTypeClient } from "@/api/carSpecsClient/useGetDriveTypeClient";
+import { useGetTransmissionClient } from "@/api/carSpecsClient/useGetTransmissionClient";
+import { useGetFuelTypeClient } from "@/api/carSpecsClient/useGetFuelTypeClient";
+import { useGetCharsClient } from "@/api/carSpecsClient/useGetCharsClient";
+import { useGetColorsClient } from "@/api/carSpecsClient/useGetColorsClient";
+
 const SearchForm = () => {
+  const { i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<"all" | "new" | "used">("all");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
@@ -50,8 +59,13 @@ const SearchForm = () => {
   const [citySearch, setCitySearch] = useState("");
 
   const { data: regions } = useGetRegions();
+  const { data: conditions } = useGetCarSpecsConditionsClient(i18n.language);
+  const { data: driveTypes } = useGetDriveTypeClient(i18n.language);
+  const { data: transmissions } = useGetTransmissionClient(i18n.language);
+  const { data: fuelTypes } = useGetFuelTypeClient(i18n.language);
+  const { data: chars } = useGetCharsClient(i18n.language);
+  const { data: colors } = useGetColorsClient(i18n.language);
 
-  // Filter regions and cities based on search
   const filteredRegions = useMemo(() => {
     if (!regions?.data?.rows) return [];
 
@@ -75,7 +89,6 @@ const SearchForm = () => {
   const tabs = [
     { id: "all" as const, label: "Все" },
     { id: "new" as const, label: "Новые" },
-    { id: "used" as const, label: "Подержанные" },
   ];
 
   const carBrands = [
@@ -94,17 +107,11 @@ const SearchForm = () => {
   const carModels = ["Model 1", "Model 2", "Model 3", "Model 4"];
   const years = ["2024", "2023", "2022", "2021", "2020", "2019"];
   const bodyTypes = ["Седан", "Внедорожник", "Хэтчбек", "Купе", "Универсал"];
-  const conditions = ["Отличное", "Хорошее", "Удовлетворительное"];
   const categories = ["Легковые", "Грузовые", "Мото", "Спецтехника"];
-  const offerTypes = ["Продажа", "Аренда"];
-  const driveTypes = ["Передний", "Задний", "Полный"];
   const mileageRanges = ["0-10000", "10000-50000", "50000-100000", "100000+"];
   const priceRanges = ["0-10000", "10000-20000", "20000-50000", "50000+"];
-  const transmissions = ["Автомат", "Механика", "Робот", "Вариатор"];
-  const fuelTypes = ["Бензин", "Дизель", "Электро", "Гибрид"];
   const engineVolumes = ["1.0-1.5", "1.6-2.0", "2.1-3.0", "3.0+"];
   const cylinderOptions = ["3", "4", "6", "8", "12"];
-  const colors = ["Белый", "Черный", "Серый", "Синий", "Красный"];
   const doorOptions = ["2", "3", "4", "5"];
   const labels = ["Срочная продажа", "Новое поступление", "Хит продаж"];
 
@@ -119,7 +126,7 @@ const SearchForm = () => {
               className="relative cursor-pointer font-rale font-medium text-base text-white pb-4 transition-colors hover:text-white/80"
             >
               {tab.label}
-              {/* Animated underline */}
+
               {activeTab === tab.id && (
                 <span className="absolute bottom-[25%] left-0 right-0 h-0.5 bg-primary animate-in slide-in-from-bottom-1 duration-300" />
               )}
@@ -311,13 +318,13 @@ const SearchForm = () => {
                 </div>
               </SelectTrigger>
               <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                {conditions.map((cond) => (
+                {conditions?.data.rows.map((cond) => (
                   <SelectItem
-                    key={cond}
-                    value={cond}
+                    key={cond.id}
+                    value={cond.id}
                     className="text-base font-rale cursor-pointer"
                   >
-                    {cond}
+                    {cond.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -351,19 +358,19 @@ const SearchForm = () => {
               <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 hidden lg:flex">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                    Тип предложения
+                    Характеристики
                   </span>
                   <SelectValue placeholder="Выберите тип" />
                 </div>
               </SelectTrigger>
               <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                {offerTypes.map((ot) => (
+                {chars?.data.rows.map((char) => (
                   <SelectItem
-                    key={ot}
-                    value={ot}
+                    key={char.id}
+                    value={char.id}
                     className="text-base font-rale cursor-pointer"
                   >
-                    {ot}
+                    {char.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -380,13 +387,13 @@ const SearchForm = () => {
                 </div>
               </SelectTrigger>
               <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                {driveTypes.map((dt) => (
+                {driveTypes?.data.rows.map((dt) => (
                   <SelectItem
-                    key={dt}
-                    value={dt}
+                    key={dt.id}
+                    value={dt.id}
                     className="text-base font-rale cursor-pointer"
                   >
-                    {dt}
+                    {dt.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -426,13 +433,13 @@ const SearchForm = () => {
                 </div>
               </SelectTrigger>
               <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                {transmissions.map((trans) => (
+                {transmissions?.data.rows.map((trans) => (
                   <SelectItem
-                    key={trans}
-                    value={trans}
+                    key={trans.id}
+                    value={trans.id}
                     className="text-base font-rale cursor-pointer"
                   >
-                    {trans}
+                    {trans.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -449,13 +456,13 @@ const SearchForm = () => {
                 </div>
               </SelectTrigger>
               <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                {fuelTypes.map((ft) => (
+                {fuelTypes?.data.rows.map((ft) => (
                   <SelectItem
-                    key={ft}
-                    value={ft}
+                    key={ft.id}
+                    value={ft.id}
                     className="text-base font-rale cursor-pointer"
                   >
-                    {ft}
+                    {ft.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -518,13 +525,13 @@ const SearchForm = () => {
                 </div>
               </SelectTrigger>
               <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                {colors.map((col) => (
+                {colors?.data.rows.map((col) => (
                   <SelectItem
-                    key={col}
-                    value={col}
-                    className="text-base font-rale cursor-pointer"
+                    key={col.id}
+                    value={col.id}
+                    className="text-base font-rale cursor-pointer capitalize"
                   >
-                    {col}
+                    {col.name}
                   </SelectItem>
                 ))}
               </SelectContent>
