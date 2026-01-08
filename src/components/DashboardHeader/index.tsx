@@ -8,14 +8,20 @@ import { Input } from "../ui/input";
 import { navs } from "../Header/lib/navs";
 import rus from "@assets/header/rus.png";
 
-const DashboardHeader = () => {
+interface DashboardHeaderProps {
+  onMenuClick?: () => void;
+}
+
+const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
   return (
-    <header className="px-10 py-9 2xl:px-[60px] flex items-center justify-between">
-      <div className="flex items-center">
+    <header className="px-4 py-6 md:px-6 lg:px-10 2xl:px-[60px] md:py-9 flex items-center justify-between">
+      <div className="flex items-center gap-4 md:gap-8 lg:gap-16 flex-1 md:flex-initial">
         <LogoDashboard />
-        <div className="ml-16 flex gap-8 items-center">
-          <BurgerMenu />
-          <div className="text-white flex items-center">
+        <div className="flex gap-4 md:gap-8 items-center flex-1 md:flex-initial">
+          <button onClick={onMenuClick} className="lg:hidden">
+            <BurgerMenu />
+          </button>
+          <div className="hidden md:flex text-white items-center">
             <CiSearch />
             <Input
               className="border-none text-white placeholder:text-white"
@@ -24,8 +30,8 @@ const DashboardHeader = () => {
           </div>
         </div>
       </div>
-      <div className="flex items-center">
-        <nav className="">
+      <div className="flex items-center gap-4 md:gap-6">
+        <nav className="hidden lg:block">
           <ul className="flex items-center gap-[30px]">
             {navs.map((nav) => (
               <li
@@ -38,7 +44,7 @@ const DashboardHeader = () => {
             ))}
           </ul>
         </nav>
-        <div className="ml-12 text-white flex items-center gap-2">
+        <div className="hidden md:flex text-white items-center gap-2">
           <img src={rus} className="w-[26px] h-[26px] rounded-md" alt="" />
           <div
             className={`font-dm font-medium text-[15px] transition-colors duration-300 `}
