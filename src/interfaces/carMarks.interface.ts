@@ -38,3 +38,11 @@ export interface OneCarModel {
   nameRu: string;
   id: string;
 }
+
+export interface CarModelsClientRes {
+  count: number;
+  rows: {
+    name: string;
+    id: string;
+  }[];
+}

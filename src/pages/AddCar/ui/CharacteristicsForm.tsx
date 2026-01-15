@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { BsArrowUpRight } from "react-icons/bs";
-import { featureCategories } from "../lib/featureCategories";
+import { useGetCharsClient } from "@/api/carSpecsClient/useGetCharsClient";
 
 const CharacteristicsForm = () => {
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+
+  const { data: chars } = useGetCharsClient();
 
   const handleFeatureToggle = (feature: string) => {
     setSelectedFeatures((prev) =>
@@ -17,21 +19,21 @@ const CharacteristicsForm = () => {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="grid grid-cols-5 gap-8">
-        {featureCategories.map((category) => (
+      <div className="grid grid-cols-4 gap-8">
+        {chars?.data.rows.map((category) => (
           <div key={category.name} className="flex flex-col gap-2">
             <h3 className="text-[16px] font-dm text-textPrimary mb-2">
               {category.name}
             </h3>
-            {category.features.map((feature) => (
-              <div key={feature} className="flex items-center gap-3">
+            {category.items.map((feature) => (
+              <div key={feature.id} className="flex items-center gap-3">
                 <Checkbox
-                  checked={selectedFeatures.includes(feature)}
-                  onCheckedChange={() => handleFeatureToggle(feature)}
+                  checked={selectedFeatures.includes(feature.id)}
+                  onCheckedChange={() => handleFeatureToggle(feature.id)}
                   className="w-5 h-5 data-[state=checked]:bg-[#0C1002]! data-[state=checked]:text-white! data-[state=checked]:border-[#0C1002]! border-[#0C1002]!"
                 />
                 <label className="text-base font-rale text-textPrimary cursor-pointer">
-                  {feature}
+                  {feature.name}
                 </label>
               </div>
             ))}

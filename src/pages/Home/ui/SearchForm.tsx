@@ -58,7 +58,7 @@ const SearchForm = () => {
   const [tirePressure, setTirePressure] = useState(false);
   const [citySearch, setCitySearch] = useState("");
 
-  const { data: regions } = useGetRegions();
+  const { data: regions } = useGetRegions(i18n.language);
   const { data: conditions } = useGetCarSpecsConditionsClient(i18n.language);
   const { data: driveTypes } = useGetDriveTypeClient(i18n.language);
   const { data: transmissions } = useGetTransmissionClient(i18n.language);

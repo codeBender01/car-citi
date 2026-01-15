@@ -33,3 +33,12 @@ export interface OneCarCharClient {
     characteristicId: string;
   }[];
 }
+
+export interface SubcategoriesClient {
+  count: number;
+  rows: {
+    categoryId: string;
+    id: string;
+    name: string;
+  }[];
+}

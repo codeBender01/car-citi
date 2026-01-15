@@ -2,18 +2,29 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { BsArrowUpRight } from "react-icons/bs";
-import { useState } from "react";
+import type { NewPostReq } from "@/interfaces/posts.interface";
 
-const PriceInputs = () => {
-  const [price, setPrice] = useState<number | null>(null);
+interface PriceInputsProps {
+  formData: NewPostReq;
+  setFormData: React.Dispatch<React.SetStateAction<NewPostReq>>;
+}
 
+const PriceInputs = ({ formData, setFormData }: PriceInputsProps) => {
   return (
     <div className="flex flex-col gap-3">
       <div className="relative w-full min-h-[60px]">
         <Input
           type="text"
-          value={price ? price : undefined}
-          onChange={(e) => setPrice(parseInt(e.target.value))}
+          value={formData.carPrice.price}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              carPrice: {
+                ...formData.carPrice,
+                price: parseInt(e.target.value),
+              },
+            })
+          }
           placeholder="Пример 1000"
           className="w-full h-full px-4 pt-7 pb-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale focus:outline-none focus:border-[#7B3FF2] focus:ring-2 focus:ring-[#7B3FF2]/20 placeholder:text-base"
         />
@@ -23,6 +34,16 @@ const PriceInputs = () => {
       </div>
       <div className="relative w-full min-h-[60px]">
         <Input
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              carPrice: {
+                ...formData.carPrice,
+                prefixPrice: e.target.value,
+              },
+            })
+          }
+          value={formData.carPrice.prefixPrice}
           type="text"
           className="w-full h-full px-4 pt-7 pb-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale focus:outline-none focus:border-[#7B3FF2] focus:ring-2 focus:ring-[#7B3FF2]/20 placeholder:text-base"
         />
@@ -35,6 +56,16 @@ const PriceInputs = () => {
       </div>
       <div className="relative w-full min-h-[60px]">
         <Input
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              carPrice: {
+                ...formData.carPrice,
+                suffixPrice: e.target.value,
+              },
+            })
+          }
+          value={formData.carPrice.suffixPrice}
           type="text"
           className="w-full h-full px-4 pt-7 pb-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale focus:outline-none focus:border-[#7B3FF2] focus:ring-2 focus:ring-[#7B3FF2]/20 placeholder:text-base"
         />
@@ -47,6 +78,16 @@ const PriceInputs = () => {
       </div>
       <div className="relative w-full min-h-[60px]">
         <Input
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              carPrice: {
+                ...formData.carPrice,
+                customPrice: e.target.value,
+              },
+            })
+          }
+          value={formData.carPrice.customPrice}
           type="text"
           className="w-full h-full px-4 pt-7 pb-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale focus:outline-none focus:border-[#7B3FF2] focus:ring-2 focus:ring-[#7B3FF2]/20 placeholder:text-base"
         />

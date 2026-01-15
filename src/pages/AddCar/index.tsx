@@ -81,7 +81,9 @@ const AddCar = () => {
             <CarDetailsForm formData={formData} setFormData={setFormData} />
           )}
 
-          {activeTab === 1 && <PriceInputs />}
+          {activeTab === 1 && (
+            <PriceInputs formData={formData} setFormData={setFormData} />
+          )}
 
           {activeTab === 2 && <CharacteristicsForm />}
 
