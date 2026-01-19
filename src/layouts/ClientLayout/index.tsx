@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 const ClientLayout = () => {
   return (
-    <main className="max-w-[1920px] mx-auto bg-mainBg">
+    <main className="max-w-480 mx-auto bg-mainBg">
       <Header />
       <Outlet />
       <Footer />

@@ -8,15 +8,11 @@ export const useAddPost = () => {
   const token = localStorage.getItem("accessToken");
   return useMutation({
     mutationFn: async (payload: NewPostReq): Promise<ApiResponse<OnePost>> => {
-      const { data } = await apiClient.post(
-        "/car-marks/admin-upsert",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const { data } = await apiClient.post("/posts/upsert", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return data;
     },
     mutationKey: ["addPost"],

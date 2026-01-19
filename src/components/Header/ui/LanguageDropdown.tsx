@@ -2,16 +2,16 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const languages = [
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'tk', name: 'Türkmençe', flag: '🇹🇲' },
+  { code: "ru", name: "Русский", flag: "🇷🇺" },
+  { code: "tk", name: "Türkmençe", flag: "🇹🇲" },
 ];
 
 export const LanguageDropdown = () => {
   const { t, i18n } = useTranslation();
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
 
-  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+  const currentLanguage =
+    languages.find((lang) => lang.code === i18n.language) || languages[0];
 
   const changeLanguage = (langCode: string) => {
     i18n.changeLanguage(langCode);
@@ -20,7 +20,9 @@ export const LanguageDropdown = () => {
 
   return (
     <div className="mt-5 pt-5 border-t border-gray-700">
-      <div className="text-sm font-medium text-gray-400 mb-3">{t('common.language')}</div>
+      <div className="text-sm font-medium text-gray-400 mb-3">
+        {t("common.language")}
+      </div>
       <div className="relative">
         <button
           onClick={(e) => {
@@ -34,20 +36,25 @@ export const LanguageDropdown = () => {
             <span className="font-dm font-medium">{currentLanguage.name}</span>
           </div>
           <svg
-            className={`w-5 h-5 transition-transform ${isLangDropdownOpen ? 'rotate-180' : ''}`}
+            className={`w-5 h-5 transition-transform ${
+              isLangDropdownOpen ? "rotate-180" : ""
+            }`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </button>
 
         <div
           className={`mt-2 space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${
-            isLangDropdownOpen
-              ? 'max-h-[500px] opacity-100'
-              : 'max-h-0 opacity-0'
+            isLangDropdownOpen ? "max-h-125 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
           {languages.map((lang) => (
@@ -59,8 +66,8 @@ export const LanguageDropdown = () => {
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 lang.code === i18n.language
-                  ? 'bg-primary text-white'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  ? "bg-primary text-white"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
               }`}
             >
               <span className="text-xl">{lang.flag}</span>

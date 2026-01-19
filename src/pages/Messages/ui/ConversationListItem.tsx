@@ -44,7 +44,7 @@ const ConversationListItem = ({
             isActive ? "text-white" : "text-textPrimary"
           }`}
         >
-          {conversation.carModel}
+          {conversation.lastMessage}
         </p>
       </div>
 

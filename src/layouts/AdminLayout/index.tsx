@@ -13,7 +13,7 @@ const AdminLayout = () => {
   const { isLoading, error } = useGetAdminProfile();
 
   useEffect(() => {
-    if (error && axios.isAxiosError(error)) {
+    if (error && axios.isAxiosError(error) && !adminAccessToken) {
       if (error.response?.status === 401) {
         localStorage.removeItem("adminAccessToken");
         navigate("/admin/login", { replace: true });

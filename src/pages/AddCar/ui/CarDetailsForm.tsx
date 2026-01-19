@@ -65,7 +65,6 @@ const CarDetailsForm = ({ formData, setFormData }: CarDetailsFormProps) => {
     }
   };
 
-  const bodyTypes = ["Седан", "Внедорожник", "Хэтчбек", "Купе", "Универсал"];
   const cylinderOptions = ["3", "4", "6", "8", "12"];
   const doorOptions = ["2", "3", "4", "5"];
   const engineVolumes = [
@@ -182,32 +181,6 @@ const CarDetailsForm = ({ formData, setFormData }: CarDetailsFormProps) => {
         </span>
       </div>
 
-      {/* Тип кузова */}
-      <Select
-        value={formData.subcategoryId}
-        onValueChange={(value) => handleInputChange("subcategoryId", value)}
-      >
-        <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
-          <div className="flex flex-col gap-2 items-start w-full">
-            <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-              Тип кузова
-            </span>
-            <SelectValue placeholder="Выберите тип" />
-          </div>
-        </SelectTrigger>
-        <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-          {bodyTypes.map((bt) => (
-            <SelectItem
-              key={bt}
-              value={bt}
-              className="text-base font-rale cursor-pointer"
-            >
-              {bt}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
       {/* Город / Регион */}
       <SearchableSelect
         value={formData.cityId}
@@ -302,14 +275,15 @@ const CarDetailsForm = ({ formData, setFormData }: CarDetailsFormProps) => {
           ))}
         </SelectContent>
       </Select>
+
       <Select
-        value={formData.categoryId}
-        onValueChange={(value) => handleInputChange("categoryId", value)}
+        value={formData.subcategoryId}
+        onValueChange={(value) => handleInputChange("subcategoryId", value)}
       >
         <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
           <div className="flex flex-col gap-2 items-start w-full">
             <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-              Подкатегория
+              Тип кузова
             </span>
             <SelectValue placeholder="Выберите категорию" />
           </div>
@@ -384,7 +358,9 @@ const CarDetailsForm = ({ formData, setFormData }: CarDetailsFormProps) => {
         <Input
           type="number"
           value={formData.mileage}
-          onChange={(e) => handleInputChange("mileage", e.target.value)}
+          onChange={(e) =>
+            handleInputChange("mileage", Number(e.target.value) || 0)
+          }
           placeholder="Введите пробег"
           className="w-full h-full px-4 pt-7 pb-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale focus:outline-none focus:border-[#7B3FF2] focus:ring-2 focus:ring-[#7B3FF2]/20 placeholder:text-base"
         />

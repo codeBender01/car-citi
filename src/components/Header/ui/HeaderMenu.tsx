@@ -24,7 +24,7 @@ const HeaderMenu = ({ isOpen, userProfile }: HeaderMenuProps) => {
 
   return (
     <div
-      className={`fixed md:absolute text-white md:rounded-lg bg-black left-0 right-0 md:right-0 md:left-auto w-full md:w-[300px] p-5 top-[85px] md:top-[120%] bottom-0 md:bottom-auto h-[calc(100vh-85px)] md:h-auto md:max-h-[80vh] transition-all duration-300 ease-out overflow-y-auto ${
+      className={`fixed md:absolute text-white md:rounded-lg bg-black left-0 right-0 md:right-0 md:left-auto w-full md:w-75 p-5 top-21.25 md:top-[120%] bottom-0 md:bottom-auto h-[calc(100vh-85px)] md:h-auto md:max-h-[80vh] transition-all duration-300 ease-out overflow-y-auto ${
         isOpen
           ? "opacity-100 translate-y-0"
           : "opacity-0 -translate-y-4 pointer-events-none"
@@ -51,9 +51,9 @@ const HeaderMenu = ({ isOpen, userProfile }: HeaderMenuProps) => {
         <>
           <Button
             size="none"
-            className="bg-primary text-white w-full font-dm text-[15px] cursor-pointer rounded-xl mt-5 flex items-center justify-center gap-2.5 py-5 font-medium px-[25px]"
+            className="bg-primary text-white w-full font-dm text-[15px] cursor-pointer rounded-xl mt-5 flex items-center justify-center gap-2.5 py-5 font-medium px-6.25"
           >
-            {t('common.add')}
+            {t("common.add")}
             <Car className="size-5" />
           </Button>
 
@@ -79,16 +79,16 @@ const HeaderMenu = ({ isOpen, userProfile }: HeaderMenuProps) => {
           <Button
             onClick={() => navigate("/auth")}
             size="none"
-            className="bg-primary self-start text-white w-full font-dm text-[15px] cursor-pointer rounded-xl mt-5 flex items-center gap-2.5 py-5 font-medium px-[25px]"
+            className="bg-primary self-start text-white w-full font-dm text-[15px] cursor-pointer rounded-xl mt-5 flex items-center gap-2.5 py-5 font-medium px-6.25"
           >
-            <div>{t('common.login')}</div>
+            <div>{t("common.login")}</div>
           </Button>
           <Button
             size="none"
             onClick={() => navigate("/auth")}
-            className="bg-trasparent border border-white self-start text-white w-full font-dm text-[15px] cursor-pointer rounded-xl mt-5 flex items-center gap-2.5 py-5 font-medium px-[25px]"
+            className="bg-trasparent border border-white self-start text-white w-full font-dm text-[15px] cursor-pointer rounded-xl mt-5 flex items-center gap-2.5 py-5 font-medium px-6.25"
           >
-            <div>{t('common.registration')}</div>
+            <div>{t("common.registration")}</div>
           </Button>
         </>
       )}

@@ -1,6 +1,6 @@
 import React from "react";
 import { HiOutlineLocationMarker } from "react-icons/hi";
-import { IoNewspaperOutline } from "react-icons/io5";
+import { IoNewspaperOutline, IoChatbubblesOutline } from "react-icons/io5";
 import { VscFeedback } from "react-icons/vsc";
 import { BiLogOut } from "react-icons/bi";
 import { FaQuestion } from "react-icons/fa";
@@ -97,6 +97,11 @@ export const adminNavs: AdminNav[] = [
     text: "FAQ",
     icon: <FaQuestion className="w-5 h-5" />,
     path: "/admin/faq",
+  },
+  {
+    text: "Чат",
+    icon: <IoChatbubblesOutline className="w-5 h-5" />,
+    path: "/admin/chat",
   },
   {
     text: "Выход",

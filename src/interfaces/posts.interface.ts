@@ -62,7 +62,7 @@ export interface NewPostReq {
   driveTypeId: string;
   transmissionId: string;
   colorId: string;
-  mileage: string;
+  mileage: number;
   carEquipment: string;
   damage: string;
   categoryId: string;
@@ -98,5 +98,5 @@ export interface NewPostReq {
     characteristicId: string;
     characteristicItemId: string;
     checked: boolean;
-  };
+  }[];
 }

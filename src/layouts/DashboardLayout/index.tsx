@@ -24,7 +24,7 @@ const DashboardLayout = () => {
     <div className="w-full min-h-screen bg-darkGreen flex flex-col pb-4 md:pb-8">
       <DashboardHeader onMenuClick={() => setIsMobileMenuOpen(true)} />
 
-      <div className="flex justify-between px-4 md:pr-6 lg:pr-[30px] h-[80%] gap-4">
+      <div className="flex justify-between px-4 md:pr-6 lg:pr-7.5 h-[80%] gap-4">
         {/* Desktop Sidebar */}
         <div className="hidden lg:block">
           <DahsboardSidebar />
@@ -32,7 +32,7 @@ const DashboardLayout = () => {
 
         {/* Mobile Sidebar */}
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-          <SheetContent side="left" className="p-0 w-[280px]">
+          <SheetContent side="left" className="p-0 w-70">
             <DahsboardSidebar onNavigate={() => setIsMobileMenuOpen(false)} />
           </SheetContent>
         </Sheet>

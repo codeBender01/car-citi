@@ -1,5 +1,4 @@
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
-import { mockPosts } from "./lib/mockPosts";
 import Pagination from "@/components/Pagination";
 
 import { CiSearch } from "react-icons/ci";
@@ -14,17 +13,25 @@ import {
 
 import { useState } from "react";
 
+import { useGetOwnPosts } from "@/api/posts/useGetOwnPosts";
+import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
+
 const MyPosts = () => {
+  const { i18n } = useTranslation();
   const [selectedCar, setSelectedCar] = useState("Audi A3");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const ITEMS_PER_PAGE = 3;
-  const totalItems = mockPosts.length;
+  const { data: ownPosts, isLoading } = useGetOwnPosts(i18n.language);
+
+  const ITEMS_PER_PAGE = 10;
+  const posts = ownPosts?.data?.rows || [];
+  const totalItems = ownPosts?.data?.count || 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedPosts = mockPosts.slice(startIndex, endIndex);
+  const paginatedPosts = posts.slice(startIndex, endIndex);
 
   return (
     <div className="p-[35px] 2xl:p-[60px]">
@@ -81,76 +88,90 @@ const MyPosts = () => {
           </div>
         </div>
 
-        <div className="space-y-3">
-          {paginatedPosts.map((post) => (
-            <div
-              key={post.id}
-              className="bg-white rounded-2xl px-9 py-5 border-b border-grayBorder hover:shadow-md transition-shadow"
-            >
-              <div className="grid grid-cols-[2fr_1fr_0.7fr_0.7fr_1fr_1fr] gap-4 items-center">
-                {/* Объявления - Listing with image and name */}
-                <div className="flex items-center gap-4">
-                  <img
-                    src={post.image}
-                    alt={post.name}
-                    className="w-[135px] h-[110px] rounded-lg object-cover"
-                  />
-                  <span className="font-dm text-sm text-textSecondary line-clamp-2">
-                    {post.name}
-                  </span>
-                </div>
-
-                {/* Марка - Brand */}
-                <span className="font-dm text-sm text-textSecondary">
-                  {post.brand}
-                </span>
-
-                {/* Год - Year */}
-                <span className="font-dm text-sm text-textSecondary">
-                  {post.year}
-                </span>
-
-                {/* КП - Transmission */}
-                <span className="font-dm text-sm text-textSecondary">
-                  {post.transmission}
-                </span>
-
-                {/* Тип топлива - Fuel Type */}
-                <span className="font-dm text-sm text-textSecondary">
-                  {post.fuelType}
-                </span>
-
-                {/* Действие - Actions */}
-                <div className="flex items-center gap-3">
-                  <button className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-primary">
-                    <FiEdit2 size={18} />
-                  </button>
-                  <button className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-danger">
-                    <FiTrash2 size={18} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {mockPosts.length === 0 && (
+        {isLoading ? (
           <div className="bg-white rounded-2xl px-9 py-16 border border-grayBorder text-center">
-            <p className="font-dm text-textGray text-base">
-              У вас пока нет объявлений
-            </p>
+            <p className="font-dm text-textGray text-base">Загрузка...</p>
           </div>
-        )}
+        ) : (
+          <>
+            <div className="space-y-3">
+              {paginatedPosts.map((post) => (
+                <div
+                  key={post.id}
+                  className="bg-white rounded-2xl px-9 py-5 border-b border-grayBorder hover:shadow-md transition-shadow"
+                >
+                  <div className="grid grid-cols-[2fr_1fr_0.7fr_0.7fr_1fr_1fr] gap-4 items-center">
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={
+                          post.images?.images?.[0]?.url
+                            ? `${import.meta.env.VITE_BASE_URL}/${
+                                post.images.images[0].url
+                              }`
+                            : "https://via.placeholder.com/135x110"
+                        }
+                        alt={`${post.carMark?.name} ${post.carModel?.name}`}
+                        className="w-[135px] h-[110px] rounded-lg object-cover"
+                      />
+                      <span className="font-dm text-sm text-textSecondary line-clamp-2">
+                        {post.carMark?.name} {post.carModel?.name}{" "}
+                        {post.issueYear
+                          ? dayjs(post.issueYear).format("DD.MM.YYYY")
+                          : ""}
+                      </span>
+                    </div>
 
-        {/* Pagination */}
-        {mockPosts.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            totalItems={totalItems}
-            itemsPerPage={ITEMS_PER_PAGE}
-            onPageChange={setCurrentPage}
-          />
+                    <span className="font-dm text-sm text-textSecondary">
+                      {post.carMark?.name || "-"}
+                    </span>
+
+                    <span className="font-dm text-sm text-textSecondary">
+                      {post.issueYear
+                        ? dayjs(post.issueYear).format("DD.MM.YYYY")
+                        : "-"}
+                    </span>
+
+                    <span className="font-dm text-sm text-textSecondary">
+                      {post.transmission?.name || "-"}
+                    </span>
+
+                    <span className="font-dm text-sm text-textSecondary">
+                      {post.fuelType?.name || "-"}
+                    </span>
+
+                    {/* Действие - Actions */}
+                    <div className="flex items-center gap-3">
+                      <button className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-primary">
+                        <FiEdit2 size={18} />
+                      </button>
+                      <button className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-danger">
+                        <FiTrash2 size={18} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {posts.length === 0 && !isLoading && (
+              <div className="bg-white rounded-2xl px-9 py-16 border border-grayBorder text-center">
+                <p className="font-dm text-textGray text-base">
+                  У вас пока нет объявлений
+                </p>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {posts.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={totalItems}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={setCurrentPage}
+              />
+            )}
+          </>
         )}
       </div>
     </div>

@@ -14,7 +14,7 @@ interface DashboardHeaderProps {
 
 const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
   return (
-    <header className="px-4 py-6 md:px-6 lg:px-10 2xl:px-[60px] md:py-9 flex items-center justify-between">
+    <header className="px-4 py-6 md:px-6 lg:px-10 2xl:px-15 md:py-9 flex items-center justify-between">
       <div className="flex items-center gap-4 md:gap-8 lg:gap-16 flex-1 md:flex-initial">
         <LogoDashboard />
         <div className="flex gap-4 md:gap-8 items-center flex-1 md:flex-initial">
@@ -32,7 +32,7 @@ const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
       </div>
       <div className="flex items-center gap-4 md:gap-6">
         <nav className="hidden lg:block">
-          <ul className="flex items-center gap-[30px]">
+          <ul className="flex items-center gap-7.5">
             {navs.map((nav) => (
               <li
                 key={nav.id}
@@ -45,7 +45,7 @@ const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
           </ul>
         </nav>
         <div className="hidden md:flex text-white items-center gap-2">
-          <img src={rus} className="w-[26px] h-[26px] rounded-md" alt="" />
+          <img src={rus} className="w-6.5 h-6.5 rounded-md" alt="" />
           <div
             className={`font-dm font-medium text-[15px] transition-colors duration-300 `}
           >

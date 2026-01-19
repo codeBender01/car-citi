@@ -7,10 +7,17 @@ import MediaForm from "./ui/MediaForm";
 import LocationForm from "./ui/LocationForm";
 import type { NewPostReq } from "@/interfaces/posts.interface";
 
+import { useAddPost } from "@/api/posts/useAddPost";
+import { useGetProfile } from "@/api/auth/useGetProfile";
+import { toast } from "@/hooks/use-toast";
+
 const AddCar = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const { data: profile } = useGetProfile();
 
-  const [formData, setFormData] = useState<NewPostReq>({
+  const addPost = useAddPost();
+
+  const getInitialFormData = (): NewPostReq => ({
     tags: [],
     engineVolume: 0,
     doors: 0,
@@ -26,11 +33,11 @@ const AddCar = () => {
     driveTypeId: "",
     transmissionId: "",
     colorId: "",
-    mileage: "",
+    mileage: 0,
     carEquipment: "",
     damage: "",
     categoryId: "",
-    phone: "",
+    phone: profile ? profile?.data.phone : "",
     title: "",
     cylinders: "",
     vin: "",
@@ -52,12 +59,31 @@ const AddCar = () => {
       latitude: "",
       longitude: "",
     },
-    carCharacteristics: {
-      characteristicId: "",
-      characteristicItemId: "",
-      checked: false,
-    },
+    carCharacteristics: [],
   });
+
+  const [formData, setFormData] = useState<NewPostReq>(getInitialFormData());
+
+  const handleSubmit = async () => {
+    try {
+      await addPost.mutateAsync(formData);
+
+      toast({
+        title: "Успешно!",
+        description: "Объявление успешно создано",
+        variant: "success",
+      });
+
+      setFormData(getInitialFormData());
+      setActiveTab(0);
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось создать объявление. Попробуйте еще раз.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const tabs = [
     "Детали автомобиля",
@@ -85,11 +111,25 @@ const AddCar = () => {
             <PriceInputs formData={formData} setFormData={setFormData} />
           )}
 
-          {activeTab === 2 && <CharacteristicsForm />}
+          {activeTab === 2 && (
+            <CharacteristicsForm
+              formData={formData}
+              setFormData={setFormData}
+            />
+          )}
 
-          {activeTab === 3 && <MediaForm />}
+          {activeTab === 3 && (
+            <MediaForm formData={formData} setFormData={setFormData} />
+          )}
 
-          {activeTab === 4 && <LocationForm />}
+          {activeTab === 4 && (
+            <LocationForm
+              formData={formData}
+              setFormData={setFormData}
+              onSubmit={handleSubmit}
+              isSubmitting={addPost.isPending}
+            />
+          )}
         </div>
       </div>
     </div>

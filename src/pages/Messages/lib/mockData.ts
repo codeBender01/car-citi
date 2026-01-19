@@ -8,7 +8,7 @@ export interface Message {
 
 export interface Conversation {
   id: number;
-  userId: number;
+  userId: string;
   userName: string;
   userAvatar: string;
   carModel: string;
@@ -17,64 +17,6 @@ export interface Conversation {
   unreadCount: number;
   isOnline: boolean;
 }
-
-export const mockConversations: Conversation[] = [
-  {
-    id: 1,
-    userId: 1,
-    userName: "Murad",
-    userAvatar: "https://via.placeholder.com/50",
-    carModel: "Audi Q8 2023",
-    lastMessage: "Lorem ipsum dolor sit amet",
-    timestamp: "1 мин.",
-    unreadCount: 0,
-    isOnline: true,
-  },
-  {
-    id: 2,
-    userId: 2,
-    userName: "Floyd Alexander",
-    userAvatar: "https://via.placeholder.com/50",
-    carModel: "Audi Q8 2023",
-    lastMessage: "Lorem ipsum dolor sit amet",
-    timestamp: "35 мин.",
-    unreadCount: 2,
-    isOnline: false,
-  },
-  {
-    id: 3,
-    userId: 3,
-    userName: "Floyd Alexander",
-    userAvatar: "https://via.placeholder.com/50",
-    carModel: "Audi Q8 2023",
-    lastMessage: "Lorem ipsum dolor sit amet",
-    timestamp: "35 мин.",
-    unreadCount: 2,
-    isOnline: false,
-  },
-  {
-    id: 4,
-    userId: 4,
-    userName: "Floyd Alexander",
-    userAvatar: "https://via.placeholder.com/50",
-    carModel: "Audi Q8 2023",
-    lastMessage: "Lorem ipsum dolor sit amet",
-    timestamp: "35 мин.",
-    unreadCount: 2,
-    isOnline: false,
-  },
-  {
-    id: 5,
-    userId: 5,
-    userName: "Floyd Alexander",
-    userAvatar: "https://via.placeholder.com/50",
-    carModel: "Audi Q8 2023",
-    lastMessage: "Lorem ipsum dolor sit amet",
-    timestamp: "19/08/2024",
-    unreadCount: 0,
-    isOnline: false,
-  },
-];
 
 export const mockMessages: Message[] = [
   {

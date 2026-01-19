@@ -21,16 +21,16 @@ const DahsboardSidebar = ({ onNavigate }: DashboardSidebarProps) => {
   };
 
   return (
-    <aside className="px-[30px] py-[60px] max-w-[300px] w-full">
+    <aside className="px-7.5 py-15 max-w-75 w-full">
       <Button
         size="none"
-        className="text-white bg-transparent hover:bg-white hover:text-darkGreen border border-white  font-dm text-[15px] cursor-pointer rounded-xl flex items-center gap-2.5 py-4 px-[25px] w-full"
+        className="text-white bg-transparent hover:bg-white hover:text-darkGreen border border-white  font-dm text-[15px] cursor-pointer rounded-xl flex items-center gap-2.5 py-4 px-6.25 w-full"
         onClick={() => handleNavigate("/dashboard/add")}
       >
         <LuPlus />
-        {t('dashboard.addListings')}
+        {t("dashboard.addListings")}
       </Button>
-      <ul className="mt-[25px] ">
+      <ul className="mt-6.25 ">
         {sideNavs.map((n) => {
           return (
             <li
@@ -38,7 +38,7 @@ const DahsboardSidebar = ({ onNavigate }: DashboardSidebarProps) => {
               onClick={() => handleNavigate(n.path)}
               className={`${
                 location.pathname === n.path ? "bg-[#FFFFFF1A]" : ""
-              } py-[18px] px-5 flex items-center gap-3.5 text-white font-dm text-base text-nowrap rounded-2xl hover:bg-[#FFFFFF1A] duration-150 cursor-pointer`}
+              } py-4.5 px-5 flex items-center gap-3.5 text-white font-dm text-base text-nowrap rounded-2xl hover:bg-[#FFFFFF1A] duration-150 cursor-pointer`}
             >
               {n.icon}
               {t(n.textKey)}
