@@ -2,17 +2,22 @@ import LogoDashboard from "@/svgs/LogoDashboard";
 import BurgerMenu from "@/svgs/BurgerMenu";
 import { CiSearch } from "react-icons/ci";
 import { RiArrowDownSLine } from "react-icons/ri";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { Input } from "../ui/input";
+import { LanguageSwitcher } from "../LanguageSwitcher";
 
 import { navs } from "../Header/lib/navs";
-import rus from "@assets/header/rus.png";
 
 interface DashboardHeaderProps {
   onMenuClick?: () => void;
 }
 
 const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
   return (
     <header className="px-4 py-6 md:px-6 lg:px-10 2xl:px-15 md:py-9 flex items-center justify-between">
       <div className="flex items-center gap-4 md:gap-8 lg:gap-16 flex-1 md:flex-initial">
@@ -36,21 +41,19 @@ const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
             {navs.map((nav) => (
               <li
                 key={nav.id}
+                onClick={() => {
+                  navigate(nav.path);
+                }}
                 className={`flex items-center gap-2.5 text-white font-dm font-medium text-[15px] cursor-pointer hover:opacity-65 duration-150 transition-colors `}
               >
-                <span>{nav.titleKey}</span>
+                <span>{t(nav.titleKey)}</span>
                 {nav.isDropdown && <RiArrowDownSLine size={16} />}
               </li>
             ))}
           </ul>
         </nav>
-        <div className="hidden md:flex text-white items-center gap-2">
-          <img src={rus} className="w-6.5 h-6.5 rounded-md" alt="" />
-          <div
-            className={`font-dm font-medium text-[15px] transition-colors duration-300 `}
-          >
-            Язык
-          </div>
+        <div className="hidden md:flex">
+          <LanguageSwitcher isDark={true} />
         </div>
       </div>
     </header>

@@ -18,6 +18,8 @@ import { useGetAllNewsTags } from "@/api/news/useGetAllNewsTags";
 
 import { useUploadSingle } from "@/api/upload/useUploadSingle";
 
+import { BASE_URL } from "@/api";
+
 interface AddNewsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -82,7 +84,7 @@ export const AddNewsModal = ({
             <div className="grid gap-2">
               <Label>Изображение</Label>
               <ImageUpload
-                value={newsObj.image?.url}
+                value={BASE_URL + "/" + newsObj.image?.url}
                 onChange={handleImageChange}
                 className="max-w-sm h-[150px] w-[300px] "
               />

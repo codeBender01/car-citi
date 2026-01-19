@@ -1,5 +1,34 @@
 export interface PostsFilters {
+  search?: string;
+  vin?: string;
   regionId?: string;
+  cityId?: string;
+  carMarkId?: string;
+  carModelId?: string;
+  fuelTypeId?: string;
+  driveTypeId?: string;
+  transmissionId?: string;
+  carConditionId?: string;
+  categoryId?: string;
+  subcategoryId?: string;
+  page?: number;
+  pageSize?: number;
+  yearFrom?: string;
+  yearTo?: string;
+  priceFrom?: number;
+  priceTo?: number;
+  mileageFrom?: number;
+  mileageTo?: number;
+  colorId?: string;
+  "Accept-Language"?: string;
+}
+
+export interface AdminCarsParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  status?: "checking" | "confirmed" | "rejected";
+  language?: string;
 }
 
 export interface PostsList {
@@ -17,11 +46,19 @@ export interface OnePost {
     id: string;
     name: string;
   };
+  damage: string;
   carPrice: {
     customPrice: string;
     prefixPrice: string;
     price: number;
     suffixPrice: string;
+  };
+  carMap: {
+    address: string;
+    latitude: string;
+    location: string;
+    longitude: string;
+    mapUrl: string;
   };
   fuelType: {
     id: string;
@@ -44,6 +81,7 @@ export interface OnePost {
     name: string;
   };
   viewed: false;
+  status?: "checking" | "confirmed" | "rejected";
 }
 
 export interface NewPostReq {

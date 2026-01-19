@@ -41,16 +41,16 @@ const SavedSearch = () => {
   };
 
   return (
-    <div className="p-[35px] 2xl:p-[60px]">
-      <div className="font-dm text-textSecondary mb-10">
-        <div className="text-[32px] font-bold">Сохранённый поиск</div>
-        <p className="text-textSecondary text-base">
+    <div className="p-4 md:p-[35px] 2xl:p-[60px]">
+      <div className="font-dm text-textSecondary mb-6 md:mb-10">
+        <div className="text-2xl md:text-[32px] font-bold">Сохранённый поиск</div>
+        <p className="text-textSecondary text-sm md:text-base">
           Lorem ipsum dolor sit amet, consectetur.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-headerBorder p-4">
-        <div className="my-2 flex justify-between items-center">
+      <div className="rounded-2xl border border-headerBorder p-3 md:p-4">
+        <div className="my-2 flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
           <div className="text-textPrimary flex items-center">
             <CiSearch />
             <Input
@@ -59,7 +59,7 @@ const SavedSearch = () => {
             />
           </div>
           <div className="flex items-center gap-2.5">
-            <span className="text-textGray text-[15px] font-dm">
+            <span className="text-textGray text-[15px] font-dm hidden sm:inline">
               Сортировать по
             </span>
             <Select>
@@ -72,6 +72,7 @@ const SavedSearch = () => {
             </Select>
           </div>
         </div>
+        <div className="overflow-x-auto -mx-3 md:mx-0">
         <Table>
           <TableHeader>
             <TableRow className="bg-mainBg rounded-t-2xl border-none hover:bg-mainBg">
@@ -136,6 +137,7 @@ const SavedSearch = () => {
             ))}
           </TableBody>
         </Table>
+        </div>
 
         {/* Empty State */}
         {searches.length === 0 && (

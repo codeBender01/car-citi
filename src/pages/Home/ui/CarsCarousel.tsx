@@ -15,15 +15,18 @@ import type { HomeCarModel } from "@/interfaces/home.interface";
 
 interface CarsCarouselProps {
   posts?: (OnePost | HomeCarModel)[];
+  totalCount?: number;
 }
 
-const CarsCarousel = ({ posts }: CarsCarouselProps) => {
+const CarsCarousel = ({ posts, totalCount }: CarsCarouselProps) => {
   const carsSwiperRef = useRef<SwiperType | null>(null);
   const [currentSlide, setCurrentSlide] = useState(1);
 
   if (!posts || posts.length === 0) {
     return null;
   }
+
+  const displayCount = totalCount ?? posts.length;
 
   return (
     <div className="mt-[50px] md:hidden">
@@ -59,7 +62,7 @@ const CarsCarousel = ({ posts }: CarsCarouselProps) => {
         </button>
 
         <div className="font-dm text-textPrimary font-medium text-sm">
-          {currentSlide} of {posts.length}
+          {currentSlide} of {displayCount}
         </div>
 
         <button

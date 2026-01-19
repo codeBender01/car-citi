@@ -52,7 +52,6 @@ const CarCard = ({ car }: CarCardProps) => {
     const containerWidth = rect.width;
     const percentage = x / containerWidth;
 
-    // Calculate which slide to show based on mouse position
     const targetIndex = Math.floor(percentage * images.length);
     const clampedIndex = Math.max(0, Math.min(targetIndex, images.length - 1));
 
@@ -62,7 +61,7 @@ const CarCard = ({ car }: CarCardProps) => {
   return (
     <div
       onClick={() => {
-        navigate("/car-details");
+        navigate("/car-details/" + car.id);
       }}
       className="rounded-2xl flex flex-col w-full max-w-[330px] bg-white shadow-md border border-headerBorder"
     >

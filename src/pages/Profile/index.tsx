@@ -74,10 +74,10 @@ const Profile = () => {
   };
 
   return (
-    <div className="p-[35px] 2xl:p-[60px]">
-      <div className="font-dm text-textSecondary mb-10">
-        <div className="text-[32px] font-bold">Профиль</div>
-        <p className="text-textSecondary text-base">
+    <div className="p-4 md:p-[35px] 2xl:p-[60px]">
+      <div className="font-dm text-textSecondary mb-6 md:mb-10">
+        <div className="text-2xl md:text-[32px] font-bold">Профиль</div>
+        <p className="text-textSecondary text-sm md:text-base">
           Тип профиля:{" "}
           <span className="font-bold">
             {profile?.data.accountType === "Personal" ? "Простой" : "Бизнес"}
@@ -85,7 +85,7 @@ const Profile = () => {
         </p>
       </div>
 
-      <div className="border border-headerBorder p-4 rounded-2xl">
+      <div className="border border-headerBorder p-3 md:p-4 rounded-2xl">
         <div className="flex my-4 flex-col gap-4">
           <Label htmlFor="smsSub" className="font-sans font-medium">
             Смс подписка
@@ -103,7 +103,7 @@ const Profile = () => {
         </div>
         <div className="font-dm text-textPrimary">
           <div className="text-base">Аватар</div>
-          <div className="my-4 flex items-center gap-6">
+          <div className="my-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6">
             {avatarPreview !== "" && (
               <div className="w-[190px] h-[170px]">
                 <img
@@ -124,7 +124,7 @@ const Profile = () => {
 
         <div className="h-0.5 my-[30px] w-full bg-grayBorder"></div>
 
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <LabeledInput
             onChange={(e) => {
               setPersonalProfile({
@@ -157,7 +157,7 @@ const Profile = () => {
           ) : null}
         </div>
 
-        <div className="flex gap-4 mt-4">
+        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-4">
           <Button
             onClick={handleProfileUpdate}
             size="none"

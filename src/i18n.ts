@@ -13,7 +13,9 @@ i18n
       ru: { translation: ru },
       tk: { translation: tk },
     },
+    lng: 'ru', // Set default language to Russian
     fallbackLng: 'ru',
+    supportedLngs: ['ru', 'tk'], // Only support ru and tk
     interpolation: {
       escapeValue: false,
     },

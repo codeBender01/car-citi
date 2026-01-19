@@ -14,15 +14,19 @@ import {
 import { useState } from "react";
 
 import { useGetOwnPosts } from "@/api/posts/useGetOwnPosts";
+import { useDeletePost } from "@/api/posts/useDeletePost";
 import { useTranslation } from "react-i18next";
+import { useToast } from "@/hooks/use-toast";
 import dayjs from "dayjs";
 
 const MyPosts = () => {
   const { i18n } = useTranslation();
+  const { toast } = useToast();
   const [selectedCar, setSelectedCar] = useState("Audi A3");
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data: ownPosts, isLoading } = useGetOwnPosts(i18n.language);
+  const deletePost = useDeletePost();
 
   const ITEMS_PER_PAGE = 10;
   const posts = ownPosts?.data?.rows || [];
@@ -33,17 +37,31 @@ const MyPosts = () => {
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const paginatedPosts = posts.slice(startIndex, endIndex);
 
+  const handleDelete = async (id: string) => {
+    try {
+      await deletePost.mutateAsync(id);
+      toast({
+        title: "Успешно удалено",
+        description: "Объявление было успешно удалено",
+        variant: "success",
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить объявление. Попробуйте снова.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
-    <div className="p-[35px] 2xl:p-[60px]">
-      <div className="font-dm text-textSecondary mb-10">
-        <div className="text-[32px] font-bold">Мои объявления</div>
-        <p className="text-textSecondary text-base">
-          Lorem ipsum dolor sit amet, consectetur.
-        </p>
+    <div className="p-4 md:p-[35px] 2xl:p-[60px]">
+      <div className="font-dm text-textSecondary mb-6 md:mb-10">
+        <div className="text-2xl md:text-[32px] font-bold">Мои объявления</div>
       </div>
 
-      <div className="w-full border border-headerBorder rounded-2xl p-4">
-        <div className="my-6 flex justify-between items-center">
+      <div className="w-full border border-headerBorder rounded-2xl p-3 md:p-4">
+        <div className="my-4 md:my-6 flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
           <div className="text-textPrimary flex items-center">
             <CiSearch />
             <Input
@@ -52,7 +70,7 @@ const MyPosts = () => {
             />
           </div>
           <div className="flex items-center gap-2.5">
-            <span className="text-textGray text-[15px] font-dm">
+            <span className="text-textGray text-[15px] font-dm hidden sm:inline">
               Сортировать по
             </span>
             <Select value={selectedCar} onValueChange={setSelectedCar}>
@@ -65,7 +83,7 @@ const MyPosts = () => {
             </Select>
           </div>
         </div>
-        <div className="bg-mainBg rounded-2xl px-9 py-[21px] mb-4">
+        <div className="bg-mainBg rounded-2xl px-4 md:px-9 py-[21px] mb-4 hidden lg:block">
           <div className="grid grid-cols-[2fr_1fr_0.7fr_0.7fr_1fr_1fr] gap-4 items-center">
             <p className="font-dm font-medium text-base text-primary leading-7">
               Объявления
@@ -98,9 +116,10 @@ const MyPosts = () => {
               {paginatedPosts.map((post) => (
                 <div
                   key={post.id}
-                  className="bg-white rounded-2xl px-9 py-5 border-b border-grayBorder hover:shadow-md transition-shadow"
+                  className="bg-white rounded-2xl px-3 md:px-9 py-5 border-b border-grayBorder hover:shadow-md transition-shadow"
                 >
-                  <div className="grid grid-cols-[2fr_1fr_0.7fr_0.7fr_1fr_1fr] gap-4 items-center">
+                  {/* Desktop Layout */}
+                  <div className="hidden lg:grid grid-cols-[2fr_1fr_0.7fr_0.7fr_1fr_1fr] gap-4 items-center">
                     <div className="flex items-center gap-4">
                       <img
                         src={
@@ -139,13 +158,58 @@ const MyPosts = () => {
                       {post.fuelType?.name || "-"}
                     </span>
 
-                    {/* Действие - Actions */}
                     <div className="flex items-center gap-3">
                       <button className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-primary">
                         <FiEdit2 size={18} />
                       </button>
-                      <button className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-danger">
+                      <button
+                        onClick={() => handleDelete(post.id)}
+                        className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-danger"
+                      >
                         <FiTrash2 size={18} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Mobile Layout */}
+                  <div className="lg:hidden flex flex-col gap-3">
+                    <div className="flex gap-3">
+                      <img
+                        src={
+                          post.images?.images?.[0]?.url
+                            ? `${import.meta.env.VITE_BASE_URL}/${
+                                post.images.images[0].url
+                              }`
+                            : "https://via.placeholder.com/100x80"
+                        }
+                        alt={`${post.carMark?.name} ${post.carModel?.name}`}
+                        className="w-[100px] h-[80px] rounded-lg object-cover flex-shrink-0"
+                      />
+                      <div className="flex-1 flex flex-col gap-1">
+                        <span className="font-dm text-sm font-medium text-textSecondary">
+                          {post.carMark?.name} {post.carModel?.name}
+                        </span>
+                        <span className="font-dm text-xs text-textGray">
+                          {post.issueYear
+                            ? dayjs(post.issueYear).format("YYYY")
+                            : "-"}
+                        </span>
+                        <div className="flex gap-2 text-xs text-textGray">
+                          <span>{post.transmission?.name}</span>
+                          <span>•</span>
+                          <span>{post.fuelType?.name}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 justify-end">
+                      <button className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-primary">
+                        <FiEdit2 size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(post.id)}
+                        className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-danger"
+                      >
+                        <FiTrash2 size={16} />
                       </button>
                     </div>
                   </div>

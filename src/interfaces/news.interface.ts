@@ -46,3 +46,25 @@ export interface NewNews {
   tagIds: string[];
   categoryIds: string[];
 }
+
+export interface NewsList {
+  count: number;
+  rows: OneNews[];
+}
+
+export interface OneNews {
+  categories: OneNewsCategory[];
+  created: string;
+  description: string;
+  descriptionRu: string;
+  descriptionTk: string;
+  id: string;
+  image: {
+    url: string;
+    hashblur: string;
+  };
+  tags: OneNewsTag[];
+  titleTk: string;
+  titleRu: string;
+  title: string;
+}

@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import benz2 from "@assets/images/benz2.png";
 import { FaRegCirclePlay } from "react-icons/fa6";
 import { TiCameraOutline } from "react-icons/ti";
 import {
@@ -8,14 +7,28 @@ import {
 } from "react-icons/md";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
+import { BASE_URL } from "@/api";
 
 import "swiper/css";
 import "swiper/css/pagination";
 
-import { serviceOptions } from "../lib/serviceOptions";
+interface CarImagesProps {
+  images?: {
+    images: {
+      hashblur: string;
+      url: string;
+    }[];
+    reports: {
+      name: string;
+      url: string;
+    }[];
+  };
+}
 
-const CarImages = () => {
+const CarImages = ({ images }: CarImagesProps) => {
   const swiperRef = useRef<SwiperType | null>(null);
+
+  const carImages = images?.images || [];
 
   return (
     <div className="mt-[30px] relative">
@@ -26,20 +39,26 @@ const CarImages = () => {
         pagination={{ clickable: true }}
         className="h-[340px] md:h-[440px] lg:h-[550px] w-full lg:rounded-2xl"
       >
-        {serviceOptions.map((s) => {
-          return (
-            <SwiperSlide key={s.id}>
+        {carImages.length > 0 ? (
+          carImages.map((img, idx) => (
+            <SwiperSlide key={idx}>
               <div
                 className="h-full w-full lg:rounded-2xl"
                 style={{
-                  backgroundImage: `url(${benz2})`,
+                  backgroundImage: `url(${BASE_URL}/${img.url})`,
                   backgroundPosition: "center",
                   backgroundSize: "cover",
                 }}
               />
             </SwiperSlide>
-          );
-        })}
+          ))
+        ) : (
+          <SwiperSlide>
+            <div className="h-full w-full lg:rounded-2xl bg-gray-200 flex items-center justify-center">
+              <span className="text-gray-500">Нет изображений</span>
+            </div>
+          </SwiperSlide>
+        )}
       </Swiper>
 
       {/* Navigation Buttons */}
@@ -64,7 +83,7 @@ const CarImages = () => {
       </div>
       <div className="bg-white text-base font-dm rounded-xl flex gap-2.5 items-center w-fit py-3.5 px-5 absolute bottom-2 right-2 z-10">
         <TiCameraOutline size={20} />
-        Все фото
+        {carImages.length} фото
       </div>
     </div>
   );

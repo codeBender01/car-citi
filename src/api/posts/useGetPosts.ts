@@ -3,14 +3,86 @@ import { apiClient } from "../index";
 import type { PostsFilters, PostsList } from "@/interfaces/posts.interface";
 import type { ApiResponse } from "@/interfaces/apiResponse.interface";
 
-export const useGetPosts = ({ regionId }: PostsFilters = {}) => {
+export const useGetPosts = ({
+  search,
+  vin,
+  regionId,
+  cityId,
+  carMarkId,
+  carModelId,
+  fuelTypeId,
+  driveTypeId,
+  transmissionId,
+  carConditionId,
+  categoryId,
+  subcategoryId,
+  page,
+  pageSize,
+  yearFrom,
+  yearTo,
+  priceFrom,
+  priceTo,
+  mileageFrom,
+  mileageTo,
+  colorId,
+  "Accept-Language": acceptLanguage,
+}: PostsFilters = {}) => {
   return useQuery<ApiResponse<PostsList>>({
-    queryKey: ["getAllPosts", regionId],
+    queryKey: [
+      "getAllPosts",
+      search,
+      vin,
+      regionId,
+      cityId,
+      carMarkId,
+      carModelId,
+      fuelTypeId,
+      driveTypeId,
+      transmissionId,
+      carConditionId,
+      categoryId,
+      subcategoryId,
+      page,
+      pageSize,
+      yearFrom,
+      yearTo,
+      priceFrom,
+      priceTo,
+      mileageFrom,
+      mileageTo,
+      colorId,
+      acceptLanguage,
+    ],
     queryFn: async () => {
       const { data } = await apiClient.get("/posts/all", {
         params: {
+          search,
+          vin,
           regionId,
+          cityId,
+          carMarkId,
+          carModelId,
+          fuelTypeId,
+          driveTypeId,
+          transmissionId,
+          carConditionId,
+          categoryId,
+          subcategoryId,
+          page,
+          pageSize,
+          yearFrom,
+          yearTo,
+          priceFrom,
+          priceTo,
+          mileageFrom,
+          mileageTo,
+          colorId,
         },
+        headers: acceptLanguage
+          ? {
+              "Accept-Language": acceptLanguage,
+            }
+          : undefined,
       });
       return data;
     },

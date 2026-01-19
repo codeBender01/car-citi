@@ -79,7 +79,7 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 px-12 2xl:px-[118px] py-[25px] w-full border-b border-headerBorder flex items-center justify-between transition-colors duration-300 max-lg:bg-black ${
+      className={`fixed top-0 left-0 right-0 z-[10000] px-12 2xl:px-[118px] py-[25px] w-full border-b border-headerBorder flex items-center justify-between transition-colors duration-300 max-lg:bg-black ${
         isFullyScrolled || isAuthPathname || isMenuOpen
           ? "bg-[#000000]"
           : "bg-transparent"
@@ -138,7 +138,7 @@ const Header = () => {
       <div className="flex items-center">
         {profile ? (
           <Button
-            onClick={() => [navigate("/dashboard")]}
+            onClick={() => [navigate("/dashboard/posted")]}
             size="none"
             className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl hidden xl:flex items-center gap-2.5 py-4 px-[25px]"
           >

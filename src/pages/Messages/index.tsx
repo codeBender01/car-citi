@@ -2,31 +2,23 @@ import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import ConversationListItem from "./ui/ConversationListItem";
-import MessageBubble from "./ui/MessageBubble";
-import { mockConversations, mockMessages } from "./lib/mockData";
 
 const Messages = () => {
-  const [activeConversation, setActiveConversation] = useState(1);
   const [messageInput, setMessageInput] = useState("");
 
-  const currentConversation = mockConversations.find(
-    (c) => c.id === activeConversation
-  );
-
   return (
-    <div className="p-[35px] 2xl:p-[60px]">
-      <div className="font-dm text-textSecondary mb-10">
-        <div className="text-[32px] font-bold">Мои сообщения</div>
-        <p className="text-textSecondary text-base">
+    <div className="p-4 md:p-[35px] 2xl:p-[60px]">
+      <div className="font-dm text-textSecondary mb-6 md:mb-10">
+        <div className="text-2xl md:text-[32px] font-bold">Мои сообщения</div>
+        <p className="text-textSecondary text-sm md:text-base">
           Lorem ipsum dolor sit amet, consectetur.
         </p>
       </div>
 
       {/* Messages Layout */}
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
         {/* Left Panel - Conversations List */}
-        <div className="w-[415px] bg-white border border-grayBorder rounded-2xl h-[774px] flex flex-col">
+        <div className="w-full lg:w-[415px] bg-white border border-grayBorder rounded-2xl h-[400px] lg:h-[774px] flex flex-col">
           {/* Search Bar */}
           <div className="p-10 pb-0">
             <div className="bg-mainBg rounded-2xl px-4 py-3 flex items-center gap-2">
@@ -40,7 +32,7 @@ const Messages = () => {
           </div>
 
           {/* Conversations List */}
-          <div className="flex-1 overflow-y-auto mt-4">
+          {/* <div className="flex-1 overflow-y-auto mt-4">
             {mockConversations.map((conversation) => (
               <ConversationListItem
                 key={conversation.id}
@@ -49,7 +41,7 @@ const Messages = () => {
                 onClick={() => setActiveConversation(conversation.id)}
               />
             ))}
-          </div>
+          </div> */}
         </div>
 
         {/* Right Panel - Chat */}
@@ -58,14 +50,6 @@ const Messages = () => {
           <div className="px-9 py-5 border-b border-grayBorder flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-[50px] h-[50px] rounded-full bg-textGray overflow-hidden"></div>
-              <div>
-                <p className="font-dm font-medium text-[15px] leading-[26px] text-textPrimary">
-                  {currentConversation?.userName}
-                </p>
-                <p className="font-dm text-sm leading-7 text-textPrimary">
-                  {currentConversation?.isOnline ? "Онлайн" : "Оффлайн"}
-                </p>
-              </div>
             </div>
             <a
               href="#"
@@ -76,19 +60,6 @@ const Messages = () => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-9 py-10">
-            {mockMessages.map((message) => (
-              <MessageBubble
-                key={message.id}
-                message={message}
-                senderName={
-                  message.isCurrentUser
-                    ? "Bally"
-                    : currentConversation?.userName || ""
-                }
-              />
-            ))}
-          </div>
 
           {/* Message Input */}
           <div className="border-t border-grayBorder px-9 py-6">

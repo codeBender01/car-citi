@@ -30,16 +30,22 @@ const Feedbacks = lazy(() => import("@pages/Admin/Feedbacks"));
 const Faq = lazy(() => import("@pages/Admin/Faq"));
 const AdminChat = lazy(() => import("@pages/Admin/AdminChat"));
 const CarCategories = lazy(() => import("@pages/Admin/CarSpecs/Categories"));
-const CarSubcategories = lazy(() => import("@pages/Admin/CarSpecs/Subcategories"));
+const CarSubcategories = lazy(
+  () => import("@pages/Admin/CarSpecs/Subcategories"),
+);
 const CarConditions = lazy(() => import("@pages/Admin/CarSpecs/Condition"));
 const DriveTypes = lazy(() => import("@pages/Admin/CarSpecs/DriveType"));
 const Transmissions = lazy(() => import("@pages/Admin/CarSpecs/Transmission"));
 const FuelTypes = lazy(() => import("@pages/Admin/CarSpecs/FuelType"));
 const SaleTypes = lazy(() => import("@pages/Admin/CarSpecs/SaleType"));
-const Characteristics = lazy(() => import("@pages/Admin/CarSpecs/Characteristics"));
+const Characteristics = lazy(
+  () => import("@pages/Admin/CarSpecs/Characteristics"),
+);
 const Colors = lazy(() => import("@pages/Admin/CarSpecs/Color"));
 const CarMarks = lazy(() => import("@pages/Admin/CarMarks"));
 const CarModels = lazy(() => import("@pages/Admin/CarMarks/Models"));
+const Stats = lazy(() => import("@pages/Admin/Stats"));
+const AdminCars = lazy(() => import("@pages/Admin/Cars"));
 
 export default function Router() {
   const routes = useRoutes([
@@ -60,7 +66,7 @@ export default function Router() {
           element: <AboutUs />,
         },
         {
-          path: "/car-details",
+          path: "/car-details/:id",
           element: <CarDetails />,
         },
         {
@@ -190,6 +196,14 @@ export default function Router() {
         {
           path: "car-marks/:carMarkId",
           element: <CarModels />,
+        },
+        {
+          path: "stats",
+          element: <Stats />,
+        },
+        {
+          path: "cars",
+          element: <AdminCars />,
         },
       ],
     },

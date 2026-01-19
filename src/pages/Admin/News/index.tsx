@@ -1,11 +1,23 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 import { useGetNewsAdmin } from "@/api/news/useGetAllNewsAdmin";
 import { useAddNews } from "@/api/news/useAddNews";
+import { useRemoveNews } from "@/api/news/useRemoveNews";
 import { AddNewsModal } from "./ui/AddNewsModal";
-import type { NewNews } from "@/interfaces/news.interface";
+import type { NewNews, OneNews } from "@/interfaces/news.interface";
+
+import { BASE_URL } from "@/api";
 
 const News = () => {
   const { toast } = useToast();
@@ -22,24 +34,22 @@ const News = () => {
     categoryIds: [],
   });
 
-  console.log(news);
-
   const addNews = useAddNews();
-  // const removeNews = useRemoveNews();
+  const removeNews = useRemoveNews();
 
-  // const handleEdit = (newsObj: NewNews) => {
-  //   setNewNews({
-  //     id: newsObj.id,
-  //     image: newsObj.image,
-  //     titleTk: newsObj.titleTk,
-  //     titleRu: newsObj.titleRu,
-  //     descriptionTk: newsObj.descriptionTk,
-  //     descriptionRu: newsObj.descriptionRu,
-  //     tagIds: newsObj.tagIds,
-  //     categoryIds: newsObj.categoryIds,
-  //   });
-  //   setIsModalOpen(true);
-  // };
+  const handleEdit = (newsObj: OneNews) => {
+    setNewNews({
+      id: newsObj.id,
+      image: newsObj.image,
+      titleTk: newsObj.titleTk,
+      titleRu: newsObj.titleRu,
+      descriptionTk: newsObj.descriptionTk,
+      descriptionRu: newsObj.descriptionRu,
+      tagIds: newsObj.tags.map((i) => i.id),
+      categoryIds: newsObj.categories.map((i) => i.id),
+    });
+    setIsModalOpen(true);
+  };
 
   const handleSubmitNews = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,23 +82,23 @@ const News = () => {
     }
   };
 
-  // const handleDelete = async (newsId: string) => {
-  //   const res = await removeNews.mutateAsync(newsId);
+  const handleDelete = async (newsId: string) => {
+    const res = await removeNews.mutateAsync(newsId);
 
-  //   if (res.data) {
-  //     toast({
-  //       title: "Новость удалена",
-  //       variant: "success",
-  //       duration: 1000,
-  //     });
-  //   } else {
-  //     toast({
-  //       title: "Ошибка",
-  //       variant: "destructive",
-  //       duration: 1000,
-  //     });
-  //   }
-  // };
+    if (res.data) {
+      toast({
+        title: "Новость удалена",
+        variant: "success",
+        duration: 1000,
+      });
+    } else {
+      toast({
+        title: "Ошибка",
+        variant: "destructive",
+        duration: 1000,
+      });
+    }
+  };
 
   return (
     <div className="p-[35px] 2xl:p-[60px]">
@@ -130,7 +140,7 @@ const News = () => {
               </TableHead>
             </TableRow>
           </TableHeader>
-          {/* <TableBody>
+          <TableBody>
             {news?.data?.rows?.map((newsItem) => (
               <TableRow
                 key={newsItem.id}
@@ -139,7 +149,7 @@ const News = () => {
                 <TableCell>
                   {newsItem.image?.url && (
                     <img
-                      src={newsItem.image.url}
+                      src={BASE_URL + "/" + newsItem.image.url}
                       alt={newsItem.titleRu}
                       className="w-16 h-16 object-cover rounded"
                     />
@@ -180,7 +190,7 @@ const News = () => {
                 </TableCell>
               </TableRow>
             ))}
-          </TableBody> */}
+          </TableBody>
         </Table>
       </div>
     </div>

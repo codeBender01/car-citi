@@ -18,19 +18,19 @@ const Favorites = () => {
   const paginatedFavorites = favorites.slice(startIndex, endIndex);
 
   return (
-    <div className="p-[35px] 2xl:p-[60px]">
-      <div className="font-dm text-textSecondary mb-10">
-        <div className="text-[32px] font-bold">Избранное</div>
+    <div className="p-4 md:p-[35px] 2xl:p-[60px]">
+      <div className="font-dm text-textSecondary mb-6 md:mb-10">
+        <div className="text-2xl md:text-[32px] font-bold">Избранное</div>
       </div>
 
-      <div className="rounded-2xl border border-headerBorder p-4">
+      <div className="rounded-2xl border border-headerBorder p-3 md:p-4">
         {isLoading ? (
           <div className="py-16 text-center">
             <p className="font-dm text-textGray text-base">Загрузка...</p>
           </div>
         ) : (
           <>
-            <div className="mt-[50px] grid grid-cols-3 2xl:grid-cols-4 gap-7">
+            <div className="mt-6 md:mt-[50px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-7">
               {paginatedFavorites.map((favorite) => {
                 return <CarCard car={favorite} key={favorite.id} />;
               })}

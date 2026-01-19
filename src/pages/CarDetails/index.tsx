@@ -5,40 +5,42 @@ import { BsArrowUpRight } from "react-icons/bs";
 import { CiBookmark } from "react-icons/ci";
 import { PiUpload } from "react-icons/pi";
 import { IoPricetagOutline } from "react-icons/io5";
-import { HiOutlineLocationMarker } from "react-icons/hi";
-import { CgPhone } from "react-icons/cg";
-import {
-  MdOutlineKeyboardArrowLeft,
-  MdOutlineKeyboardArrowRight,
-} from "react-icons/md";
 
 import CarImages from "./ui/CarImages";
 import Map from "./ui/Map";
-import Reviews from "./ui/Reviews";
-import LeaveReviewForm from "./ui/LeaveReviewForm";
+
 import CarChars from "./ui/CarCharacteristics";
 import { Button } from "@/components/ui/button";
 
-import { useGetPosts } from "@/api/posts";
-
-import user from "@assets/header/user.png";
-
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 import { specifics } from "./lib/specifics";
 import { techChars } from "./lib/technicalChars";
 import CarsCarousel from "../Home/ui/CarsCarousel";
+import { useGetOnePost } from "@/api/posts/useGetOnePost";
+import { useGetSimilar } from "@/api/posts/useGetSimilar";
+
+import { useTranslation } from "react-i18next";
+
+import dayjs from "dayjs";
 
 const CarDetails = () => {
   const [expandedChars, setExpandedChars] = useState<number[]>([]);
 
+  const { id } = useParams();
+  const { i18n } = useTranslation();
+
   const toggleChar = (id: number) => {
     setExpandedChars((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
-  const { data: posts } = useGetPosts();
+  const { data: oneCar } = useGetOnePost(i18n.language, id as string);
+  const { data: similarPosts } = useGetSimilar(i18n.language, id as string);
+
+  const car = oneCar?.data;
 
   return (
     <div className="pt-8 lg:pt-[120px] xl:pt-[180px] px-0 lg:px-10 xl:px-20 2xl:px-[118px]">
@@ -46,9 +48,12 @@ const CarDetails = () => {
         <span className="text-primary">Домашняя страница</span> /{" "}
         <span>Авто на продажу</span>
       </div>
-      <div className="lg:flex hidden h2 mt-5">Mercedes-Benz, C Class</div>
+      <div className="lg:flex hidden h2 mt-5">
+        {car?.carMark?.name}, {car?.carModel?.name}
+      </div>
       <p className="font-dm text-base lg:flex hidden">
-        2.0 D5 PowerPulse Momentum 5dr AWD Geartronic Estate
+        {car?.transmission?.name} • {car?.fuelType?.name} •{" "}
+        {dayjs(car?.issueYear).format("DD.MM.YYYY")}
       </p>
       <div className="mt-5 flex justify-between gap-4 xl:gap-0">
         <div className="w-full lg:w-[65%]">
@@ -65,26 +70,19 @@ const CarDetails = () => {
               );
             })}
           </ul>
-          <CarImages />
+          <CarImages images={car?.images} />
           <div className="px-6">
-            <div className="lg:hidden flex h2 mt-5">Mercedes-Benz, C Class</div>
+            <div className="lg:hidden flex h2 mt-5">
+              {car?.carMark?.name}, {car?.carModel?.name}
+            </div>
             <p className="font-dm text-base lg:hidden flex">
-              2.0 D5 PowerPulse Momentum 5dr AWD Geartronic Estate
+              {car?.transmission?.name} • {car?.fuelType?.name} •{" "}
+              {dayjs(car?.issueYear).format("DD.MM.YYYY")}
             </p>
           </div>
           <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
             <div className="text-[22px] md:text-[26px]">Описание</div>
-            <p className="mt-6 lg:mt-10 text-base font-light">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
-              ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-              tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-              minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-              aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
+            <p className="mt-6 lg:mt-10 text-base font-light">{car?.damage}</p>
           </div>
           <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
             <div className="text-[22px] md:text-[26px]">Особенности</div>
@@ -176,8 +174,8 @@ const CarDetails = () => {
             </div>
           </div>
           <Map />
-          <Reviews />
-          <LeaveReviewForm />
+          {/* <Reviews />
+          <LeaveReviewForm /> */}
         </div>
         <div className="hidden lg:flex flex-col gap-[30px] self-stretch">
           <div className="flex items-center justify-end gap-7 font-dm text-base">
@@ -198,9 +196,14 @@ const CarDetails = () => {
           <div className="p-[30px] bg-white border border-grayBorder rounded-2xl font-dm">
             <div className="flex gap-4 text-textPrimary">
               <span>Цена</span>
-              <span className="text-textGray line-through">$48,000 </span>
             </div>
-            <div className="font-dm text-[30px] my-5 font-bold">$45,900</div>
+            <div className="font-dm text-[30px] my-5 font-bold">
+              {car?.carPrice?.prefixPrice}
+              {car?.carPrice?.price
+                ? `$${car.carPrice.price.toLocaleString()}`
+                : car?.carPrice?.customPrice}
+              {car?.carPrice?.suffixPrice}
+            </div>
             <div>Без торга</div>
             <Button
               size="none"
@@ -210,9 +213,9 @@ const CarDetails = () => {
               Сделайте Предложение
             </Button>
           </div>
-          <CarChars />
+          <CarChars car={car} />
 
-          <div className="p-[30px] bg-white border flex flex-col gap-5 border-grayBorder rounded-2xl font-dm">
+          {/* <div className="p-[30px] bg-white border flex flex-col gap-5 border-grayBorder rounded-2xl font-dm">
             <div className="w-20 h-20 rounded-full">
               <img
                 src={user}
@@ -250,7 +253,7 @@ const CarDetails = () => {
               Связаться в Whatsapp
               <BsArrowUpRight />
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="px-6 lg:px-0 mt-20 md:mt-[200px] w-full">
@@ -265,17 +268,10 @@ const CarDetails = () => {
         </div>
 
         <div className="px-6 bg-amber-50">
-          <CarsCarousel posts={posts ? posts.data.rows : []} />
-        </div>
-
-        <div className="mt-[50px] flex items-center gap-10">
-          <div className="rounded-[100px] border border-textPrimary px-6 py-2.5">
-            <MdOutlineKeyboardArrowLeft size={20} />
-          </div>
-          <div className="font-dm text-base">4 из 13</div>
-          <div className="rounded-[100px] border border-textPrimary px-6 py-2.5">
-            <MdOutlineKeyboardArrowRight size={20} />
-          </div>
+          <CarsCarousel
+            posts={similarPosts ? similarPosts.data.rows : []}
+            totalCount={similarPosts?.data.count}
+          />
         </div>
       </div>
     </div>

@@ -6,6 +6,8 @@ import { BiLogOut } from "react-icons/bi";
 import { FaQuestion } from "react-icons/fa";
 import { IoCarSport } from "react-icons/io5";
 import { TbBrandToyota } from "react-icons/tb";
+import { HiOutlineChartBar } from "react-icons/hi";
+import { MdDirectionsCar } from "react-icons/md";
 
 interface SubPath {
   name: string;
@@ -102,6 +104,16 @@ export const adminNavs: AdminNav[] = [
     text: "Чат",
     icon: <IoChatbubblesOutline className="w-5 h-5" />,
     path: "/admin/chat",
+  },
+  {
+    text: "Автомобили",
+    icon: <MdDirectionsCar className="w-5 h-5" />,
+    path: "/admin/cars",
+  },
+  {
+    text: "Статистика",
+    icon: <HiOutlineChartBar className="w-5 h-5" />,
+    path: "/admin/stats",
   },
   {
     text: "Выход",
