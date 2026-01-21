@@ -4,13 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ConversationListItem from "@/pages/Messages/ui/ConversationListItem";
 import MessageBubble from "@/pages/Messages/ui/MessageBubble";
-import { mockAdminMessages } from "./lib/mockData";
 import { chatSocket } from "./lib/socket";
-import type {
-  Message as SocketMessage,
-  Room,
-  GetMessagesParams,
-} from "./lib/socket";
+import type { Room, GetMessagesParams } from "./lib/socket";
 import type { Message, Conversation } from "@/pages/Messages/lib/mockData";
 
 String.prototype.hashCode = function () {
@@ -52,18 +47,17 @@ const AdminChat = () => {
   const [messageInput, setMessageInput] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [rooms, setRooms] = useState<Room[]>([]);
-  const [messages, setMessages] = useState<Message[]>(mockAdminMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  console.log(rooms);
-
   const conversations: Conversation[] = rooms.map((room) => ({
-    id: room.roomId.hashCode(),
+    id: room.id,
     userId: room.lastMessage?.user_id || "",
     userName: room.title,
     userAvatar: "https://via.placeholder.com/50",
-    carModel: room.otherUser.phone,
+    carModel: room.otherUser?.phone,
     lastMessage: room.lastMessage?.message || "",
     timestamp: room.lastMessage?.date
       ? formatTimestamp(room.lastMessage.date)
@@ -72,35 +66,45 @@ const AdminChat = () => {
     isOnline: false,
   }));
 
-  const currentRoom = rooms.find((r) => r.roomId === currentRoomId);
+  const currentRoom = rooms.find((r) => r.id === currentRoomId);
 
-  useEffect(() => {
-    if (currentRoomId && isConnected) {
-      const params: GetMessagesParams = {
-        roomId: currentRoomId,
-        limit: 2,
-        offset: 0,
-      };
+  const fetchMessagesForRoom = (roomId: string) => {
+    setIsLoadingMessages(true);
 
-      chatSocket.getMessages(params, (serverMessages) => {
-        const adminToken = localStorage.getItem("adminAccessToken");
-        const adminId = adminToken
-          ? JSON.parse(atob(adminToken.split(".")[1])).sub
-          : null;
+    const params: GetMessagesParams = {
+      roomId: roomId,
+      limit: 50,
+      offset: 0,
+    };
 
-        const convertedMessages: Message[] = serverMessages.map((msg) => ({
-          id: parseInt(msg.id.substring(0, 8), 36), // Convert string ID to number
-          senderId: parseInt(msg.authorId.substring(0, 8), 36),
-          text: msg.message,
+    chatSocket.getMessages(params, (serverMessages) => {
+      console.log(serverMessages, "serveereerereer");
+      const convertedMessages: Message[] = serverMessages.map((msg: any) => {
+        const isAdminMessage = !!msg.adminId;
+        const authorId = msg.adminId || msg.userId || msg.id;
+
+        return {
+          id: parseInt((msg.id || "").substring(0, 8), 36) || Math.random(),
+          senderId:
+            parseInt((authorId || "").substring(0, 8), 36) || Math.random(),
+          text: msg.message || "",
           timestamp: new Date(msg.created).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           }),
-          isCurrentUser: msg.authorId === adminId,
-        }));
-
-        setMessages(convertedMessages);
+          isCurrentUser: isAdminMessage,
+        };
       });
+
+      setMessages(convertedMessages);
+      setIsLoadingMessages(false);
+    });
+  };
+
+  useEffect(() => {
+    if (currentRoomId && isConnected) {
+      setMessages([]);
+      fetchMessagesForRoom(currentRoomId);
     }
   }, [currentRoomId, isConnected]);
 
@@ -122,11 +126,18 @@ const AdminChat = () => {
     chatSocket.connect(adminToken, {
       onConnect: () => {
         setIsConnected(true);
-        chatSocket.getMyRooms((rooms) => {
+
+        // Join admin rooms
+        chatSocket.joinRoomsAdmin();
+
+        chatSocket.getAdminRooms((rooms) => {
           setRooms(rooms);
 
           if (rooms.length > 0) {
-            setCurrentRoomId(rooms[0].roomId);
+            const firstRoomId = rooms[0].id;
+            setCurrentRoomId(firstRoomId);
+
+            fetchMessagesForRoom(firstRoomId);
           }
         });
       },
@@ -136,21 +147,31 @@ const AdminChat = () => {
       onConnectError: () => {
         setIsConnected(false);
       },
-      onNewMessage: (socketMessage: SocketMessage) => {
-        const adminToken = localStorage.getItem("adminAccessToken");
-        const adminId = adminToken
-          ? JSON.parse(atob(adminToken.split(".")[1])).sub
-          : null;
+      onNewMessage: (socketMessage: any) => {
+        console.log("📨 New message received:", socketMessage);
+
+        // Check if message is from current room
+        if (socketMessage.roomId !== currentRoomId) {
+          console.log("⏭️ Message from different room, ignoring");
+          return;
+        }
+
+        const isAdminMessage = !!socketMessage.adminId;
+        const authorId =
+          socketMessage.adminId || socketMessage.userId || socketMessage.id;
 
         const newMessage: Message = {
-          id: parseInt(socketMessage.id.substring(0, 8), 36),
-          senderId: parseInt(socketMessage.authorId.substring(0, 8), 36),
-          text: socketMessage.message,
+          id:
+            parseInt((socketMessage.id || "").substring(0, 8), 36) ||
+            Math.random(),
+          senderId:
+            parseInt((authorId || "").substring(0, 8), 36) || Math.random(),
+          text: socketMessage.message || "",
           timestamp: new Date(socketMessage.created).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           }),
-          isCurrentUser: socketMessage.authorId === adminId,
+          isCurrentUser: isAdminMessage,
         };
         setMessages((prev) => [...prev, newMessage]);
       },
@@ -172,13 +193,31 @@ const AdminChat = () => {
       return;
     }
 
-    const success = chatSocket.sendMessage({
+    // Optimistically add message to UI immediately
+    const optimisticMessage: Message = {
+      id: Math.random(), // Temporary ID
+      senderId: Math.random(),
+      text: messageInput,
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      isCurrentUser: true, // Admin's own message
+    };
+
+    setMessages((prev) => [...prev, optimisticMessage]);
+
+    // Send to server
+    const success = chatSocket.sendMessageAdmin({
       roomId: currentRoomId,
       message: messageInput,
     });
 
     if (success) {
       setMessageInput("");
+    } else {
+      // If send failed, remove the optimistic message
+      setMessages((prev) => prev.filter((m) => m.id !== optimisticMessage.id));
     }
   };
 
@@ -235,8 +274,12 @@ const AdminChat = () => {
                 <ConversationListItem
                   key={conversation.id}
                   conversation={conversation}
-                  isActive={rooms[index]?.roomId === currentRoomId}
-                  onClick={() => setCurrentRoomId(rooms[index]?.roomId)}
+                  isActive={rooms[index]?.id === currentRoomId}
+                  onClick={() => {
+                    const roomId = rooms[index]?.id;
+                    console.log("👆 User selected room:", roomId);
+                    setCurrentRoomId(roomId);
+                  }}
                 />
               ))
             ) : (
@@ -258,36 +301,42 @@ const AdminChat = () => {
                   {currentRoom?.title || "Выберите чат"}
                 </p>
                 <p className="font-dm text-sm leading-7 text-textPrimary">
-                  {currentRoom?.otherUser.phone || ""}
+                  {currentRoom?.otherUser?.phone || ""}
                 </p>
               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-dm text-xs text-textSecondary">
-                {currentRoom
-                  ? `ID: ${currentRoom.roomId.substring(0, 8)}...`
-                  : ""}
-              </span>
             </div>
           </div>
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto px-9 py-10">
             {currentRoomId ? (
-              <>
-                {messages.map((message) => (
-                  <MessageBubble
-                    key={message.id}
-                    message={message}
-                    senderName={
-                      message.isCurrentUser
-                        ? "Администратор"
-                        : currentRoom?.title || ""
-                    }
-                  />
-                ))}
-                <div ref={messagesEndRef} />
-              </>
+              isLoadingMessages ? (
+                <div className="flex items-center justify-center h-full text-textSecondary">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                    <span>Загрузка сообщений...</span>
+                  </div>
+                </div>
+              ) : messages.length > 0 ? (
+                <>
+                  {messages.map((message) => (
+                    <MessageBubble
+                      key={message.id}
+                      message={message}
+                      senderName={
+                        message.isCurrentUser
+                          ? "Администратор"
+                          : currentRoom?.title || ""
+                      }
+                    />
+                  ))}
+                  <div ref={messagesEndRef} />
+                </>
+              ) : (
+                <div className="flex items-center justify-center h-full text-textSecondary">
+                  Нет сообщений в этом чате
+                </div>
+              )
             ) : (
               <div className="flex items-center justify-center h-full text-textSecondary">
                 Выберите чат для просмотра сообщений

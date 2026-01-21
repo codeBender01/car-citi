@@ -7,7 +7,7 @@ export interface Message {
 }
 
 export interface Conversation {
-  id: number;
+  id: string;
   userId: string;
   userName: string;
   userAvatar: string;

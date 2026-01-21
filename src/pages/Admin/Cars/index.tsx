@@ -121,7 +121,10 @@ const AdminCars = () => {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2.5">
               <span className="text-textGray text-[15px] font-dm">Статус</span>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <Select
+                value={statusFilter}
+                onValueChange={(value) => setStatusFilter(value as "checking" | "confirmed" | "rejected" | "all")}
+              >
                 <SelectTrigger className="border-none shadow-none p-0 h-auto gap-2 w-auto focus:ring-0">
                   <SelectValue className="text-textPrimary text-[15px] font-dm" />
                 </SelectTrigger>

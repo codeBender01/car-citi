@@ -92,9 +92,20 @@ class ChatSocket {
     this.socket.emit("getMyRooms", {}, callback);
   }
 
+  // Client-specific method to get user's room (returns single room)
+  clientGetRoom(callback: (result: { roomId?: string }) => void) {
+    if (!this.socket?.connected) {
+      console.error("❌ Cannot get client room: Socket not connected");
+      callback({});
+      return;
+    }
+    console.log("📤 Fetching client room...");
+    this.socket.emit("clientGetRoom", {}, callback);
+  }
+
   getOrCreatePrivateRoom(
     params: PrivateRoomParams,
-    callback: (result: PrivateRoomResponse) => void
+    callback: (result: PrivateRoomResponse) => void,
   ) {
     if (!this.socket?.connected) {
       return;
@@ -104,14 +115,24 @@ class ChatSocket {
 
   getMessages(
     params: GetMessagesParams,
-    callback: (messages: Message[]) => void
+    callback: (messages: Message[]) => void,
   ) {
     if (!this.socket?.connected) {
+      callback([]);
       return;
     }
 
     this.socket.emit("getMessages", params, (response: any) => {
-      callback(response);
+      if (!response) {
+        callback([]);
+        return;
+      }
+
+      if (Array.isArray(response)) {
+        callback(response);
+      } else {
+        callback([]);
+      }
     });
   }
 
@@ -121,6 +142,46 @@ class ChatSocket {
     }
     this.socket.emit("sendMessage", data);
 
+    return true;
+  }
+
+  // Admin-specific method to join admin rooms
+  joinRoomsAdmin() {
+    if (!this.socket?.connected) {
+      console.error("❌ Cannot join admin rooms: Socket not connected");
+      return;
+    }
+    console.log("📤 Joining admin rooms...");
+    this.socket.emit("joinRoomsAdmin");
+  }
+
+  // Admin-specific method to get admin rooms
+  getAdminRooms(callback: (rooms: Room[]) => void) {
+    if (!this.socket?.connected) {
+      console.error("❌ Cannot get admin rooms: Socket not connected");
+      callback([]);
+      return;
+    }
+    console.log("📤 Fetching admin rooms...");
+    this.socket.emit("getAdminRooms", {}, (response: any) => {
+      console.log("📦 getAdminRooms response:", response);
+      if (Array.isArray(response)) {
+        callback(response);
+      } else {
+        console.error("❌ Invalid response format for admin rooms");
+        callback([]);
+      }
+    });
+  }
+
+  // Admin-specific method to send messages as admin
+  sendMessageAdmin(data: SocketMessage) {
+    if (!this.socket?.connected) {
+      console.error("❌ Cannot send admin message: Socket not connected");
+      return false;
+    }
+    console.log("📤 Sending admin message:", data);
+    this.socket.emit("sendMessageAdmin", data);
     return true;
   }
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Tabs from "@/components/Tabs";
 import CarDetailsForm from "./ui/CarDetailsForm";
 import PriceInputs from "./ui/PriceInputs";
@@ -92,6 +92,15 @@ const AddCar = () => {
     "Медиа",
     "Местоположение",
   ];
+
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        ...formData,
+        phone: profile?.data.phone,
+      });
+    }
+  }, [profile]);
 
   return (
     <div className="p-[35px] 2xl:p-[60px]">
