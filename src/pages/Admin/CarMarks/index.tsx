@@ -14,6 +14,7 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { MdViewList } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import { AddCarMarkModal } from "./ui/AddCarMarkModal";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetCarMarks } from "@/api/carMarks/useGetCarMarks";
 import { useAddCarMark } from "@/api/carMarks/useAddCarMark";
@@ -31,6 +32,8 @@ const CarMarks = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [carMarkToDelete, setCarMarkToDelete] = useState<OneCarMark | null>(null);
   const [newCarMark, setNewCarMark] = useState<NewCarMark>({
     id: "",
     nameTk: "",
@@ -89,9 +92,11 @@ const CarMarks = () => {
     }
   };
 
-  const handleDelete = async (carMarkId: string) => {
+  const handleConfirmedDelete = async () => {
+    if (!carMarkToDelete) return;
+
     try {
-      await removeCarMark.mutateAsync(carMarkId);
+      await removeCarMark.mutateAsync(carMarkToDelete.id);
       toast({
         title: "Марка удалена",
         description: "Марка машины успешно удалена",
@@ -105,6 +110,9 @@ const CarMarks = () => {
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setDeleteDialogOpen(false);
+      setCarMarkToDelete(null);
     }
   };
 
@@ -133,6 +141,15 @@ const CarMarks = () => {
         formData={newCarMark}
         setFormData={setNewCarMark}
         onSubmit={handleSubmitCarMark}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={carMarkToDelete ? `${carMarkToDelete.nameRu} / ${carMarkToDelete.name}` : ''}
+        itemType="марку"
+        isLoading={removeCarMark.isPending}
       />
 
       <div className="mt-10">
@@ -214,7 +231,8 @@ const CarMarks = () => {
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(carMark.id);
+                          setCarMarkToDelete(carMark);
+                          setDeleteDialogOpen(true);
                         }}
                         className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                         title="Удалить"

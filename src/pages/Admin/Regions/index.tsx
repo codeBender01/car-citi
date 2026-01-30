@@ -18,6 +18,7 @@ import { AddRegionModal } from "./ui/AddRegionModal";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { BiSolidCity } from "react-icons/bi";
 import { Button } from "@/components/ui/button";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 import type { NewRegion } from "@/interfaces/regions.interface";
 
 const Regions = () => {
@@ -30,6 +31,8 @@ const Regions = () => {
   const [pageSize] = useState(10);
   const { data: regions } = useGetRegionsAdmin(i18n.language, currentPage, pageSize);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [regionToDelete, setRegionToDelete] = useState<NewRegion | null>(null);
   const [newRegion, setNewRegion] = useState({
     nameTk: "",
     nameRu: "",
@@ -65,8 +68,10 @@ const Regions = () => {
     setIsModalOpen(false);
   };
 
-  const handleDelete = async (regionId: string) => {
-    const res = await removeRegion.mutateAsync(regionId);
+  const handleConfirmedDelete = async () => {
+    if (!regionToDelete) return;
+
+    const res = await removeRegion.mutateAsync(regionToDelete.id);
 
     if (res.data) {
       toast({
@@ -81,6 +86,9 @@ const Regions = () => {
         duration: 1000,
       });
     }
+
+    setDeleteDialogOpen(false);
+    setRegionToDelete(null);
   };
 
   return (
@@ -108,6 +116,16 @@ const Regions = () => {
         onOpenChange={setIsModalOpen}
         onSubmit={handleAddRegion}
       />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={regionToDelete ? `${regionToDelete.nameRu} / ${regionToDelete.nameTk}` : ''}
+        itemType="регион"
+        isLoading={removeRegion.isPending}
+      />
+
       <div className="mt-10">
         <Table>
           <TableHeader>
@@ -156,7 +174,8 @@ const Regions = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(region.id);
+                        setRegionToDelete(region);
+                        setDeleteDialogOpen(true);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"

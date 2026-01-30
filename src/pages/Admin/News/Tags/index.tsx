@@ -11,6 +11,7 @@ import {
 import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetAllNewsTags } from "@/api/news/useGetAllNewsTags";
 import { useAddNewsTag } from "@/api/news/useAddNewsTag";
@@ -24,6 +25,8 @@ const NewsTags = () => {
   const [pageSize] = useState(10);
   const { data: tags } = useGetAllNewsTags(currentPage, pageSize);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [tagToDelete, setTagToDelete] = useState<NewNewsTag | null>(null);
   const [newTag, setNewTag] = useState<NewNewsTag>({
     id: "",
     nameTk: "",
@@ -68,8 +71,10 @@ const NewsTags = () => {
     }
   };
 
-  const handleDelete = async (tagId: string) => {
-    const res = await removeNewsTag.mutateAsync(tagId);
+  const handleConfirmedDelete = async () => {
+    if (!tagToDelete) return;
+
+    const res = await removeNewsTag.mutateAsync(tagToDelete.id);
 
     if (res.data) {
       toast({
@@ -84,6 +89,9 @@ const NewsTags = () => {
         duration: 1000,
       });
     }
+
+    setDeleteDialogOpen(false);
+    setTagToDelete(null);
   };
 
   return (
@@ -111,6 +119,15 @@ const NewsTags = () => {
         formData={newTag}
         setFormData={setNewTag}
         onSubmit={handleSubmitTag}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={tagToDelete ? `${tagToDelete.nameRu} / ${tagToDelete.nameTk}` : ''}
+        itemType="тег"
+        isLoading={removeNewsTag.isPending}
       />
 
       <div className="mt-10">
@@ -147,7 +164,8 @@ const NewsTags = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(tag.id);
+                        setTagToDelete(tag);
+                        setDeleteDialogOpen(true);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"

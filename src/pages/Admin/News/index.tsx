@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetNewsAdmin } from "@/api/news/useGetAllNewsAdmin";
 import { useAddNews } from "@/api/news/useAddNews";
@@ -23,6 +24,8 @@ const News = () => {
   const { toast } = useToast();
   const { data: news } = useGetNewsAdmin();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [newsToDelete, setNewsToDelete] = useState<OneNews | null>(null);
   const [newNews, setNewNews] = useState<NewNews>({
     id: "",
     image: { url: "", hashblur: "" },
@@ -82,8 +85,10 @@ const News = () => {
     }
   };
 
-  const handleDelete = async (newsId: string) => {
-    const res = await removeNews.mutateAsync(newsId);
+  const handleConfirmedDelete = async () => {
+    if (!newsToDelete) return;
+
+    const res = await removeNews.mutateAsync(newsToDelete.id);
 
     if (res.data) {
       toast({
@@ -98,6 +103,9 @@ const News = () => {
         duration: 1000,
       });
     }
+
+    setDeleteDialogOpen(false);
+    setNewsToDelete(null);
   };
 
   return (
@@ -125,6 +133,15 @@ const News = () => {
         newsObj={newNews}
         setNewsObj={setNewNews}
         onSubmit={handleSubmitNews}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={newsToDelete ? `${newsToDelete.titleRu} / ${newsToDelete.titleTk}` : ''}
+        itemType="новость"
+        isLoading={removeNews.isPending}
       />
 
       <div className="mt-10">
@@ -179,7 +196,8 @@ const News = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(newsItem.id);
+                        setNewsToDelete(newsItem);
+                        setDeleteDialogOpen(true);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"

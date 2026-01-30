@@ -37,6 +37,7 @@ import StatsSection from "./ui/StatSection";
 import Reviews from "./ui/Reviews";
 
 import { useGetHomeClient } from "@/api/home/useGetHomeClient";
+import { useGetBanners } from "@/api/banners/useGetAllBanners";
 import { BASE_URL } from "@/api";
 
 const Home = () => {
@@ -53,6 +54,7 @@ const Home = () => {
   ];
 
   const { data: homeData } = useGetHomeClient();
+  const { data: banners } = useGetBanners(1, 100);
 
   const navigate = useNavigate();
 
@@ -85,8 +87,8 @@ const Home = () => {
             loop={true}
             onSwiper={(swiper) => (swiperRef.current = swiper)}
           >
-            {homeData?.data?.banners && homeData.data.banners.length > 0 ? (
-              homeData.data.banners.map((banner) => (
+            {banners?.data?.rows && banners.data.rows.length > 0 ? (
+              banners.data.rows.slice(2).map((banner) => (
                 <SwiperSlide key={banner.id}>
                   <div
                     className="w-full h-[420px] lg:h-[660px] lg:rounded-2xl flex items-center justify-end md:justify-center text-center flex-col relative"
@@ -205,10 +207,12 @@ const Home = () => {
             Локальные автодилеры и лучшие предложения
           </div>
           <p className="font-dm text-base ">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. 
+            Мы сотрудничаем с проверенными продавцами и частными владельцами,
+            помогая размещать только реальные и актуальные объявления. Каждый
+            автомобиль, прошедший проверку CarCiti, получает приоритетное
+            размещение и повышенное доверие со стороны покупателей. Вы видите
+            лучшие предложения в вашем регионе — без фейков, скрученных пробегов
+            и скрытых проблем.
           </p>
           <Button
             size="none"
@@ -286,7 +290,7 @@ const Home = () => {
             </li>
             <li className="flex h-[345px] md:h-auto flex-col justify-between bg-primary text-white p-5 md:rounded-2xl">
               <div className="text-[32px] font-rale font-bold">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                CarCiti — новый уровень безопасности при покупке авто
               </div>
               <div className="flex items-center gap-2 font-dm font-medium">
                 Подробнее
@@ -295,7 +299,7 @@ const Home = () => {
             </li>
             <li className="flex h-[345px] md:h-auto flex-col relative justify-between bg-black text-white p-5 md:rounded-2xl overflow-hidden">
               <div className="text-[32px] font-rale font-bold relative z-10">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                «Полный цикл от А до Я»
               </div>
               <div className="flex items-center gap-2 font-dm font-medium relative z-10">
                 Подробнее

@@ -12,6 +12,7 @@ import {
 import { FiEdit, FiTrash2, FiArrowLeft } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { AddCarModelModal } from "./ui/AddCarModelModal";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetOneCarMark } from "@/api/carMarks/useGetOneCarMark";
 import { useAddCarModel } from "@/api/carMarks/useAddCarModel";
@@ -26,6 +27,8 @@ const CarModels = () => {
   const removeCarModel = useRemoveCarModel();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [modelToDelete, setModelToDelete] = useState<OneCarModel | null>(null);
   const [newCarModel, setNewCarModel] = useState<NewCarModel>({
     id: "",
     nameTk: "",
@@ -78,9 +81,11 @@ const CarModels = () => {
     }
   };
 
-  const handleDelete = async (modelId: string) => {
+  const handleConfirmedDelete = async () => {
+    if (!modelToDelete) return;
+
     try {
-      await removeCarModel.mutateAsync(modelId);
+      await removeCarModel.mutateAsync(modelToDelete.id);
       toast({
         title: "Модель удалена",
         description: "Модель успешно удалена",
@@ -94,6 +99,9 @@ const CarModels = () => {
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setDeleteDialogOpen(false);
+      setModelToDelete(null);
     }
   };
 
@@ -132,6 +140,15 @@ const CarModels = () => {
         formData={newCarModel}
         setFormData={setNewCarModel}
         onSubmit={handleSubmitCarModel}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={modelToDelete ? `${modelToDelete.nameRu} / ${modelToDelete.nameTk}` : ''}
+        itemType="модель"
+        isLoading={removeCarModel.isPending}
       />
 
       <div className="mt-10">
@@ -177,7 +194,8 @@ const CarModels = () => {
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(model.id);
+                          setModelToDelete(model);
+                          setDeleteDialogOpen(true);
                         }}
                         className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                         title="Удалить"

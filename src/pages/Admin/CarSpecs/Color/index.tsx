@@ -12,6 +12,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { AddColorModal } from "./ui/AddColorModal";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetCarSpecsColors } from "@/api/carSpecs/useGetCarSpecsColors";
 import { useAddCarSpecsColor } from "@/api/carSpecs/useAddCarSpecsColor";
@@ -29,6 +30,8 @@ const Colors = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [colorToDelete, setColorToDelete] = useState<OneCarColor | null>(null);
   const [newColor, setNewColor] = useState<NewCarColor>({
     id: "",
     nameTk: "",
@@ -86,9 +89,11 @@ const Colors = () => {
     }
   };
 
-  const handleDelete = async (colorId: string) => {
+  const handleConfirmedDelete = async () => {
+    if (!colorToDelete) return;
+
     try {
-      await removeColor.mutateAsync(colorId);
+      await removeColor.mutateAsync(colorToDelete.id);
       toast({
         title: "Цвет удален",
         description: "Цвет успешно удален",
@@ -102,6 +107,9 @@ const Colors = () => {
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setDeleteDialogOpen(false);
+      setColorToDelete(null);
     }
   };
 
@@ -130,6 +138,15 @@ const Colors = () => {
         formData={newColor}
         setFormData={setNewColor}
         onSubmit={handleSubmitColor}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={colorToDelete ? `${colorToDelete.nameRu} / ${colorToDelete.nameTk}` : ''}
+        itemType="цвет"
+        isLoading={removeColor.isPending}
       />
 
       <div className="mt-10">
@@ -192,7 +209,8 @@ const Colors = () => {
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(color.id);
+                          setColorToDelete(color);
+                          setDeleteDialogOpen(true);
                         }}
                         className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                         title="Удалить"

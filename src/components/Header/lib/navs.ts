@@ -12,18 +12,6 @@ export const navs = [
     path: "/about",
   },
   {
-    id: 3,
-    titleKey: "nav.findCar",
-    isDropdown: true,
-    path: "/",
-  },
-  {
-    id: 4,
-    titleKey: "nav.useful",
-    isDropdown: true,
-    path: "/",
-  },
-  {
     id: 5,
     titleKey: "nav.contacts",
     isDropdown: false,

@@ -14,6 +14,7 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { MdOutlineCategory } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import { AddCarCategoryModal } from "./ui/AddCarCategoryModal";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useAddCarSpecsCategory } from "@/api/carSpecs/useAddCarSpecsCategory";
 import { useGetCarSpecsCategories } from "@/api/carSpecs/useGetCarSpecsCategories";
@@ -40,6 +41,8 @@ const CarCategories = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<CarCategory | null>(null);
   const [newCategory, setNewCategory] = useState<NewCarCategory>({
     id: "",
     nameTk: "",
@@ -86,9 +89,11 @@ const CarCategories = () => {
     }
   };
 
-  const handleDelete = async (categoryId: string) => {
+  const handleConfirmedDelete = async () => {
+    if (!categoryToDelete) return;
+
     try {
-      await removeCategory.mutateAsync(categoryId);
+      await removeCategory.mutateAsync(categoryToDelete.id);
       toast({
         title: "Категория удалена",
         description: "Категория успешно удалена",
@@ -102,6 +107,9 @@ const CarCategories = () => {
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setDeleteDialogOpen(false);
+      setCategoryToDelete(null);
     }
   };
 
@@ -130,6 +138,15 @@ const CarCategories = () => {
         formData={newCategory}
         setFormData={setNewCategory}
         onSubmit={handleSubmitCategory}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={categoryToDelete ? `${categoryToDelete.nameRu} / ${categoryToDelete.nameTk}` : ''}
+        itemType="категорию"
+        isLoading={removeCategory.isPending}
       />
 
       <div className="mt-10">
@@ -182,7 +199,8 @@ const CarCategories = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(category.id);
+                        setCategoryToDelete(category);
+                        setDeleteDialogOpen(true);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"

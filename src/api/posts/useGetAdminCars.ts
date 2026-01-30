@@ -5,6 +5,7 @@ import type { ApiResponse } from "@/interfaces/apiResponse.interface";
 
 export const useGetAdminCars = (params?: AdminCarsParams) => {
   const { page = 1, pageSize = 10, search, status, language = "ru" } = params || {};
+  const token = localStorage.getItem("adminAccessToken");
 
   return useQuery<ApiResponse<PostsList>>({
     queryKey: ["adminCars", page, pageSize, search, status, language],
@@ -25,6 +26,7 @@ export const useGetAdminCars = (params?: AdminCarsParams) => {
       const { data } = await apiClient.get("/cars/fetch-cars", {
         params: queryParams,
         headers: {
+          Authorization: `Bearer ${token}`,
           "Accept-Language": language,
         },
       });

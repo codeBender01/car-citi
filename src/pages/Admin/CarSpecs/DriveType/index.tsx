@@ -12,6 +12,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { AddDriveTypeModal } from "./ui/AddDriveTypeModal";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetCarSpecsDriveTypes } from "@/api/carSpecs/useGetCarSpecsDriveTypes";
 import { useAddCarSpecsDriveType } from "@/api/carSpecs/useAddCarSpecsDriveType";
@@ -26,6 +27,8 @@ const DriveTypes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [driveTypeToDelete, setDriveTypeToDelete] = useState<OneCarDriveType | null>(null);
   const [newDriveType, setNewDriveType] = useState<NewCarDriveType>({
     id: "",
     nameTk: "",
@@ -75,9 +78,11 @@ const DriveTypes = () => {
     }
   };
 
-  const handleDelete = async (driveTypeId: string) => {
+  const handleConfirmedDelete = async () => {
+    if (!driveTypeToDelete) return;
+
     try {
-      await removeDriveType.mutateAsync(driveTypeId);
+      await removeDriveType.mutateAsync(driveTypeToDelete.id);
       toast({
         title: "Тип привода удален",
         description: "Тип привода успешно удален",
@@ -91,6 +96,9 @@ const DriveTypes = () => {
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setDeleteDialogOpen(false);
+      setDriveTypeToDelete(null);
     }
   };
 
@@ -119,6 +127,15 @@ const DriveTypes = () => {
         formData={newDriveType}
         setFormData={setNewDriveType}
         onSubmit={handleSubmitDriveType}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={driveTypeToDelete ? `${driveTypeToDelete.nameRu} / ${driveTypeToDelete.nameTk}` : ''}
+        itemType="тип привода"
+        isLoading={removeDriveType.isPending}
       />
 
       <div className="mt-10">
@@ -164,7 +181,8 @@ const DriveTypes = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(driveType.id);
+                        setDriveTypeToDelete(driveType);
+                        setDeleteDialogOpen(true);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"

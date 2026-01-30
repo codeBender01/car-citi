@@ -12,6 +12,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { AddFuelTypeModal } from "./ui/AddFuelTypeModal";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetCarSpecsFuelTypes } from "@/api/carSpecs/useGetCarSpecsFuelTypes";
 import { useAddCarSpecsFuelType } from "@/api/carSpecs/useAddCarSpecsFuelType";
@@ -26,6 +27,8 @@ const FuelTypes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [fuelTypeToDelete, setFuelTypeToDelete] = useState<OneCarFuelType | null>(null);
   const [newFuelType, setNewFuelType] = useState<NewCarFuelType>({
     id: "",
     nameTk: "",
@@ -75,9 +78,11 @@ const FuelTypes = () => {
     }
   };
 
-  const handleDelete = async (fuelTypeId: string) => {
+  const handleConfirmedDelete = async () => {
+    if (!fuelTypeToDelete) return;
+
     try {
-      await removeFuelType.mutateAsync(fuelTypeId);
+      await removeFuelType.mutateAsync(fuelTypeToDelete.id);
       toast({
         title: "Тип топлива удален",
         description: "Тип топлива успешно удален",
@@ -91,6 +96,9 @@ const FuelTypes = () => {
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setDeleteDialogOpen(false);
+      setFuelTypeToDelete(null);
     }
   };
 
@@ -119,6 +127,15 @@ const FuelTypes = () => {
         formData={newFuelType}
         setFormData={setNewFuelType}
         onSubmit={handleSubmitFuelType}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={fuelTypeToDelete ? `${fuelTypeToDelete.nameRu} / ${fuelTypeToDelete.nameTk}` : ''}
+        itemType="тип топлива"
+        isLoading={removeFuelType.isPending}
       />
 
       <div className="mt-10">
@@ -164,7 +181,8 @@ const FuelTypes = () => {
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(fuelType.id);
+                          setFuelTypeToDelete(fuelType);
+                          setDeleteDialogOpen(true);
                         }}
                         className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                         title="Удалить"

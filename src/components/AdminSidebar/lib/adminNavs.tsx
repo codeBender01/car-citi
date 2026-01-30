@@ -8,6 +8,7 @@ import { IoCarSport } from "react-icons/io5";
 import { TbBrandToyota } from "react-icons/tb";
 import { HiOutlineChartBar } from "react-icons/hi";
 import { MdDirectionsCar } from "react-icons/md";
+import { MdViewCarousel } from "react-icons/md";
 
 interface SubPath {
   name: string;
@@ -99,6 +100,11 @@ export const adminNavs: AdminNav[] = [
     text: "FAQ",
     icon: <FaQuestion className="w-5 h-5" />,
     path: "/admin/faq",
+  },
+  {
+    text: "Баннеры",
+    icon: <MdViewCarousel className="w-5 h-5" />,
+    path: "/admin/banners",
   },
   {
     text: "Чат",

@@ -135,21 +135,14 @@ const Footer = () => {
                 <li className="cursor-pointer hover:text-primary transition-colors">
                   Подобрать авто
                 </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Вакансии
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Полезное
-                </li>
+
                 <li className="cursor-pointer hover:text-primary transition-colors">
                   Блог
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
                   FAQ
                 </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Поддержка
-                </li>
+
                 <li className="cursor-pointer hover:text-primary transition-colors">
                   Контакты
                 </li>
@@ -220,11 +213,11 @@ const Footer = () => {
             </div>
 
             {/* Our App */}
-            <div className="col-span-2 md:block flex items-center flex-col md:col-span-1">
+            <div className="col-span-4 md:block flex items-center flex-col md:col-span-1">
               <h3 className="text-[20px] font-dm font-medium mb-6">
                 Наше приложение
               </h3>
-              <div className="space-y-4 w-[80%] md:w-[60%]">
+              <div className="space-y-4 w-full">
                 <div className="bg-white/7 rounded-2xl px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-white/10 transition-colors">
                   <BsApple size={30} />
                   <div className="font-dm">
@@ -243,7 +236,7 @@ const Footer = () => {
             </div>
 
             {/* Social Networks */}
-            <div className="col-span-2 md:col-span-1 md:block flex items-center flex-col">
+            <div className="col-span-1 md:col-span-1 md:block flex items-center flex-col">
               <h3 className="text-[20px] font-dm font-medium mb-6">
                 Наши соц. сети
               </h3>

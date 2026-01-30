@@ -12,6 +12,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { AddTransmissionModal } from "./ui/AddTransmissionModal";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetCarSpecsTransmissions } from "@/api/carSpecs/useGetCarSpecsTransmissions";
 import { useAddCarSpecsTransmission } from "@/api/carSpecs/useAddCarSpecsTransmission";
@@ -29,6 +30,8 @@ const Transmissions = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [transmissionToDelete, setTransmissionToDelete] = useState<OneCarTransmission | null>(null);
   const [newTransmission, setNewTransmission] = useState<NewCarTransmission>({
     id: "",
     nameTk: "",
@@ -83,9 +86,11 @@ const Transmissions = () => {
     }
   };
 
-  const handleDelete = async (transmissionId: string) => {
+  const handleConfirmedDelete = async () => {
+    if (!transmissionToDelete) return;
+
     try {
-      await removeTransmission.mutateAsync(transmissionId);
+      await removeTransmission.mutateAsync(transmissionToDelete.id);
       toast({
         title: "Трансмиссия удалена",
         description: "Трансмиссия успешно удалена",
@@ -99,6 +104,9 @@ const Transmissions = () => {
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setDeleteDialogOpen(false);
+      setTransmissionToDelete(null);
     }
   };
 
@@ -127,6 +135,15 @@ const Transmissions = () => {
         formData={newTransmission}
         setFormData={setNewTransmission}
         onSubmit={handleSubmitTransmission}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={transmissionToDelete ? `${transmissionToDelete.nameRu} / ${transmissionToDelete.nameTk}` : ''}
+        itemType="трансмиссию"
+        isLoading={removeTransmission.isPending}
       />
 
       <div className="mt-10">
@@ -172,7 +189,8 @@ const Transmissions = () => {
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(transmission.id);
+                          setTransmissionToDelete(transmission);
+                          setDeleteDialogOpen(true);
                         }}
                         className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                         title="Удалить"

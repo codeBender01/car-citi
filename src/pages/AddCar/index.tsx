@@ -4,7 +4,7 @@ import CarDetailsForm from "./ui/CarDetailsForm";
 import PriceInputs from "./ui/PriceInputs";
 import CharacteristicsForm from "./ui/CharacteristicsForm";
 import MediaForm from "./ui/MediaForm";
-import LocationForm from "./ui/LocationForm";
+
 import type { NewPostReq } from "@/interfaces/posts.interface";
 
 import { useAddPost } from "@/api/posts/useAddPost";
@@ -52,17 +52,14 @@ const AddCar = () => {
       reports: [],
       videoUrl: "",
     },
-    carMap: {
-      address: "",
-      location: "",
-      mapUrl: "",
-      latitude: "",
-      longitude: "",
-    },
     carCharacteristics: [],
   });
 
   const [formData, setFormData] = useState<NewPostReq>(getInitialFormData());
+
+  const handleNext = () => {
+    setActiveTab((prev) => Math.min(prev + 1, tabs.length - 1));
+  };
 
   const handleSubmit = async () => {
     try {
@@ -90,7 +87,7 @@ const AddCar = () => {
     "Цена",
     "Характеристики",
     "Медиа",
-    "Местоположение",
+    // "Местоположение",
   ];
 
   useEffect(() => {
@@ -113,32 +110,46 @@ const AddCar = () => {
 
         <div className="mt-8">
           {activeTab === 0 && (
-            <CarDetailsForm formData={formData} setFormData={setFormData} />
+            <CarDetailsForm
+              formData={formData}
+              setFormData={setFormData}
+              onNext={handleNext}
+            />
           )}
 
           {activeTab === 1 && (
-            <PriceInputs formData={formData} setFormData={setFormData} />
+            <PriceInputs
+              formData={formData}
+              setFormData={setFormData}
+              onNext={handleNext}
+            />
           )}
 
           {activeTab === 2 && (
             <CharacteristicsForm
               formData={formData}
               setFormData={setFormData}
+              onNext={handleNext}
             />
           )}
 
           {activeTab === 3 && (
-            <MediaForm formData={formData} setFormData={setFormData} />
-          )}
-
-          {activeTab === 4 && (
-            <LocationForm
+            <MediaForm
               formData={formData}
               setFormData={setFormData}
               onSubmit={handleSubmit}
               isSubmitting={addPost.isPending}
             />
           )}
+
+          {/* {activeTab === 4 && (
+            <LocationForm
+              formData={formData}
+              setFormData={setFormData}
+              onSubmit={handleSubmit}
+              isSubmitting={addPost.isPending}
+            />
+          )} */}
         </div>
       </div>
     </div>

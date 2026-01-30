@@ -12,15 +12,17 @@ export const useUpdateCarStatus = () => {
   const token = localStorage.getItem("accessToken");
 
   return useMutation({
-    mutationFn: async (payload: UpdateCarStatusPayload): Promise<ApiResponse<any>> => {
+    mutationFn: async (
+      payload: UpdateCarStatusPayload,
+    ): Promise<ApiResponse<any>> => {
       const { data } = await apiClient.patch(
-        `/cars/${payload.carId}/status`,
-        { status: payload.status },
+        `/cars/car-status`,
+        { status: payload.status, carId: payload.carId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       return data;
     },

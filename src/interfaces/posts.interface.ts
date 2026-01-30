@@ -125,13 +125,6 @@ export interface NewPostReq {
     }[];
     videoUrl: string;
   };
-  carMap: {
-    address: string;
-    location: string;
-    mapUrl: string;
-    latitude: string;
-    longitude: string;
-  };
   carCharacteristics: {
     characteristicId: string;
     characteristicItemId: string;

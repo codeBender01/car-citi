@@ -164,3 +164,13 @@ export interface CarSpecsColorsList {
   count: number;
   rows: OneCarColor[];
 }
+
+export interface CarEquipmentList {
+  count: number;
+  rows: OneCarEquipment[];
+}
+
+export interface OneCarEquipment {
+  id: string;
+  name: string;
+}

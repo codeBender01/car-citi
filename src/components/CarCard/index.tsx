@@ -63,7 +63,7 @@ const CarCard = ({ car }: CarCardProps) => {
       onClick={() => {
         navigate("/car-details/" + car.id);
       }}
-      className="rounded-2xl flex flex-col w-full max-w-[330px] bg-white shadow-md border border-headerBorder"
+      className="rounded-2xl flex flex-col w-full md:max-w-[330px] bg-white shadow-md border border-headerBorder"
     >
       <div
         ref={containerRef}

@@ -16,6 +16,7 @@ import { useGetOneCarSpecsCategory } from "@/api/carSpecs/useGetOneCarSpecsCateg
 import { useAddCarSpecsSubcategory } from "@/api/carSpecs/useAddCarSpecsSubcategory";
 import { useRemoveCarSpecsSubcategory } from "@/api/carSpecs/useRemoveCarSpecsSubcategory";
 import { AddCarSubcategoryModal } from "./ui/AddCarSubcategoryModal";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 import type { NewCarSpecsSubcategory } from "@/interfaces/carSpecs.interface";
 
 const CarSubcategories = () => {
@@ -28,6 +29,8 @@ const CarSubcategories = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [subcategoryToDelete, setSubcategoryToDelete] = useState<any | null>(null);
   const [newSubcategory, setNewSubcategory] = useState<NewCarSpecsSubcategory>({
     nameTk: "",
     nameRu: "",
@@ -86,9 +89,11 @@ const CarSubcategories = () => {
     }
   };
 
-  const handleDelete = async (subcategoryId: string) => {
+  const handleConfirmedDelete = async () => {
+    if (!subcategoryToDelete) return;
+
     try {
-      await removeSubcategory.mutateAsync(subcategoryId);
+      await removeSubcategory.mutateAsync(subcategoryToDelete.id);
       toast({
         title: "Подкатегория удалена",
         description: "Подкатегория успешно удалена",
@@ -102,6 +107,9 @@ const CarSubcategories = () => {
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setDeleteDialogOpen(false);
+      setSubcategoryToDelete(null);
     }
   };
 
@@ -136,6 +144,15 @@ const CarSubcategories = () => {
         formData={newSubcategory}
         setFormData={setNewSubcategory}
         onSubmit={handleSubmit}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={subcategoryToDelete ? `${subcategoryToDelete.nameRu} / ${subcategoryToDelete.nameTk}` : ''}
+        itemType="подкатегорию"
+        isLoading={removeSubcategory.isPending}
       />
 
       <div className="mt-10">
@@ -176,7 +193,8 @@ const CarSubcategories = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(subcategory.id);
+                        setSubcategoryToDelete(subcategory);
+                        setDeleteDialogOpen(true);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"

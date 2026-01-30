@@ -13,7 +13,6 @@ import Save from "@/svgs/Save";
 import { LanguageSwitcher } from "../LanguageSwitcher";
 
 import { RiArrowDownSLine } from "react-icons/ri";
-import { FaRegBell } from "react-icons/fa";
 import { IoPersonOutline } from "react-icons/io5";
 
 import { useGetProfile } from "@/api/auth/useGetProfile";
@@ -149,27 +148,31 @@ const Header = () => {
 
         {profile ? (
           <div className="hidden xl:flex items-center gap-[18px] ml-7">
-            <Messages
-              className={`w-7 h-7 cursor-pointer transition-colors duration-300 max-lg:text-white ${
-                isFullyScrolled || isWhiteLogoPathname ? "text-white" : ""
-              }`}
-              opacity={
-                isFullyScrolled || isWhiteLogoPathname || isMobileView
-                  ? 1
-                  : 0.25
-              }
-            />
-            <Save
-              className={`w-6 h-6 cursor-pointer transition-colors duration-300 max-lg:text-white ${
-                isFullyScrolled || isWhiteLogoPathname ? "text-white" : ""
-              }`}
-              opacity={
-                isFullyScrolled || isWhiteLogoPathname || isMobileView
-                  ? 1
-                  : 0.25
-              }
-            />
-            <div className="relative cursor-pointer ">
+            <div onClick={() => navigate("/dashboard/messages")}>
+              <Messages
+                className={`w-7 h-7 cursor-pointer transition-colors duration-300 max-lg:text-white ${
+                  isFullyScrolled || isWhiteLogoPathname ? "text-white" : ""
+                }`}
+                opacity={
+                  isFullyScrolled || isWhiteLogoPathname || isMobileView
+                    ? 1
+                    : 0.25
+                }
+              />
+            </div>
+            <div onClick={() => navigate("/saved")}>
+              <Save
+                className={`w-6 h-6 cursor-pointer transition-colors duration-300 max-lg:text-white ${
+                  isFullyScrolled || isWhiteLogoPathname ? "text-white" : ""
+                }`}
+                opacity={
+                  isFullyScrolled || isWhiteLogoPathname || isMobileView
+                    ? 1
+                    : 0.25
+                }
+              />
+            </div>
+            {/* <div className="relative cursor-pointer ">
               <FaRegBell
                 className={`w-6 h-6 max-lg:text-white ${
                   isFullyScrolled || isWhiteLogoPathname
@@ -180,9 +183,10 @@ const Header = () => {
               <div className="absolute top-0 right-0 bg-danger w-2.5 h-2.5 rounded-full text-white text-[8px] flex items-center justify-center">
                 1
               </div>
-            </div>
+            </div> */}
 
             <div
+              onClick={() => navigate("/dashboard/profile")}
               className={`w-11 h-11 rounded-md flex items-center justify-center cursor-pointer transition-colors duration-200 ${
                 isFullyScrolled || isWhiteLogoPathname
                   ? "bg-gray-700 hover:bg-gray-600"
@@ -211,25 +215,6 @@ const Header = () => {
               onClick={() => navigate("/auth")}
             >
               {t("common.login")}
-            </span>
-            <span
-              className={`font-dm font-medium text-[15px] transition-colors duration-300 ${
-                isFullyScrolled || isWhiteLogoPathname
-                  ? "text-white"
-                  : "text-textGraySec"
-              }`}
-            >
-              |
-            </span>
-            <span
-              className={`font-dm font-medium text-[15px] cursor-pointer hover:opacity-70 transition-all duration-300 ${
-                isFullyScrolled || isWhiteLogoPathname
-                  ? "text-white"
-                  : "text-textGraySec"
-              }`}
-              onClick={() => navigate("/auth")}
-            >
-              {t("common.registration")}
             </span>
           </div>
         )}

@@ -5,8 +5,8 @@ import CarService from "@/svgs/CarService";
 
 export const whyUs = [
   {
-    title: "Полный цикл от А до Я",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    title: "CarCiti — новый уровень безопасности при покупке авто",
+    text: "CarCiti — это современная платформа для безопасной покупки и продажи автомобилей. ",
     icon: <FullList />,
   },
   {

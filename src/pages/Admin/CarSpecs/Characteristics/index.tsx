@@ -12,6 +12,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { AddCharacteristicModal } from "./ui/AddCharacteristicModal";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetCarSpecsCharacteristics } from "@/api/carSpecs/useGetCarSpecsCharacteristics";
 import { useAddCarSpecsCharacteristic } from "@/api/carSpecs/useAddCarSpecsCharacteristic";
@@ -29,6 +30,8 @@ const Characteristics = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [characteristicToDelete, setCharacteristicToDelete] = useState<OneCarCharacteristic | null>(null);
   const [newCharacteristic, setNewCharacteristic] = useState<NewCarCharacteristic>({
     id: "",
     nameTk: "",
@@ -83,9 +86,11 @@ const Characteristics = () => {
     }
   };
 
-  const handleDelete = async (characteristicId: string) => {
+  const handleConfirmedDelete = async () => {
+    if (!characteristicToDelete) return;
+
     try {
-      await removeCharacteristic.mutateAsync(characteristicId);
+      await removeCharacteristic.mutateAsync(characteristicToDelete.id);
       toast({
         title: "Характеристика удалена",
         description: "Характеристика успешно удалена",
@@ -99,6 +104,9 @@ const Characteristics = () => {
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setDeleteDialogOpen(false);
+      setCharacteristicToDelete(null);
     }
   };
 
@@ -127,6 +135,15 @@ const Characteristics = () => {
         formData={newCharacteristic}
         setFormData={setNewCharacteristic}
         onSubmit={handleSubmitCharacteristic}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={characteristicToDelete ? `${characteristicToDelete.nameRu} / ${characteristicToDelete.nameTk}` : ''}
+        itemType="характеристику"
+        isLoading={removeCharacteristic.isPending}
       />
 
       <div className="mt-10">
@@ -172,7 +189,8 @@ const Characteristics = () => {
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(characteristic.id);
+                          setCharacteristicToDelete(characteristic);
+                          setDeleteDialogOpen(true);
                         }}
                         className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                         title="Удалить"

@@ -17,6 +17,7 @@ import {
 import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 const Faq = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,6 +27,8 @@ const Faq = () => {
   const addFaq = useAddFaq();
   const removeFaq = useRemoveFaq();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [faqToDelete, setFaqToDelete] = useState<NewFaq | null>(null);
   const [newFaq, setNewFaq] = useState<NewFaq>({
     id: "",
     titleTk: "",
@@ -73,8 +76,10 @@ const Faq = () => {
     }
   };
 
-  const handleDelete = async (faqId: string) => {
-    const res = await removeFaq.mutateAsync(faqId);
+  const handleConfirmedDelete = async () => {
+    if (!faqToDelete) return;
+
+    const res = await removeFaq.mutateAsync(faqToDelete.id);
 
     if (res.data) {
       toast({
@@ -89,6 +94,9 @@ const Faq = () => {
         duration: 1000,
       });
     }
+
+    setDeleteDialogOpen(false);
+    setFaqToDelete(null);
   };
 
   return (
@@ -106,6 +114,16 @@ const Faq = () => {
           isPending={addFaq.isPending}
         />
       </div>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={faqToDelete ? `${faqToDelete.titleRu} / ${faqToDelete.titleTk}` : ''}
+        itemType="вопрос"
+        isLoading={removeFaq.isPending}
+      />
+
       <div className="mt-10">
         <Table>
           <TableHeader>
@@ -148,7 +166,8 @@ const Faq = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(faq.id);
+                        setFaqToDelete(faq);
+                        setDeleteDialogOpen(true);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"

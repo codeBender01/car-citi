@@ -6,13 +6,16 @@ import { Input } from "@/components/ui/input";
 import { useUploadSingle } from "@/api/upload/useUploadSingle";
 import type { NewPostReq } from "@/interfaces/posts.interface";
 import { X } from "lucide-react";
+import { BASE_URL } from "@/api";
 
 interface MediaFormProps {
   formData: NewPostReq;
   setFormData: React.Dispatch<React.SetStateAction<NewPostReq>>;
+  onSubmit: () => Promise<void>;
+  isSubmitting: boolean;
 }
 
-const MediaForm = ({ formData, setFormData }: MediaFormProps) => {
+const MediaForm = ({ formData, setFormData, onSubmit, isSubmitting }: MediaFormProps) => {
   const uploadSingle = useUploadSingle();
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingReport, setUploadingReport] = useState(false);
@@ -107,7 +110,7 @@ const MediaForm = ({ formData, setFormData }: MediaFormProps) => {
               className="relative w-[190px] h-[167px] rounded-lg overflow-hidden border-2 border-primary"
             >
               <img
-                src={image.url}
+                src={`${BASE_URL}/${image.url}`}
                 alt={`Upload ${index + 1}`}
                 className="w-full h-full object-cover"
               />
@@ -136,8 +139,8 @@ const MediaForm = ({ formData, setFormData }: MediaFormProps) => {
           )}
         </div>
         <p className="text-base font-light mt-4">
-          Максимальный размер файла - 1 МБ, минимальный размер: 330x300.
-          Подходящие файлы - .jpg и .png.
+          Максимальный размер файла - 5 МБ, максимальный размер: 330x300px и
+          количество 10 шт. Подходящие файлы - .jpg и .png.
         </p>
       </div>
       <div className="font-dm text-textPrimary">
@@ -200,10 +203,12 @@ const MediaForm = ({ formData, setFormData }: MediaFormProps) => {
 
       <div className="col-span-4">
         <Button
+          onClick={onSubmit}
+          disabled={isSubmitting}
           size="none"
-          className="text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] cursor-pointer rounded-xl flex items-center mt-[30px] gap-2.5 py-4 px-[25px] ml-auto w-fit"
+          className="text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] cursor-pointer rounded-xl flex items-center mt-[30px] gap-2.5 py-4 px-[25px] ml-auto w-fit disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Далее
+          {isSubmitting ? "Отправка..." : "Далее"}
           <BsArrowUpRight />
         </Button>
       </div>

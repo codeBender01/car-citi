@@ -12,6 +12,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { AddConditionModal } from "./ui/AddConditionModal";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetCarSpecsConditions } from "@/api/carSpecs/useGetCarSpecsConditions";
 import { useAddCarSpecsCondition } from "@/api/carSpecs/useAddCarSpecsCondition";
@@ -29,6 +30,8 @@ const CarConditions = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [conditionToDelete, setConditionToDelete] = useState<OneCarCondition | null>(null);
   const [newCondition, setNewCondition] = useState<NewCarCondition>({
     id: "",
     nameTk: "",
@@ -84,9 +87,11 @@ const CarConditions = () => {
     }
   };
 
-  const handleDelete = async (conditionId: string) => {
+  const handleConfirmedDelete = async () => {
+    if (!conditionToDelete) return;
+
     try {
-      await removeCondition.mutateAsync(conditionId);
+      await removeCondition.mutateAsync(conditionToDelete.id);
       toast({
         title: "Состояние удалено",
         description: "Состояние успешно удалено",
@@ -100,6 +105,9 @@ const CarConditions = () => {
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setDeleteDialogOpen(false);
+      setConditionToDelete(null);
     }
   };
 
@@ -128,6 +136,15 @@ const CarConditions = () => {
         formData={newCondition}
         setFormData={setNewCondition}
         onSubmit={handleSubmitCondition}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={conditionToDelete ? `${conditionToDelete.nameRu} / ${conditionToDelete.nameTk}` : ''}
+        itemType="состояние"
+        isLoading={removeCondition.isPending}
       />
 
       <div className="mt-10">
@@ -189,7 +206,8 @@ const CarConditions = () => {
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(condition.id);
+                          setConditionToDelete(condition);
+                          setDeleteDialogOpen(true);
                         }}
                         className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                         title="Удалить"

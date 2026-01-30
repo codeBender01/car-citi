@@ -6,11 +6,16 @@ import { useSendOtp } from "@/api/auth/useSendOtp";
 import { useCheckOtp } from "@/api/auth/useCheckOtp";
 
 import { useNavigate } from "react-router-dom";
+import { formatPhoneNumber, validatePhoneNumber, cleanPhoneNumber } from "@/lib/phoneUtils";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [accountType, setAccountType] = useState<"Personal" | "Business">(
     "Personal"
   );
@@ -20,18 +25,63 @@ const LoginForm = () => {
   const sendOtp = useSendOtp();
   const checkOtp = useCheckOtp();
 
-  const handleSendOtp = async () => {
-    await sendOtp.mutateAsync({
-      phone,
-      accountType,
-    });
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    setPhone(formatted);
 
-    setShowOtp(true);
+    // Clear error when user types
+    if (phoneError) {
+      setPhoneError("");
+    }
+  };
+
+  const handlePhoneBlur = () => {
+    const validation = validatePhoneNumber(phone);
+    if (!validation.isValid && phone.length > 4) {
+      setPhoneError(validation.error || "");
+    }
+  };
+
+  const handlePhoneFocus = () => {
+    if (!phone || phone.trim() === "") {
+      setPhone("+993 ");
+    }
+    setPhoneError("");
+  };
+
+  const handleSendOtp = async () => {
+    const validation = validatePhoneNumber(phone);
+
+    if (!validation.isValid) {
+      setPhoneError(validation.error || "Неверный формат номера");
+      toast({
+        title: "Ошибка",
+        description: validation.error || "Неверный формат номера телефона",
+        variant: "destructive",
+        duration: 3000,
+      });
+      return;
+    }
+
+    try {
+      await sendOtp.mutateAsync({
+        phone: cleanPhoneNumber(phone),
+        accountType,
+      });
+      setShowOtp(true);
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось отправить код",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
   };
 
   const handleCheckOtp = async () => {
     const res = await checkOtp.mutateAsync({
-      phone,
+      phone: cleanPhoneNumber(phone),
       otp,
     });
 
@@ -87,17 +137,30 @@ const LoginForm = () => {
         </label>
       </div>
 
-      <div className="relative w-full min-h-[60px]">
+      <div className="relative w-full">
         <Input
           type="tel"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="+99"
-          className="w-full h-full px-4 pt-7 pb-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale focus:outline-none focus:border-[#7B3FF2] focus:ring-2 focus:ring-[#7B3FF2]/20 placeholder:text-base"
+          onChange={handlePhoneChange}
+          onBlur={handlePhoneBlur}
+          onFocus={handlePhoneFocus}
+          placeholder="+993"
+          aria-invalid={!!phoneError}
+          className={cn(
+            "w-full h-full px-4 pt-7 pb-2.5 border rounded-xl bg-white font-medium text-textPrimary font-rale focus:outline-none placeholder:text-base transition-colors",
+            phoneError
+              ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+              : "border-[#E1E1E1] focus:border-[#7B3FF2] focus:ring-2 focus:ring-[#7B3FF2]/20"
+          )}
         />
         <span className="absolute left-4 top-3 text-sm font-medium text-gray-500 font-rale pointer-events-none">
           Номер телефона
         </span>
+        {phoneError && (
+          <p className="text-red-500 text-xs mt-1 ml-1 font-rale">
+            {phoneError}
+          </p>
+        )}
       </div>
 
       <div
@@ -121,10 +184,16 @@ const LoginForm = () => {
 
       <Button
         onClick={showOtp ? handleCheckOtp : handleSendOtp}
+        disabled={showOtp ? false : !!phoneError || sendOtp.isPending}
         size="none"
-        className="text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] cursor-pointer rounded-xl flex items-center justify-center mt-2 gap-2.5 py-4 px-[25px] w-full"
+        className={cn(
+          "text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] rounded-xl flex items-center justify-center mt-2 gap-2.5 py-4 px-[25px] w-full transition-all",
+          (phoneError || sendOtp.isPending) && !showOtp
+            ? "opacity-50 cursor-not-allowed"
+            : "cursor-pointer"
+        )}
       >
-        Войти
+        {sendOtp.isPending ? "Отправка..." : "Войти"}
       </Button>
     </div>
   );

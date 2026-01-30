@@ -22,7 +22,7 @@ const Tabs = ({ tabs, activeTab, onTabChange }: TabsProps) => {
 
   return (
     <div className="relative">
-      <div className="flex gap-8 border-b border-grayBorder">
+      <div className="flex gap-3 sm:gap-6 lg:gap-8 border-b border-grayBorder overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {tabs.map((tab, index) => (
           <button
             key={index}
@@ -31,8 +31,8 @@ const Tabs = ({ tabs, activeTab, onTabChange }: TabsProps) => {
             }}
             onClick={() => onTabChange(index)}
             className={`
-              font-dm text-base font-medium leading-7 text-center pb-4 px-1
-              transition-colors duration-200
+              font-dm text-sm sm:text-base font-medium leading-7 text-center pb-4 px-1
+              transition-colors duration-200 whitespace-nowrap flex-shrink-0
               ${
                 activeTab === index
                   ? "text-textPrimary"

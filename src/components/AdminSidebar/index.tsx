@@ -37,6 +37,10 @@ const AdminSidebar = () => {
                   if (hasSubPaths) {
                     toggleDropdown(n.text);
                   } else {
+                    // Handle logout
+                    if (n.text === "Выход") {
+                      localStorage.removeItem("adminAccessToken");
+                    }
                     navigate(n.path);
                   }
                 }}

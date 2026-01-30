@@ -149,7 +149,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
   ];
 
   return (
-    <div className="w-[25%] flex flex-col gap-4">
+    <div className="w-full lg:w-[100%] flex flex-col gap-4">
       <div className="w-full border border-grayBorder rounded-2xl p-5">
         {/* Регион / Город */}
         <div className="relative">

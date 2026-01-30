@@ -18,6 +18,9 @@ const Messages = lazy(() => import("@pages/Messages"));
 const Profile = lazy(() => import("@pages/Profile"));
 const AddCar = lazy(() => import("@pages/AddCar"));
 const Auth = lazy(() => import("@pages/Auth"));
+const Saved = lazy(() => import("@pages/Saved"));
+const NewsClient = lazy(() => import("@pages/News"));
+const NewsDetail = lazy(() => import("@pages/NewsDetail"));
 
 // Admin pages
 const AdminLogin = lazy(() => import("@pages/Admin/Login"));
@@ -28,6 +31,7 @@ const NewsCategories = lazy(() => import("@pages/Admin/News/Categories"));
 const NewsTags = lazy(() => import("@pages/Admin/News/Tags"));
 const Feedbacks = lazy(() => import("@pages/Admin/Feedbacks"));
 const Faq = lazy(() => import("@pages/Admin/Faq"));
+const Banners = lazy(() => import("@pages/Admin/Banners"));
 const AdminChat = lazy(() => import("@pages/Admin/AdminChat"));
 const CarCategories = lazy(() => import("@pages/Admin/CarSpecs/Categories"));
 const CarSubcategories = lazy(
@@ -72,6 +76,18 @@ export default function Router() {
         {
           path: "/all-cars",
           element: <AllCars />,
+        },
+        {
+          path: "/saved",
+          element: <Saved />,
+        },
+        {
+          path: "/news",
+          element: <NewsClient />,
+        },
+        {
+          path: "/news/:id",
+          element: <NewsDetail />,
         },
         {
           path: "/auth",
@@ -148,6 +164,10 @@ export default function Router() {
         {
           path: "faq",
           element: <Faq />,
+        },
+        {
+          path: "banners",
+          element: <Banners />,
         },
         {
           path: "chat",

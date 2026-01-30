@@ -11,6 +11,7 @@ import {
 import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetAllNewsCategory } from "@/api/news/useGetAllNewsCategory";
 import { useAddNewsCategory } from "@/api/news/useAddNewsCategory";
@@ -24,6 +25,8 @@ const NewsCategories = () => {
   const [pageSize] = useState(10);
   const { data: categories } = useGetAllNewsCategory(currentPage, pageSize);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<NewNewsCategory | null>(null);
   const [newCategory, setNewCategory] = useState<NewNewsCategory>({
     id: "",
     nameTk: "",
@@ -68,8 +71,10 @@ const NewsCategories = () => {
     }
   };
 
-  const handleDelete = async (categoryId: string) => {
-    const res = await removeNewsCategory.mutateAsync(categoryId);
+  const handleConfirmedDelete = async () => {
+    if (!categoryToDelete) return;
+
+    const res = await removeNewsCategory.mutateAsync(categoryToDelete.id);
 
     if (res.data) {
       toast({
@@ -84,6 +89,9 @@ const NewsCategories = () => {
         duration: 1000,
       });
     }
+
+    setDeleteDialogOpen(false);
+    setCategoryToDelete(null);
   };
 
   console.log(categories);
@@ -113,6 +121,15 @@ const NewsCategories = () => {
         formData={newCategory}
         setFormData={setNewCategory}
         onSubmit={handleSubmitCategory}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={categoryToDelete ? `${categoryToDelete.nameRu} / ${categoryToDelete.nameTk}` : ''}
+        itemType="категорию"
+        isLoading={removeNewsCategory.isPending}
       />
 
       <div className="mt-10">
@@ -149,7 +166,8 @@ const NewsCategories = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(category.id);
+                        setCategoryToDelete(category);
+                        setDeleteDialogOpen(true);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"

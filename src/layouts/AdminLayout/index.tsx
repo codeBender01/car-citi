@@ -13,7 +13,7 @@ const AdminLayout = () => {
   const { isLoading, error } = useGetAdminProfile();
 
   useEffect(() => {
-    if (error && axios.isAxiosError(error) && !adminAccessToken) {
+    if (error && axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         localStorage.removeItem("adminAccessToken");
         navigate("/admin/login", { replace: true });
@@ -39,7 +39,7 @@ const AdminLayout = () => {
 
       <div className="flex justify-between pr-[30px] h-[80%]">
         <AdminSidebar />
-        <div className="flex-1 bg-white rounded-2xl">
+        <div className="flex-1 bg-white rounded-2xl w-[70%]">
           <Outlet />
         </div>
       </div>

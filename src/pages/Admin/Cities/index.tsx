@@ -16,12 +16,15 @@ import { Pagination } from "@/components/ui/pagination";
 import { AddCityModal } from "./ui/AddCityModal";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 import type { NewCity } from "@/interfaces/regions.interface";
 
 const Cities = () => {
   const { id } = useParams();
   const { toast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [cityToDelete, setCityToDelete] = useState<{ id: string; name: string } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [newCity, setNewCity] = useState<NewCity>({
@@ -62,8 +65,10 @@ const Cities = () => {
     setIsModalOpen(false);
   };
 
-  const handleDelete = async (cityId: string) => {
-    const res = await deleteCity.mutateAsync(cityId);
+  const handleConfirmedDelete = async () => {
+    if (!cityToDelete) return;
+
+    const res = await deleteCity.mutateAsync(cityToDelete.id);
 
     if (res.data) {
       toast({
@@ -78,6 +83,9 @@ const Cities = () => {
         duration: 1000,
       });
     }
+
+    setDeleteDialogOpen(false);
+    setCityToDelete(null);
   };
 
   return (
@@ -106,6 +114,15 @@ const Cities = () => {
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         onSubmit={handleAddCity}
+      />
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmedDelete}
+        itemName={cityToDelete ? cityToDelete.name : ''}
+        itemType="город"
+        isLoading={deleteCity.isPending}
       />
 
       <div className="mt-10">
@@ -151,7 +168,8 @@ const Cities = () => {
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(city.id);
+                        setCityToDelete({ id: city.id, name: city.name });
+                        setDeleteDialogOpen(true);
                       }}
                       className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
                       title="Удалить"

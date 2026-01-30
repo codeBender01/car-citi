@@ -10,14 +10,18 @@ import { useUploadSingle } from "@/api/upload/useUploadSingle";
 import { useToast } from "@/hooks/use-toast";
 
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDeleteAccount } from "@/api/profile/useDeleteAccount";
 import type { UpdatePersonalProfileReq } from "@/interfaces/profile.interface";
 
 const Profile = () => {
   const { data: profile } = useGetProfile();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const updatePersonalProfile = useUpdatePersonalProfile();
   const uploadSingle = useUploadSingle();
+  const deleteAccount = useDeleteAccount();
 
   const [avatarPreview, setAvatarPreview] = useState("");
   const [personalProfile, setPersonalProfile] =
@@ -70,6 +74,31 @@ const Profile = () => {
           variant: "destructive",
         });
       }
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteAccount.mutateAsync();
+
+      // Remove access token from localStorage
+      localStorage.removeItem("accessToken");
+
+      toast({
+        title: "Аккаунт удален",
+        description: "Ваш аккаунт был успешно удален",
+        variant: "success",
+      });
+
+      // Navigate to home page
+      navigate("/home");
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить аккаунт. Попробуйте снова.",
+        variant: "destructive",
+        duration: 1000,
+      });
     }
   };
 
@@ -126,6 +155,12 @@ const Profile = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <LabeledInput
+            value={profile?.data.phone || ""}
+            label="Номер телефона"
+            placeholder=""
+            readOnly
+          />
+          <LabeledInput
             onChange={(e) => {
               setPersonalProfile({
                 ...personalProfile,
@@ -166,10 +201,12 @@ const Profile = () => {
             Сохранить
           </Button>
           <Button
+            onClick={handleDeleteAccount}
+            disabled={deleteAccount.isPending}
             size="none"
-            className="text-white bg-red-600 hover:bg-red-700 border border-red-600 hover:border-red-700 font-dm text-[15px] w-fit cursor-pointer rounded-xl flex items-center gap-2.5 py-4 px-[25px]"
+            className="text-white bg-red-600 hover:bg-red-700 border border-red-600 hover:border-red-700 font-dm text-[15px] w-fit cursor-pointer rounded-xl flex items-center gap-2.5 py-4 px-[25px] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Удалить аккаунт
+            {deleteAccount.isPending ? "Удаление..." : "Удалить аккаунт"}
           </Button>
         </div>
       </div>

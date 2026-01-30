@@ -8,12 +8,12 @@ export const useRemoveCarMark = () => {
   return useMutation({
     mutationFn: async (payload: string): Promise<ApiResponse<string>> => {
       const { data } = await apiClient.delete(
-        `/car-marks/admin-remove/${payload}`,
+        `/cars/admin-mark-remove/${payload}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       return data;
     },

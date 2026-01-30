@@ -8,16 +8,16 @@ export const useAddCarMark = () => {
   const token = localStorage.getItem("adminAccessToken");
   return useMutation({
     mutationFn: async (
-      payload: NewCarMark
+      payload: NewCarMark,
     ): Promise<ApiResponse<OneCarMark>> => {
       const { data } = await apiClient.post(
-        "/car-marks/admin-upsert",
+        "/cars/admin-mark-upsert",
         payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       return data;
     },
