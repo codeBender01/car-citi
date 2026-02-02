@@ -4,10 +4,9 @@ import { IoChevronDownOutline } from "react-icons/io5";
 import { BsArrowUpRight } from "react-icons/bs";
 import { CiBookmark } from "react-icons/ci";
 import { PiUpload } from "react-icons/pi";
-import { IoPricetagOutline } from "react-icons/io5";
+import { IoPricetagOutline, IoBookmark } from "react-icons/io5";
 
 import CarImages from "./ui/CarImages";
-import Map from "./ui/Map";
 
 import CarChars from "./ui/CarCharacteristics";
 import { Button } from "@/components/ui/button";
@@ -15,13 +14,14 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { specifics } from "./lib/specifics";
 import { techChars } from "./lib/technicalChars";
 import CarsCarousel from "../Home/ui/CarsCarousel";
 import { useGetOnePost } from "@/api/posts/useGetOnePost";
 import { useGetSimilar } from "@/api/posts/useGetSimilar";
+import { useAddPostToFavorites } from "@/api/posts/useAddTofavorites";
 
 import { useTranslation } from "react-i18next";
+import { useToast } from "@/hooks/use-toast";
 
 import dayjs from "dayjs";
 
@@ -39,8 +39,37 @@ const CarDetails = () => {
 
   const { data: oneCar } = useGetOnePost(i18n.language, id as string);
   const { data: similarPosts } = useGetSimilar(i18n.language, id as string);
+  const { toast } = useToast();
+  const addToFavorites = useAddPostToFavorites();
 
   const car = oneCar?.data;
+
+  const handleBookmark = async () => {
+    if (!id) return;
+
+    try {
+      await addToFavorites.mutateAsync(id);
+      toast({
+        title: car?.isFavorite
+          ? "Удалено из избранного"
+          : "Добавлено в избранное",
+        description: car?.isFavorite
+          ? "Объявление удалено из ваших избранных"
+          : "Объявление добавлено в избранное",
+        variant: "success",
+        duration: 2000,
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось обновить избранное",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
+  console.log(car);
 
   return (
     <div className="pt-8 lg:pt-[120px] xl:pt-[180px] px-0 lg:px-10 xl:px-20 2xl:px-[118px]">
@@ -84,33 +113,37 @@ const CarDetails = () => {
             <div className="text-[22px] md:text-[26px]">Описание</div>
             <p className="mt-6 lg:mt-10 text-base font-light">{car?.damage}</p>
           </div>
-          <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
-            <div className="text-[22px] md:text-[26px]">Особенности</div>
-            <div className="mt-6 lg:mt-10 md:flex grid grid-cols-1 sm:grid-cols-2 md:gap-0 gap-8 justify-between">
-              {specifics.map((s) => {
-                return (
-                  <div className="" key={s.title}>
-                    <div className="text-base 2xl:text-lg">{s.title}</div>
-                    <ul className="flex flex-col gap-[22px] mt-5">
-                      {s.subTexts.map((t) => {
-                        return (
-                          <li
-                            key={t}
-                            className="flex text-xs 2xl:text-base gap-2.5 items-center"
-                          >
-                            <div className="w-5 h-5 rounded-full bg-[#EEF1FB] flex items-center justify-center">
-                              <IoIosCheckmark className="text-primary" />
-                            </div>
-                            {t}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                );
-              })}
+          {car?.characteristics && car.characteristics.length > 0 && (
+            <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
+              <div className="text-[22px] md:text-[26px]">Особенности</div>
+              <div className="mt-6 lg:mt-10 md:flex grid grid-cols-1 sm:grid-cols-2 md:gap-0 gap-8 justify-between">
+                {car.characteristics
+                  .filter((char) => char.items && char.items.length > 0)
+                  .map((s) => {
+                    return (
+                      <div className="" key={s.id}>
+                        <div className="text-base 2xl:text-lg">{s.name}</div>
+                        <ul className="flex flex-col gap-[22px] mt-5">
+                          {s.items.map((item) => {
+                            return (
+                              <li
+                                key={item.id}
+                                className="flex text-xs 2xl:text-base gap-2.5 items-center"
+                              >
+                                <div className="w-5 h-5 rounded-full bg-[#EEF1FB] flex items-center justify-center">
+                                  <IoIosCheckmark className="text-primary" />
+                                </div>
+                                {item.name}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
-          </div>
+          )}
           <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
             <div className="text-[22px] md:text-[26px]">
               Технические характеристики
@@ -173,7 +206,7 @@ const CarDetails = () => {
               })}
             </div>
           </div>
-          <Map />
+          {/* <Map /> */}
           {/* <Reviews />
           <LeaveReviewForm /> */}
         </div>
@@ -185,12 +218,20 @@ const CarDetails = () => {
                 <PiUpload size={14} />
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <button
+              onClick={handleBookmark}
+              disabled={addToFavorites.isPending}
+              className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-50"
+            >
               Сохранить
               <div className=" bg-white border border-headerBorder p-3 rounded-full">
-                <CiBookmark size={14} />
+                {car?.isFavorite ? (
+                  <IoBookmark size={14} className="text-primary" />
+                ) : (
+                  <CiBookmark size={14} />
+                )}
               </div>
-            </div>
+            </button>
           </div>
 
           <div className="p-[30px] bg-white border border-grayBorder rounded-2xl font-dm">
@@ -200,7 +241,7 @@ const CarDetails = () => {
             <div className="font-dm text-[30px] my-5 font-bold">
               {car?.carPrice?.prefixPrice}
               {car?.carPrice?.price
-                ? `$${car.carPrice.price.toLocaleString()}`
+                ? `${car.carPrice.price.toLocaleString()} TMT`
                 : car?.carPrice?.customPrice}
               {car?.carPrice?.suffixPrice}
             </div>

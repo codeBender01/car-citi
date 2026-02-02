@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import {
   Table,
@@ -10,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { MdViewList } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import { AddCharacteristicModal } from "./ui/AddCharacteristicModal";
 import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
@@ -23,6 +25,7 @@ import type {
 } from "@/interfaces/carSpecs.interface";
 
 const Characteristics = () => {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const addCharacteristic = useAddCarSpecsCharacteristic();
   const removeCharacteristic = useRemoveCarSpecsCharacteristic();
@@ -31,16 +34,18 @@ const Characteristics = () => {
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [characteristicToDelete, setCharacteristicToDelete] = useState<OneCarCharacteristic | null>(null);
-  const [newCharacteristic, setNewCharacteristic] = useState<NewCarCharacteristic>({
-    id: "",
-    nameTk: "",
-    nameRu: "",
-  });
+  const [characteristicToDelete, setCharacteristicToDelete] =
+    useState<OneCarCharacteristic | null>(null);
+  const [newCharacteristic, setNewCharacteristic] =
+    useState<NewCarCharacteristic>({
+      id: "",
+      nameTk: "",
+      nameRu: "",
+    });
 
   const { data: characteristics } = useGetCarSpecsCharacteristics(
     currentPage,
-    pageSize
+    pageSize,
   );
 
   const handleEdit = (characteristicObj: OneCarCharacteristic) => {
@@ -141,7 +146,11 @@ const Characteristics = () => {
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleConfirmedDelete}
-        itemName={characteristicToDelete ? `${characteristicToDelete.nameRu} / ${characteristicToDelete.nameTk}` : ''}
+        itemName={
+          characteristicToDelete
+            ? `${characteristicToDelete.nameRu} / ${characteristicToDelete.nameTk}`
+            : ""
+        }
         itemType="характеристику"
         isLoading={removeCharacteristic.isPending}
       />
@@ -176,6 +185,16 @@ const Characteristics = () => {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/admin/car-specs/characteristics/${characteristic.id}`);
+                        }}
+                        className="p-2 text-green-600 hover:bg-green-50 bg-transparent rounded-lg transition-colors"
+                        title="Элементы"
+                      >
+                        <MdViewList className="w-4 h-4" />
+                      </Button>
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();

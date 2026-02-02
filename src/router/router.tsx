@@ -21,6 +21,7 @@ const Auth = lazy(() => import("@pages/Auth"));
 const Saved = lazy(() => import("@pages/Saved"));
 const NewsClient = lazy(() => import("@pages/News"));
 const NewsDetail = lazy(() => import("@pages/NewsDetail"));
+const ContactUs = lazy(() => import("@pages/ContactUs"));
 
 // Admin pages
 const AdminLogin = lazy(() => import("@pages/Admin/Login"));
@@ -45,6 +46,9 @@ const SaleTypes = lazy(() => import("@pages/Admin/CarSpecs/SaleType"));
 const Characteristics = lazy(
   () => import("@pages/Admin/CarSpecs/Characteristics"),
 );
+const CharacteristicChildren = lazy(
+  () => import("@pages/Admin/CarSpecs/Characteristics/Children"),
+);
 const Colors = lazy(() => import("@pages/Admin/CarSpecs/Color"));
 const CarMarks = lazy(() => import("@pages/Admin/CarMarks"));
 const CarModels = lazy(() => import("@pages/Admin/CarMarks/Models"));
@@ -68,6 +72,10 @@ export default function Router() {
         {
           path: "/about",
           element: <AboutUs />,
+        },
+        {
+          path: "/contact",
+          element: <ContactUs />,
         },
         {
           path: "/car-details/:id",
@@ -204,6 +212,10 @@ export default function Router() {
         {
           path: "car-specs/characteristics",
           element: <Characteristics />,
+        },
+        {
+          path: "car-specs/characteristics/:characteristicId",
+          element: <CharacteristicChildren />,
         },
         {
           path: "car-specs/color",

@@ -112,7 +112,7 @@ export const adminNavs: AdminNav[] = [
     path: "/admin/chat",
   },
   {
-    text: "Автомобили",
+    text: "Обьявления",
     icon: <MdDirectionsCar className="w-5 h-5" />,
     path: "/admin/cars",
   },

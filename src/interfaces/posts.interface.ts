@@ -82,6 +82,15 @@ export interface OnePost {
   };
   viewed: false;
   status?: "checking" | "confirmed" | "rejected";
+  isFavorite?: boolean;
+  characteristics?: {
+    id: string;
+    name: string;
+    items: {
+      id: string;
+      name: string;
+    }[];
+  }[];
 }
 
 export interface NewPostReq {

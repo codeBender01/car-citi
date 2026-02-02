@@ -66,6 +66,7 @@
   "about": {
     "marketplaceNumber1": "№1 Awtoulag bazary",
     "tagline": "CarCiti — aňsatlyk bilen sat, ynam bilen satyn al.",
+    "heroDescription": "Awtoulagy artykmaç kynçylyklarsyz sat we hususy şahslardan hem-de awtosalonlardan hödürlenýän hakyky teklipleri deňeşdirip, awtoulag saýla.",
     "learn": "Öwren",
     "weValueClients": "Her bir müşderimize gymmat berýäris we olaryň tejribesini ýakymly etmäge çalyşýarys",
     "missionVision": "Missiýa we görüş",
@@ -268,5 +269,41 @@
   },
   "faqAdmin": {
     "addFaq": "FAQ goşmak"
+  },
+  "contact": {
+    "hero": {
+      "title": "Biziň bilen habarlaşyň",
+      "subtitle": "Islendik soraglaryňyz bilen size kömek etmäge taýýarys"
+    },
+    "form": {
+      "title": "Bize ýazyň",
+      "name": "Ady",
+      "email": "Elektron poçta",
+      "address": "Salgy",
+      "phone": "Telefon",
+      "message": "Habar",
+      "submit": "Iber",
+      "sending": "Iberilýär..."
+    },
+    "info": {
+      "title": "Habarlaşmak maglumatlary",
+      "address": "Salgy",
+      "email": "Elektron poçta",
+      "phone": "Telefon",
+      "social": "Sosial ulgamlar"
+    },
+    "offices": {
+      "title": "Biziň ofislerimiz"
+    },
+    "errors": {
+      "nameRequired": "Adyňyzy giriziň",
+      "emailRequired": "Elektron poçta salgyňyzy giriziň",
+      "emailInvalid": "Dogry elektron poçta salgyňyzy giriziň",
+      "messageRequired": "Habaryňyzy giriziň"
+    },
+    "success": {
+      "title": "Habar iberildi!",
+      "description": "Habaryňyzy aldyk we ýakyn wagtda size habarlaşarys."
+    }
   }
 }

@@ -11,6 +11,11 @@ export interface FaqsAdmin {
   count: number;
 }
 
+export interface FaqsClient {
+  rows: OneFaqClient[];
+  count: number;
+}
+
 export interface OneFaqAdmin {
   id: string;
   title: string;
@@ -20,4 +25,11 @@ export interface OneFaqAdmin {
   titleRu: string;
   descriptionTk: string;
   descriptionRu: string;
+}
+
+export interface OneFaqClient {
+  id: string;
+  title: string;
+  description: string;
+  created: string;
 }

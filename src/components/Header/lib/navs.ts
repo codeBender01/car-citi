@@ -15,6 +15,6 @@ export const navs = [
     id: 5,
     titleKey: "nav.contacts",
     isDropdown: false,
-    path: "/",
+    path: "/contact",
   },
 ];

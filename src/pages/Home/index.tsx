@@ -17,13 +17,13 @@ import { whyUs } from "./lib/whyUs";
 import "swiper/css";
 
 import hero from "@/assets/home/hero.png";
-import land from "@assets/images/landscape.png";
 import diag from "@assets/images/diagnostic.png";
 import logoBig from "@/assets/home/logoBig.png";
 import logoMed from "@assets/home/logoMedium.png";
 import check1 from "@assets/home/check1.png";
 import check2 from "@assets/home/check2.png";
 import check3 from "@assets/home/check3.png";
+import banner from "@assets/home/banner.jpeg";
 
 import {
   MdOutlineKeyboardArrowLeft,
@@ -38,16 +38,17 @@ import Reviews from "./ui/Reviews";
 
 import { useGetHomeClient } from "@/api/home/useGetHomeClient";
 import { useGetBanners } from "@/api/banners/useGetAllBanners";
+import { useGetCarMarksClient } from "@/api/carMarks/useGetCarMarksClient";
 import { BASE_URL } from "@/api";
+import i18n from "@/i18n";
 
 const Home = () => {
   const swiperRef = useRef<SwiperType | null>(null);
-  const [activeTab, setActiveTab] = useState<
-    "favorites" | "recent" | "popular" | "all"
-  >("favorites");
+  const [activeTab, setActiveTab] = useState<"recent" | "popular" | "all">(
+    "recent",
+  );
 
   const tabs = [
-    { id: "favorites" as const, label: "Избранное" },
     { id: "recent" as const, label: "Недавние" },
     { id: "popular" as const, label: "Популярные" },
     { id: "all" as const, label: "Все", showOnSmall: true },
@@ -55,6 +56,7 @@ const Home = () => {
 
   const { data: homeData } = useGetHomeClient();
   const { data: banners } = useGetBanners(1, 100);
+  const { data: carMarks } = useGetCarMarksClient(1, 5, i18n.language);
 
   const navigate = useNavigate();
 
@@ -62,8 +64,6 @@ const Home = () => {
     if (!homeData?.data) return [];
 
     switch (activeTab) {
-      case "favorites":
-        return homeData.data.carFavorites || [];
       case "recent":
         return homeData.data.carRecent || [];
       case "popular":
@@ -75,6 +75,8 @@ const Home = () => {
   };
 
   const activeCars = getActiveCars();
+
+  console.log(homeData);
 
   return (
     <div className="pt-[75px]">
@@ -156,7 +158,7 @@ const Home = () => {
               onClick={() => {
                 navigate("/all-cars");
               }}
-              className="hidden md:flex items-center gap-2 font-dm font-medium"
+              className="hidden md:flex items-center gap-2 font-dm font-medium cursor-pointer"
             >
               Посмотреть все
               <BsArrowUpRight />
@@ -192,14 +194,14 @@ const Home = () => {
             })}
           </div>
         </div>
-        <BrandsSection carMarks={homeData?.data?.carMarks} />
+        <BrandsSection carMarks={carMarks?.data.rows} />
       </main>
-      <div className="bg-textPrimary flex flex-col md:flex-row md:h-[600px] mx-4 rounded-2xl md:mx-0">
+      <div className="bg-textPrimary flex flex-col md:flex-row md:h-[500px] mx-4  md:mx-0">
         <div className="w-full md:w-[50%] h-full">
           <img
-            src={land}
+            src={banner}
             alt=""
-            className="object-cover md:rounded-0 rounded-2xl h-full"
+            className="object-contain md:rounded-0 rounded-lg h-full"
           />
         </div>
         <div className="w-full md:w-[40%] mx-auto flex md:items-center flex-col px-[30px] md:px-0 md:py-0 py-[35px] justify-center gap-10 h-full text-white">
@@ -370,20 +372,24 @@ const Home = () => {
               Получите реальную цену за свой автомобиль
             </div>
             <p className="font-dm font-medium text-textPrimary mt-[30px]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Мы поможем определить объективную рыночную стоимость вашего
+              автомобиля с учётом состояния, пробега и текущего спроса на рынке
+              Туркменистана. Никаких догадок и занижений — только честная и
+              актуальная цена.
             </p>
 
             <ul className="mt-[66px] font-dm text-textPrimary flex flex-col gap-[34px]">
               <li className="flex items-center gap-2.5">
-                <GreenCheck /> Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit
+                <GreenCheck /> Оценка по реальному рынку — на основе актуальных
+                предложений
               </li>
               <li className="flex items-center gap-2.5">
-                <GreenCheck /> Lorem ipsum
+                <GreenCheck /> Учёт состояния автомобиля — пробег, комплектация,
+                история
               </li>
               <li className="flex items-center gap-2.5">
-                <GreenCheck /> Lorem ipsum dolor sit amet
+                <GreenCheck /> Без обязательств — вы сами решаете, продавать или
+                нет Кнопка Заказать оценку авто
               </li>
             </ul>
             <Button

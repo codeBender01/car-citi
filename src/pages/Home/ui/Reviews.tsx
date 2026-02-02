@@ -38,10 +38,7 @@ const Reviews = ({
         </div>
         <Parentheses />
       </div>
-      <p className="mt-12 md:text-base text-xs font-dm">
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad."
-      </p>
+      <p className="mt-12 md:text-base text-xs font-dm">{review.text}</p>
 
       <div className="mt-12 flex items-center gap-3">
         <div className="h-12 md:h-16 w-12 md:w-16 rounded-full">
@@ -53,9 +50,9 @@ const Reviews = ({
         </div>
         <div>
           <div className="font-dm md:text-base text-sm font-medium">
-            Floyd Alexander
+            {review.user}
           </div>
-          <div className="text-xs md:text-sm font-dm">Toyota Avalon 2022</div>
+          <div className="text-xs md:text-sm font-dm">{review.car}</div>
         </div>
       </div>
     </div>

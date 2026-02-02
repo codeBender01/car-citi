@@ -138,6 +138,20 @@ export interface OneCarCharacteristic {
   nameTk: string;
   nameRu: string;
   name: string;
+  items: {
+    id: string;
+    nameTk: string;
+    nameRu: string;
+    name: string;
+    characteristicId: string;
+  }[];
+}
+
+export interface NewCarCharChild {
+  nameTk: string;
+  nameRu: string;
+  id: string;
+  carCharacteristicId: string;
 }
 
 export interface CarSpecsCharacteristicsList {

@@ -21,7 +21,9 @@ const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
   return (
     <header className="px-4 py-6 md:px-6 lg:px-10 2xl:px-15 md:py-9 flex items-center justify-between">
       <div className="flex items-center gap-4 md:gap-8 lg:gap-16 flex-1 md:flex-initial">
-        <LogoDashboard />
+        <button onClick={() => navigate("/home")} className="cursor-pointer">
+          <LogoDashboard />
+        </button>
         <div className="flex gap-4 md:gap-8 items-center flex-1 md:flex-initial">
           <button onClick={onMenuClick} className="lg:hidden">
             <BurgerMenu />

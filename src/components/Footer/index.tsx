@@ -1,11 +1,12 @@
 import { BsApple, BsGooglePlay } from "react-icons/bs";
-import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { FaTelegramPlane, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { Button } from "../ui/button";
 import LogoWhite from "@/svgs/LogoWhite";
 import logoImage from "@/assets/header/logo.png";
 import land from "@assets/images/landscape.png";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
+import { useState } from "react";
 
 import { BsArrowUpRight } from "react-icons/bs";
 
@@ -13,6 +14,36 @@ import { MdLocationOn, MdEmail, MdPhone } from "react-icons/md";
 
 const Footer = () => {
   const location = useLocation();
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  const validateEmail = (email: string) => {
+    if (!email.trim()) {
+      return "Пожалуйста, введите адрес электронной почты";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return "Пожалуйста, введите действительный адрес электронной почты";
+    }
+    return "";
+  };
+
+  const handleSubscribe = () => {
+    const error = validateEmail(email);
+    setEmailError(error);
+
+    if (!error) {
+      setEmail("");
+      setEmailError("");
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (emailError) {
+      setEmailError("");
+    }
+  };
 
   return (
     <>
@@ -68,20 +99,30 @@ const Footer = () => {
             </div>
 
             {/* Newsletter Form */}
-            <div className="relative">
-              <div className="bg-white/10 rounded-xl px-6 py-4 w-full md:w-[450px] flex items-center justify-between">
+            <div className="flex flex-col gap-2">
+              <div
+                className={`bg-white/10 rounded-xl px-6 py-4 w-full md:w-[450px] flex items-center justify-between ${emailError ? "border border-red-500" : ""}`}
+              >
                 <input
                   type="email"
+                  value={email}
+                  onChange={handleEmailChange}
                   placeholder="Э-почта"
                   className="bg-transparent border-none outline-none text-white placeholder:text-white font-dm text-[15px] flex-1"
                 />
                 <Button
                   size="none"
-                  className="bg-primary text-white font-dm text-[15px] font-medium px-[30px] py-5 rounded-xl"
+                  onClick={handleSubscribe}
+                  className="bg-primary text-white font-dm text-[15px] font-medium px-[30px] py-5 rounded-xl hover:opacity-90 transition-opacity"
                 >
                   Подписаться
                 </Button>
               </div>
+              {emailError && (
+                <p className="text-red-400 text-sm font-dm ml-2">
+                  {emailError}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -130,21 +171,15 @@ const Footer = () => {
               <h3 className="text-[20px] font-dm font-medium mb-6">Меню</h3>
               <ul className="space-y-3 font-dm text-[15px]">
                 <li className="text-primary cursor-pointer hover:opacity-80">
-                  О компании
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Подобрать авто
+                  <Link to="/about">О компании</Link>
                 </li>
 
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Блог
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  FAQ
+                  <Link to="/news">Блог</Link>
                 </li>
 
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Контакты
+                  <Link to="/contact">Контакты</Link>
                 </li>
               </ul>
             </div>
@@ -158,26 +193,20 @@ const Footer = () => {
                 <li className="cursor-pointer hover:text-primary transition-colors">
                   Toyota
                 </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Audi
-                </li>
+
                 <li className="cursor-pointer hover:text-primary transition-colors">
                   BMW
                 </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Honda
-                </li>
+
                 <li className="cursor-pointer hover:text-primary transition-colors">
                   Mercedes Benz
                 </li>
+
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Jaguar
+                  Kia
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Opel
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Hundai
+                  Hyundai
                 </li>
               </ul>
             </div>
@@ -189,25 +218,28 @@ const Footer = () => {
               </h3>
               <ul className="space-y-3 font-dm text-[15px]">
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Пикап
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Купе
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
                   Седан
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  SUV
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
                   Хэтчбек
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Электрические
+                  Внедорожник
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Гибридные
+                  Минивэн
+                </li>
+                <li className="cursor-pointer hover:text-primary transition-colors">
+                  Фургон
+                </li>
+                <li className="cursor-pointer hover:text-primary transition-colors">
+                  Пикап
+                </li>
+                <li className="cursor-pointer hover:text-primary transition-colors">
+                  Электрический
+                </li>
+                <li className="cursor-pointer hover:text-primary transition-colors">
+                  Гибридный
                 </li>
               </ul>
             </div>
@@ -242,13 +274,13 @@ const Footer = () => {
               </h3>
               <div className="flex items-center gap-3">
                 <div className="bg-white/7 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer hover:bg-primary transition-colors">
-                  <FaFacebookF size={14} />
+                  <FaTelegramPlane size={20} />
                 </div>
                 <div className="bg-white/7 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer hover:bg-primary transition-colors">
-                  <FaInstagram size={14} />
+                  <FaWhatsapp size={20} />
                 </div>
                 <div className="bg-white/7 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer hover:bg-primary transition-colors">
-                  <FaLinkedinIn size={14} />
+                  <FaInstagram size={20} />
                 </div>
               </div>
             </div>

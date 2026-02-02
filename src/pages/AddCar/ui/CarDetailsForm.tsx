@@ -21,11 +21,10 @@ import type { NewPostReq } from "@/interfaces/posts.interface";
 import { BsArrowUpRight } from "react-icons/bs";
 
 import { useTranslation } from "react-i18next";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import { useGetCarSpecsConditionsClient } from "@/api/carSpecsClient/useGetCarConditionsClient";
 import { useGetCarMarksClient } from "@/api/carMarks/useGetCarMarksClient";
-import { useGetCarModelsClient } from "@/api/carMarks/useGetCarModelsClient";
 import { useGetRegions } from "@/api/regions/useGetRegions";
 import { useGetSaleTypeClient } from "@/api/carSpecsClient/useGetSaleTypeClient";
 import { useGetDriveTypeClient } from "@/api/carSpecsClient/useGetDriveTypeClient";
@@ -35,6 +34,8 @@ import { useGetColorsClient } from "@/api/carSpecsClient/useGetColorsClient";
 import { useGetCategoriesClient } from "@/api/carSpecsClient/useGetCategoryClient";
 import { useGetSubcategoriesClient } from "@/api/carSpecsClient/useGetSubcategoriesClient";
 import { useGetCarEquipment } from "@/api/carSpecsClient/useGetCarEquipmentAll";
+import { useGetOneCarMark } from "@/api/carMarks/useGetOneCarMark";
+import type { OneCarModel } from "@/interfaces/carMarks.interface";
 
 export interface CarDetailsFormProps {
   formData: NewPostReq;
@@ -49,6 +50,8 @@ const CarDetailsForm = ({
 }: CarDetailsFormProps) => {
   const { i18n } = useTranslation();
   const [citySearch, setCitySearch] = useState("");
+  const [activeCarModels, setActiveCarModels] = useState<OneCarModel[]>([]);
+  const [selectedCarMark, setSelectedCarMark] = useState("");
 
   // Generate years from 2000 to current year
   const currentYear = new Date().getFullYear();
@@ -87,7 +90,6 @@ const CarDetailsForm = ({
 
   const { data: conditions } = useGetCarSpecsConditionsClient(i18n.language);
   const { data: carMarks } = useGetCarMarksClient(1, 100, i18n.language);
-  const { data: models } = useGetCarModelsClient(1, 100, i18n.language);
   const { data: regions } = useGetRegions(i18n.language);
   const { data: saleTypes } = useGetSaleTypeClient(i18n.language);
   const { data: driveTypes } = useGetDriveTypeClient(i18n.language);
@@ -97,6 +99,7 @@ const CarDetailsForm = ({
   const { data: categories } = useGetCategoriesClient(i18n.language);
   const { data: subcategories } = useGetSubcategoriesClient(i18n.language);
   const { data: equipment } = useGetCarEquipment(i18n.language);
+  const { data: carMark } = useGetOneCarMark(selectedCarMark);
 
   const filteredRegions = useMemo(() => {
     if (!regions?.data?.rows) return [];
@@ -118,6 +121,12 @@ const CarDetailsForm = ({
       );
   }, [regions, citySearch]);
 
+  useEffect(() => {
+    if (selectedCarMark !== "" && carMark) {
+      setActiveCarModels(carMark.data.carModels);
+    }
+  }, [selectedCarMark, carMark]);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <div className="col-span-full relative w-full min-h-[60px]">
@@ -134,7 +143,10 @@ const CarDetailsForm = ({
 
       <Select
         value={formData.carMarkId}
-        onValueChange={(value) => handleInputChange("carMarkId", value)}
+        onValueChange={(value) => {
+          setSelectedCarMark(value);
+          handleInputChange("carMarkId", value);
+        }}
       >
         <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
           <div className="flex flex-col gap-2 items-start w-full min-w-0 pr-8">
@@ -159,6 +171,7 @@ const CarDetailsForm = ({
 
       {/* Модель */}
       <Select
+        disabled={activeCarModels.length === 0}
         value={formData.carModelId}
         onValueChange={(value) => handleInputChange("carModelId", value)}
       >
@@ -171,7 +184,7 @@ const CarDetailsForm = ({
           </div>
         </SelectTrigger>
         <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-          {models?.data.rows.map((m) => (
+          {activeCarModels.map((m) => (
             <SelectItem
               key={m.id}
               value={m.id}

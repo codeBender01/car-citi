@@ -6,7 +6,7 @@ import type { OneCarMark } from "@/interfaces/carMarks.interface";
 export const useGetOneCarMark = (
   markId: string,
   page: number = 1,
-  pageSize: number = 10
+  pageSize: number = 10,
 ) => {
   return useQuery({
     queryFn: async (): Promise<ApiResponse<OneCarMark>> => {
@@ -21,7 +21,7 @@ export const useGetOneCarMark = (
             page,
             pageSize,
           },
-        }
+        },
       );
       return data;
     },

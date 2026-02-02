@@ -4,10 +4,10 @@ import type { ApiResponse } from "@/interfaces/apiResponse.interface";
 import type { ProfileRes } from "@/interfaces/profile.interface";
 
 export const useGetProfile = () => {
+  const token = localStorage.getItem("accessToken");
+
   return useQuery({
     queryFn: async (): Promise<ApiResponse<ProfileRes>> => {
-      const token = localStorage.getItem("accessToken");
-
       const { data } = await apiClient.get<ApiResponse<ProfileRes>>(
         "/auth/profile",
         {
@@ -22,5 +22,6 @@ export const useGetProfile = () => {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     retry: false,
+    enabled: !!token,
   });
 };

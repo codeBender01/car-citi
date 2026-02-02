@@ -3,6 +3,7 @@ import heroMobile from "@assets/aboutUs/heroMobile.png";
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { BsArrowDown, BsArrowUpRight } from "react-icons/bs";
 import GreenArrow from "@/svgs/GreenArrow";
@@ -21,15 +22,19 @@ import hero2 from "@assets/aboutUs/hero2.png";
 
 import logoBlack from "@assets/images/logoBlack.png";
 
-import { questions } from "./lib/questions";
 import Faq from "./ui/Faq";
 
 import LogoCar from "@/svgs/LogoCar";
 
-const AboutUs = () => {
-  const [openQuestionId, setOpenQuestionId] = useState<null | number>(null);
+import { useGetFaqs } from "@/api/faq/useGetFaqs";
 
-  const handleToggle = (id: number) => {
+const AboutUs = () => {
+  const { t, i18n } = useTranslation();
+  const [openQuestionId, setOpenQuestionId] = useState<null | string>(null);
+
+  const { data: faqs } = useGetFaqs(i18n.language);
+
+  const handleToggle = (id: string) => {
     if (openQuestionId && id === openQuestionId) {
       setOpenQuestionId(null);
       return;
@@ -66,10 +71,7 @@ const AboutUs = () => {
             CarCiti— продавай легко, покупай уверенно.
           </h1>
           <p className="font-dm text-[15px] w-[85%] lg:text-left text-center">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.{" "}
+            {t("about.heroDescription")}
           </p>
           <Button
             size="none"
@@ -98,22 +100,14 @@ const AboutUs = () => {
         </div>
         <div className="w-full xl:w-[40%] font-dm text-white lg:text-textPrimary flex flex-col gap-8">
           <p>
-            Lorem ipsum dolor sit amet consectetur. Convallis integer enim eget
-            sit urna. Eu duis lectus amet vestibulum varius. Nibh tellus sit sit
-            at lorem facilisis. Nunc vulputate ac interdum aliquet vestibulum in
-            tellus.
+            CarCiti — это онлайн-платформа, созданная для удобной и безопасной
+            покупки и продажи автомобилей в Туркменистане. Мы помогаем
+            пользователям находить честные предложения и экономить время при
+            выборе автомобиля.
           </p>
           <p>
-            Sit convallis rhoncus dolor purus amet orci urna. Lobortis vulputate
-            vestibulum consectetur donec ipsum egestas velit laoreet justo. Eu
-            dignissim egestas egestas ipsum. Sit est nunc pellentesque at a
-            aliquam ultrices consequat. Velit duis velit nec amet eget eu morbi.
-            Libero non diam sit viverra dignissim. Aliquam tincidunt in cursus
-            euismod enim.
-          </p>
-          <p>
-            Magna odio sed ornare ultrices. Id lectus mi amet sit at sit arcu mi
-            nisl. Mauris egestas arcu mauris.
+            Мы ценим доверие наших клиентов и стремимся сделать каждый опыт
+            взаимодействия с платформой простым, понятным и комфортным.
           </p>
         </div>
       </div>
@@ -168,18 +162,22 @@ const AboutUs = () => {
         </div>
         <div className="w-full xl:w-[40%] font-dm text-white lg:text-textPrimary flex flex-col gap-8">
           <p>
-            Lorem ipsum dolor sit amet consectetur. Convallis integer enim eget
-            sit urna. Eu duis lectus amet vestibulum varius. Nibh tellus sit sit
-            at lorem facilisis. Nunc vulputate ac interdum aliquet vestibulum in
-            tellus.
+            Наша миссия — сделать покупку и продажу автомобилей в Туркменистане
+            простой, понятной и безопасной для каждого. Мы стремимся создать
+            платформу, где пользователи могут доверять информации, экономить
+            время и принимать решения без лишних сомнений.
           </p>
           <p>
-            Sit convallis rhoncus dolor purus amet orci urna. Lobortis vulputate
-            vestibulum consectetur donec ipsum egestas velit laoreet justo. Eu
-            dignissim egestas egestas ipsum. Sit est nunc pellentesque at a
-            aliquam ultrices consequat. Velit duis velit nec amet eget eu morbi.
-            Libero non diam sit viverra dignissim. Aliquam tincidunt in cursus
-            euismod enim.
+            Наше видение — стать надёжным автомобильным сервисом, которому
+            доверяют по всей стране. CarCiti развивается как единое
+            пространство, объединяющее покупателей и продавцов, где ценятся
+            честность, прозрачность и уважение к клиенту.
+          </p>
+          <p>
+            Мы верим, что современный автомобильный рынок должен быть открытым и
+            удобным. Именно поэтому мы постоянно улучшаем сервис, прислушиваемся
+            к пользователям и адаптируем платформу под реальные потребности
+            рынка Туркменистана.
           </p>
         </div>
       </div>
@@ -250,10 +248,10 @@ const AboutUs = () => {
           Часто задаваемые вопросы
         </div>
         <ul className="flex flex-col mt-[63px]">
-          {questions.map((q, i) => {
+          {faqs?.data.rows.map((q, i) => {
             return (
               <Faq
-                key={i}
+                key={q.id}
                 index={i}
                 question={q}
                 openId={openQuestionId}

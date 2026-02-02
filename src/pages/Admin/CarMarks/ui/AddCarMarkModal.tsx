@@ -30,6 +30,7 @@ export const AddCarMarkModal = ({
   onSubmit,
 }: AddCarMarkModalProps) => {
   const uploadSingle = useUploadSingle();
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const handleImageChange = async (file: File | null) => {
     const formDataObj = new FormData();
@@ -63,7 +64,7 @@ export const AddCarMarkModal = ({
             <div className="grid gap-2">
               <Label>Логотип</Label>
               <ImageUpload
-                value={formData.logo?.url}
+                value={formData.logo?.url ? `${BASE_URL}/${formData.logo.url}` : undefined}
                 onChange={handleImageChange}
                 className="max-w-sm h-[150px] w-[300px]"
               />

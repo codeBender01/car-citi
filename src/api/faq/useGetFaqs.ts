@@ -1,19 +1,24 @@
 import { BASE_URL } from "..";
 import { useQuery } from "@tanstack/react-query";
 import type { ApiResponse } from "@/interfaces/apiResponse.interface";
-import type { RegionsAllRes } from "@/interfaces/regions.interface";
+import type { FaqsClient } from "@/interfaces/faq.interface";
 
 import { apiClient } from "..";
 
-export const useGetFaqs = () => {
+export const useGetFaqs = (language: string) => {
   return useQuery({
-    queryFn: async (): Promise<ApiResponse<RegionsAllRes>> => {
-      const { data } = await apiClient.get<ApiResponse<RegionsAllRes>>(
-        `${BASE_URL}/faq/all`
+    queryFn: async (): Promise<ApiResponse<FaqsClient>> => {
+      const { data } = await apiClient.get<ApiResponse<FaqsClient>>(
+        `${BASE_URL}/faq/all`,
+        {
+          headers: {
+            "Accept-Language": language,
+          },
+        }
       );
       return data;
     },
-    queryKey: ["getAllFaqs"],
+    queryKey: ["getAllFaqs", language],
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

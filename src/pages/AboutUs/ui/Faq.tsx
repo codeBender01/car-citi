@@ -1,11 +1,12 @@
 interface FaqProps {
   question: {
-    id: number;
+    id: string;
     title: string;
+    description: string;
   };
   index: number;
-  openId: number | null;
-  onToggle: (id: number) => void;
+  openId: string | null;
+  onToggle: (id: string) => void;
 }
 
 const Faq = ({ question, openId, onToggle }: FaqProps) => {
@@ -29,8 +30,7 @@ const Faq = ({ question, openId, onToggle }: FaqProps) => {
             <p
               className={`text-textPrimary overflow-hidden transition-all text-lg font-dm`}
             >
-              Просто выберите параметры авто с помощью фильтров, найдите
-              подходящий вариант и свяжитесь с дилером для дальнейшей покупки.
+              {question.description}
             </p>
           </div>
         </div>
