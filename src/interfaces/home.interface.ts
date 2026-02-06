@@ -28,6 +28,7 @@ export interface HomeData {
   }[];
   carPopular: HomeCarModel[];
   carRecent: HomeCarModel[];
+  verifiedCars: HomeCarModel[];
   counts: {
     dealerCount: number;
     postCount: number;

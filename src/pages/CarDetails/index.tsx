@@ -1,4 +1,4 @@
-import { serviceOptions } from "./lib/serviceOptions";
+import { getServiceOptions } from "./lib/serviceOptions";
 import { IoIosCheckmark } from "react-icons/io";
 import { IoChevronDownOutline } from "react-icons/io5";
 import { BsArrowUpRight } from "react-icons/bs";
@@ -12,13 +12,13 @@ import CarChars from "./ui/CarCharacteristics";
 import { Button } from "@/components/ui/button";
 
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
-import { techChars } from "./lib/technicalChars";
+import { getTechChars } from "./lib/technicalChars";
 import CarsCarousel from "../Home/ui/CarsCarousel";
 import { useGetOnePost } from "@/api/posts/useGetOnePost";
 import { useGetSimilar } from "@/api/posts/useGetSimilar";
-import { useAddPostToFavorites } from "@/api/posts/useAddTofavorites";
+import { useAddPostToFavorites } from "@/api/posts/useAddToFavorites";
 
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
@@ -29,7 +29,7 @@ const CarDetails = () => {
   const [expandedChars, setExpandedChars] = useState<number[]>([]);
 
   const { id } = useParams();
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const toggleChar = (id: number) => {
     setExpandedChars((prev) =>
@@ -44,6 +44,9 @@ const CarDetails = () => {
 
   const car = oneCar?.data;
 
+  const serviceOptions = getServiceOptions(t);
+  const techChars = getTechChars(t);
+
   const handleBookmark = async () => {
     if (!id) return;
 
@@ -51,18 +54,18 @@ const CarDetails = () => {
       await addToFavorites.mutateAsync(id);
       toast({
         title: car?.isFavorite
-          ? "Удалено из избранного"
-          : "Добавлено в избранное",
+          ? t("carDetailsPage.favorites.removed")
+          : t("carDetailsPage.favorites.added"),
         description: car?.isFavorite
-          ? "Объявление удалено из ваших избранных"
-          : "Объявление добавлено в избранное",
+          ? t("carDetailsPage.favorites.removedDescription")
+          : t("carDetailsPage.favorites.addedDescription"),
         variant: "success",
         duration: 2000,
       });
     } catch (error) {
       toast({
-        title: "Ошибка",
-        description: "Не удалось обновить избранное",
+        title: t("carDetailsPage.favorites.error"),
+        description: t("carDetailsPage.favorites.errorDescription"),
         variant: "destructive",
         duration: 3000,
       });
@@ -74,8 +77,9 @@ const CarDetails = () => {
   return (
     <div className="pt-8 lg:pt-[120px] xl:pt-[180px] px-0 lg:px-10 xl:px-20 2xl:px-[118px]">
       <div className="font-dm text-[15px] hidden lg:flex gap-1">
-        <span className="text-primary">Домашняя страница</span> /{" "}
-        <span>Авто на продажу</span>
+        <Link to="/" className="text-primary hover:underline">{t("carDetailsPage.breadcrumb.home")}</Link> /{" "}
+        <Link to="/all-cars" className="text-primary hover:underline">{t("carDetailsPage.breadcrumb.carsForSale")}</Link> /{" "}
+        <span>{car?.carMark?.name} {car?.carModel?.name}</span>
       </div>
       <div className="lg:flex hidden h2 mt-5">
         {car?.carMark?.name}, {car?.carModel?.name}
@@ -110,12 +114,12 @@ const CarDetails = () => {
             </p>
           </div>
           <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
-            <div className="text-[22px] md:text-[26px]">Описание</div>
+            <div className="text-[22px] md:text-[26px]">{t("carDetailsPage.description")}</div>
             <p className="mt-6 lg:mt-10 text-base font-light">{car?.damage}</p>
           </div>
           {car?.characteristics && car.characteristics.length > 0 && (
             <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
-              <div className="text-[22px] md:text-[26px]">Особенности</div>
+              <div className="text-[22px] md:text-[26px]">{t("carDetailsPage.features")}</div>
               <div className="mt-6 lg:mt-10 md:flex grid grid-cols-1 sm:grid-cols-2 md:gap-0 gap-8 justify-between">
                 {car.characteristics
                   .filter((char) => char.items && char.items.length > 0)
@@ -146,7 +150,7 @@ const CarDetails = () => {
           )}
           <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
             <div className="text-[22px] md:text-[26px]">
-              Технические характеристики
+              {t("carDetailsPage.technicalSpecs")}
             </div>
             <div className="mt-6 md:mt-10 flex justify-between flex-col">
               {techChars.map((c) => {
@@ -177,27 +181,27 @@ const CarDetails = () => {
                       }`}
                     >
                       <div className="text-base flex items-center w-full justify-between">
-                        <div>Длина</div>
+                        <div>{t("carDetailsPage.dimensions.length")}</div>
                         <div>4950mm</div>
                       </div>
                       <div className="text-base flex items-center w-full justify-between">
-                        <div>Ширина</div>
+                        <div>{t("carDetailsPage.dimensions.width")}</div>
                         <div>2140mm</div>
                       </div>
                       <div className="text-base flex items-center w-full justify-between">
-                        <div>Высота</div>
+                        <div>{t("carDetailsPage.dimensions.height")}</div>
                         <div>1776mm</div>
                       </div>
                       <div className="text-base flex items-center w-full justify-between">
-                        <div>Колесная база</div>
+                        <div>{t("carDetailsPage.dimensions.wheelbase")}</div>
                         <div>2984mm</div>
                       </div>
                       <div className="text-base flex items-center w-full justify-between">
-                        <div>Передний протектор</div>
+                        <div>{t("carDetailsPage.dimensions.frontTrack")}</div>
                         <div>1668mm</div>
                       </div>
                       <div className="text-base flex items-center w-full justify-between">
-                        <div>Задний протектор</div>
+                        <div>{t("carDetailsPage.dimensions.rearTrack")}</div>
                         <div>1671mm</div>
                       </div>
                     </div>
@@ -213,7 +217,7 @@ const CarDetails = () => {
         <div className="hidden lg:flex flex-col gap-[30px] self-stretch">
           <div className="flex items-center justify-end gap-7 font-dm text-base">
             <div className="flex items-center gap-2">
-              Отправить
+              {t("carDetailsPage.send")}
               <div className=" bg-white border border-headerBorder p-3 rounded-full">
                 <PiUpload size={14} />
               </div>
@@ -223,7 +227,7 @@ const CarDetails = () => {
               disabled={addToFavorites.isPending}
               className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-50"
             >
-              Сохранить
+              {t("carDetailsPage.save")}
               <div className=" bg-white border border-headerBorder p-3 rounded-full">
                 {car?.isFavorite ? (
                   <IoBookmark size={14} className="text-primary" />
@@ -236,7 +240,7 @@ const CarDetails = () => {
 
           <div className="p-[30px] bg-white border border-grayBorder rounded-2xl font-dm">
             <div className="flex gap-4 text-textPrimary">
-              <span>Цена</span>
+              <span>{t("carDetailsPage.price")}</span>
             </div>
             <div className="font-dm text-[30px] my-5 font-bold">
               {car?.carPrice?.prefixPrice}
@@ -245,13 +249,13 @@ const CarDetails = () => {
                 : car?.carPrice?.customPrice}
               {car?.carPrice?.suffixPrice}
             </div>
-            <div>Без торга</div>
+            <div>{t("carDetailsPage.noNegotiation")}</div>
             <Button
               size="none"
               className="text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] cursor-pointer rounded-xl flex items-center mt-10 gap-2.5 py-4 px-[25px] w-fit"
             >
               <IoPricetagOutline />
-              Сделайте Предложение
+              {t("carDetailsPage.makeOffer")}
             </Button>
           </div>
           <CarChars car={car} />
@@ -300,10 +304,10 @@ const CarDetails = () => {
       <div className="px-6 lg:px-0 mt-20 md:mt-[200px] w-full">
         <div className="flex items-center justify-between">
           <div className="font-rale text-[40px] text-textPrimary font-bold">
-            Похожие объявления
+            {t("carDetailsPage.similarListings")}
           </div>
           <div className="flex items-center gap-2 font-dm font-medium">
-            Посмотреть все
+            {t("carDetailsPage.viewAll")}
             <BsArrowUpRight />
           </div>
         </div>

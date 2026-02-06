@@ -29,7 +29,7 @@ const BrandsSection = ({ carMarks }: BrandsSectionProps) => {
     <div className="mt-[70px] md:mt-[120px] lg:mt-[300px] mb-10 md:mb-[150px] w-[90%] mx-auto">
       <div className="flex items-center justify-between">
         <div className="font-rale text-[26px] md:text-[40px] text-textPrimary font-bold">
-          Познакомьтесь с нашими брендами
+          Познакомьтесь с нашими партнерами
         </div>
         <div
           onClick={() => navigate("/all-cars")}

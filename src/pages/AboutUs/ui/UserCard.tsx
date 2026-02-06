@@ -1,6 +1,9 @@
 import user from "@assets/aboutUs/user.png";
+import { useTranslation } from "react-i18next";
 
 const UserCard = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col items-center w-full lg:max-w-[260px]">
       <div className="relative group">
@@ -15,9 +18,9 @@ const UserCard = () => {
         </div>
       </div>
 
-      <div className="mt-5 text-[20px] font-rale font-bold">Имя Фамилия</div>
+      <div className="mt-5 text-[20px] font-rale font-bold">{t("about.teamMemberName")}</div>
       <div className="mt-3 font-dm font-normal text-sm">
-        Software Development Manager
+        {t("about.teamMemberRole")}
       </div>
     </div>
   );

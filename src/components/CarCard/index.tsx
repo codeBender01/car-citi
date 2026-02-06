@@ -3,7 +3,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import car1 from "@assets/images/car1.png";
 import Gearbox from "@/svgs/Gearbox";
-import Fuel from "@/svgs/Fuel";
 import Speedometer from "@/svgs/Speedometer";
 import Calendar from "@/svgs/Calendar";
 
@@ -107,10 +106,10 @@ const CarCard = ({ car }: CarCardProps) => {
           <div className="flex items-center gap-2 text-sm text-textPrimary font-dm">
             <Speedometer />
           </div>
-          <div className="flex items-center gap-2 text-sm text-textPrimary font-dm">
+          {/* <div className="flex items-center gap-2 text-sm text-textPrimary font-dm">
             <Fuel />
             {car.fuelType.name}
-          </div>
+          </div> */}
           <div className="flex items-center line-clamp-1 gap-2 text-xs text-textPrimary font-dm">
             <Gearbox />
             <div className="line-clamp-1">{car.transmission.name}</div>

@@ -7,6 +7,7 @@ import land from "@assets/images/landscape.png";
 
 import { useLocation, Link } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { BsArrowUpRight } from "react-icons/bs";
 
@@ -14,16 +15,17 @@ import { MdLocationOn, MdEmail, MdPhone } from "react-icons/md";
 
 const Footer = () => {
   const location = useLocation();
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
 
   const validateEmail = (email: string) => {
     if (!email.trim()) {
-      return "Пожалуйста, введите адрес электронной почты";
+      return t("footer.newsletter.emailRequired");
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return "Пожалуйста, введите действительный адрес электронной почты";
+      return t("footer.newsletter.emailInvalid");
     }
     return "";
   };
@@ -54,19 +56,16 @@ const Footer = () => {
           </div>
           <div className="w-[40%] mx-auto flex items-center flex-col justify-center gap-10 h-full text-white">
             <div className="text-[40px] font-rale font-bold">
-              Локальные автодилеры и лучшие предложения
+              {t("footer.dealersBanner.title")}
             </div>
             <p className="font-dm text-base ">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. 
+              {t("footer.dealersBanner.description")} 
             </p>
             <Button
               size="none"
               className="bg-transparent self-start text-white font-dm text-[15px] cursor-pointer rounded-xl w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25px] border border-white"
             >
-              <div>Весь список</div>
+              <div>{t("footer.dealersBanner.fullList")}</div>
               <BsArrowUpRight />
             </Button>
           </div>
@@ -83,7 +82,7 @@ const Footer = () => {
         {/* Newsletter Section */}
         <div className="px-4 md:px-8 lg:px-12 2xl:px-[118px] py-12 border-b border-white/15">
           <p className="text-[15px] md:text-left text-center font-dm mb-6">
-            Подписывайтесь на рассылку что бы быть в курсе всех событий и акций
+            {t("footer.newsletter.title")}
           </p>
           <div className="flex lg:flex-row flex-col lg:gap-0 gap-6 lg:items-center justify-between">
             {/* Logo */}
@@ -107,7 +106,7 @@ const Footer = () => {
                   type="email"
                   value={email}
                   onChange={handleEmailChange}
-                  placeholder="Э-почта"
+                  placeholder={t("footer.newsletter.placeholder")}
                   className="bg-transparent border-none outline-none text-white placeholder:text-white font-dm text-[15px] flex-1"
                 />
                 <Button
@@ -115,7 +114,7 @@ const Footer = () => {
                   onClick={handleSubscribe}
                   className="bg-primary text-white font-dm text-[15px] font-medium px-[30px] py-5 rounded-xl hover:opacity-90 transition-opacity"
                 >
-                  Подписаться
+                  {t("footer.newsletter.subscribe")}
                 </Button>
               </div>
               {emailError && (
@@ -132,7 +131,7 @@ const Footer = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-8">
             <div className="col-span-2 md:col-span-1">
               <h3 className="text-[20px] font-dm font-medium mb-6">
-                Для связи
+                {t("footer.contact.title")}
               </h3>
               <div className="space-y-6 flex md:block flex-wrap">
                 <div className="flex items-start gap-3 w-full">
@@ -141,7 +140,7 @@ const Footer = () => {
                     size={20}
                   />
                   <div className="font-dm text-[15px]">
-                    <p className="font-medium mb-1">Адрес</p>
+                    <p className="font-medium mb-1">{t("footer.contact.address")}</p>
                     <p className="text-white/80">
                       Magtymguly şaýoly, No:88,
                       <br />
@@ -152,14 +151,14 @@ const Footer = () => {
                 <div className="flex items-start gap-3">
                   <MdEmail className="text-white mt-1 shrink-0" size={20} />
                   <div className="font-dm text-[15px]">
-                    <p className="font-medium mb-1">Почта</p>
+                    <p className="font-medium mb-1">{t("footer.contact.email")}</p>
                     <p className="text-white/80">info@carciti.com</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <MdPhone className="text-white mt-1 shrink-0" size={20} />
                   <div className="font-dm text-[15px]">
-                    <p className="font-medium mb-1">Телефон</p>
+                    <p className="font-medium mb-1">{t("footer.contact.phone")}</p>
                     <p className="text-white/80">+90 (533) 888 47 06</p>
                   </div>
                 </div>
@@ -168,18 +167,18 @@ const Footer = () => {
 
             {/* Menu */}
             <div className="col-span-1 md:block hidden">
-              <h3 className="text-[20px] font-dm font-medium mb-6">Меню</h3>
+              <h3 className="text-[20px] font-dm font-medium mb-6">{t("footer.menu.title")}</h3>
               <ul className="space-y-3 font-dm text-[15px]">
                 <li className="text-primary cursor-pointer hover:opacity-80">
-                  <Link to="/about">О компании</Link>
+                  <Link to="/about">{t("footer.menu.about")}</Link>
                 </li>
 
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  <Link to="/news">Блог</Link>
+                  <Link to="/news">{t("footer.menu.blog")}</Link>
                 </li>
 
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  <Link to="/contact">Контакты</Link>
+                  <Link to="/contact">{t("footer.menu.contacts")}</Link>
                 </li>
               </ul>
             </div>
@@ -187,7 +186,7 @@ const Footer = () => {
             {/* Auto Dealers */}
             <div className="col-span-1">
               <h3 className="text-[20px] font-dm font-medium mb-6">
-                Авто Дилеры
+                {t("footer.dealers.title")}
               </h3>
               <ul className="space-y-3 font-dm text-[15px]">
                 <li className="cursor-pointer hover:text-primary transition-colors">
@@ -214,32 +213,32 @@ const Footer = () => {
             {/* Car Types */}
             <div className="col-span-1">
               <h3 className="text-[20px] font-dm font-medium mb-6">
-                Типы Авто
+                {t("footer.carTypes.title")}
               </h3>
               <ul className="space-y-3 font-dm text-[15px]">
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Седан
+                  {t("footer.carTypes.sedan")}
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Хэтчбек
+                  {t("footer.carTypes.hatchback")}
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Внедорожник
+                  {t("footer.carTypes.suv")}
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Минивэн
+                  {t("footer.carTypes.minivan")}
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Фургон
+                  {t("footer.carTypes.van")}
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Пикап
+                  {t("footer.carTypes.pickup")}
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Электрический
+                  {t("footer.carTypes.electric")}
                 </li>
                 <li className="cursor-pointer hover:text-primary transition-colors">
-                  Гибридный
+                  {t("footer.carTypes.hybrid")}
                 </li>
               </ul>
             </div>
@@ -247,21 +246,21 @@ const Footer = () => {
             {/* Our App */}
             <div className="col-span-4 md:block flex items-center flex-col md:col-span-1">
               <h3 className="text-[20px] font-dm font-medium mb-6">
-                Наше приложение
+                {t("footer.app.title")}
               </h3>
               <div className="space-y-4 w-full">
                 <div className="bg-white/7 rounded-2xl px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-white/10 transition-colors">
                   <BsApple size={30} />
                   <div className="font-dm">
-                    <p className="text-[13px] text-white/80">Download on the</p>
-                    <p className="text-[15px] font-medium">Apple Store</p>
+                    <p className="text-[13px] text-white/80">{t("footer.app.downloadOn")}</p>
+                    <p className="text-[15px] font-medium">{t("footer.app.appStore")}</p>
                   </div>
                 </div>
                 <div className="bg-white/7 rounded-2xl px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-white/10 transition-colors">
                   <BsGooglePlay size={25} />
                   <div className="font-dm">
-                    <p className="text-[13px] text-white/80">Get in on</p>
-                    <p className="text-[15px] font-medium">Google Play</p>
+                    <p className="text-[13px] text-white/80">{t("footer.app.getItOn")}</p>
+                    <p className="text-[15px] font-medium">{t("footer.app.googlePlay")}</p>
                   </div>
                 </div>
               </div>
@@ -270,7 +269,7 @@ const Footer = () => {
             {/* Social Networks */}
             <div className="col-span-1 md:col-span-1 md:block flex items-center flex-col">
               <h3 className="text-[20px] font-dm font-medium mb-6">
-                Наши соц. сети
+                {t("footer.social.title")}
               </h3>
               <div className="flex items-center gap-3">
                 <div className="bg-white/7 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer hover:bg-primary transition-colors">
@@ -291,15 +290,15 @@ const Footer = () => {
         <div className="px-4 md:px-8 lg:px-12 2xl:px-[118px] py-6 border-t border-white/15">
           <div className="flex items-center md:flex-row flex-col md:gap-0 gap-4 justify-between">
             <p className="font-dm text-[15px] text-white/80">
-              © 2025 Carciti.com. Все права защищены
+              {t("footer.bottom.copyright")}
             </p>
             <div className="flex items-center gap-3 font-dm text-[15px]">
               <span className="cursor-pointer hover:text-primary transition-colors">
-                Правила
+                {t("footer.bottom.terms")}
               </span>
               <div className="w-1 h-1 bg-white/50 rounded-full"></div>
               <span className="cursor-pointer hover:text-primary transition-colors">
-                Условия конфиденциальности
+                {t("footer.bottom.privacy")}
               </span>
             </div>
           </div>

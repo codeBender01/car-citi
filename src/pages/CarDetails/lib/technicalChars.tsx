@@ -1,14 +1,14 @@
-export const techChars = [
+export const getTechChars = (t: (key: string) => string) => [
   {
     id: 1,
-    text: "Двигатель и трансмиссия",
+    text: t("technicalSpecs.engineTransmission"),
   },
   {
     id: 2,
-    text: "Размеры и габариты",
+    text: t("technicalSpecs.dimensions"),
   },
   {
     id: 3,
-    text: "Другое",
+    text: t("technicalSpecs.other"),
   },
 ];

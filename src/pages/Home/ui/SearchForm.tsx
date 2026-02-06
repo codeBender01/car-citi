@@ -19,6 +19,8 @@ import {
   SearchableSelectValue,
 } from "@/components/ui/searchable-select";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 
 import { useGetRegions } from "@/api/regions/useGetRegions";
 
@@ -27,18 +29,15 @@ import { IoCloseCircle } from "react-icons/io5";
 
 import { useGetCarSpecsConditionsClient } from "@/api/carSpecsClient/useGetCarConditionsClient";
 import { useGetDriveTypeClient } from "@/api/carSpecsClient/useGetDriveTypeClient";
-import { useGetTransmissionClient } from "@/api/carSpecsClient/useGetTransmissionClient";
-import { useGetFuelTypeClient } from "@/api/carSpecsClient/useGetFuelTypeClient";
-import { useGetCharsClient } from "@/api/carSpecsClient/useGetCharsClient";
+
 import { useGetColorsClient } from "@/api/carSpecsClient/useGetColorsClient";
-import { useGetCategoriesClient } from "@/api/carSpecsClient/useGetCategoryClient";
 import { useGetSubcategoriesClient } from "@/api/carSpecsClient/useGetSubcategoriesClient";
 import { useGetPosts } from "@/api/posts";
 import { useGetCarMarksClient } from "@/api/carMarks/useGetCarMarksClient";
 import { useGetOneCarMarkClient } from "@/api/carMarks/useGetOneCarMarkClient";
 
 const SearchForm = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"all" | "new" | "used">("all");
   const [isExpanded, setIsExpanded] = useState(false);
@@ -48,28 +47,20 @@ const SearchForm = () => {
   const [bodyType, setBodyType] = useState("");
   const [cityRegion, setCityRegion] = useState("");
   const [condition, setCondition] = useState("");
-  const [category, setCategory] = useState("");
-  const [offerType, setOfferType] = useState("");
   const [driveType, setDriveType] = useState("");
-  const [mileage, setMileage] = useState("");
-  const [price, setPrice] = useState("");
-  const [transmission, setTransmission] = useState("");
-  const [fuelType, setFuelType] = useState("");
+  const [minPrice, setMinPrice] = useState("0");
+  const [maxPrice, setMaxPrice] = useState("100000");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
   const [engineVolume, setEngineVolume] = useState("");
-  const [cylinders, setCylinders] = useState("");
   const [color, setColor] = useState("");
-  const [doors, setDoors] = useState("");
 
   const [citySearch, setCitySearch] = useState("");
 
   const { data: regions } = useGetRegions(i18n.language);
   const { data: conditions } = useGetCarSpecsConditionsClient(i18n.language);
   const { data: driveTypes } = useGetDriveTypeClient(i18n.language);
-  const { data: transmissions } = useGetTransmissionClient(i18n.language);
-  const { data: fuelTypes } = useGetFuelTypeClient(i18n.language);
-  const { data: chars } = useGetCharsClient(i18n.language);
+
   const { data: colors } = useGetColorsClient(i18n.language);
-  const { data: categories } = useGetCategoriesClient(i18n.language);
   const { data: subCats } = useGetSubcategoriesClient(i18n.language);
   const { data: carMarks } = useGetCarMarksClient(1, 100, i18n.language);
   const { data: selectedCarMark } = useGetOneCarMarkClient(brand);
@@ -79,31 +70,6 @@ const SearchForm = () => {
       setModel("");
     }
   }, [brand]);
-
-  // Clear bodyType when category changes
-  useEffect(() => {
-    if (category) {
-      setBodyType("");
-    }
-  }, [category]);
-
-  const parsedPrice = useMemo(() => {
-    if (!price) return { priceFrom: undefined, priceTo: undefined };
-    const parts = price.split("-");
-    return {
-      priceFrom: parts[0] ? Number(parts[0].replace("+", "")) : undefined,
-      priceTo: parts[1] ? Number(parts[1].replace("+", "")) : undefined,
-    };
-  }, [price]);
-
-  const parsedMileage = useMemo(() => {
-    if (!mileage) return { mileageFrom: undefined, mileageTo: undefined };
-    const parts = mileage.split("-");
-    return {
-      mileageFrom: parts[0] ? Number(parts[0].replace("+", "")) : undefined,
-      mileageTo: parts[1] ? Number(parts[1].replace("+", "")) : undefined,
-    };
-  }, [mileage]);
 
   // Parse year to YYYY-MM-DD format
   const parsedYear = useMemo(() => {
@@ -118,19 +84,14 @@ const SearchForm = () => {
     carMarkId: brand || undefined,
     carModelId: model || undefined,
     cityId: cityRegion || undefined,
-    fuelTypeId: fuelType || undefined,
     driveTypeId: driveType || undefined,
-    transmissionId: transmission || undefined,
     carConditionId: condition || undefined,
-    categoryId: category || undefined,
     subcategoryId: bodyType || undefined,
     colorId: color || undefined,
     yearFrom: parsedYear.yearFrom,
     yearTo: parsedYear.yearTo,
-    priceFrom: parsedPrice.priceFrom,
-    priceTo: parsedPrice.priceTo,
-    mileageFrom: parsedMileage.mileageFrom,
-    mileageTo: parsedMileage.mileageTo,
+    priceFrom: minPrice ? Number(minPrice) : undefined,
+    priceTo: maxPrice ? Number(maxPrice) : undefined,
     "Accept-Language": i18n.language,
   });
 
@@ -140,30 +101,17 @@ const SearchForm = () => {
     if (brand) params.append("carMarkId", brand);
     if (model) params.append("carModelId", model);
     if (cityRegion) params.append("cityId", cityRegion);
-    if (fuelType) params.append("fuelTypeId", fuelType);
     if (driveType) params.append("driveTypeId", driveType);
-    if (transmission) params.append("transmissionId", transmission);
     if (condition) params.append("carConditionId", condition);
-    if (category) params.append("categoryId", category);
     if (bodyType) params.append("subcategoryId", bodyType);
     if (color) params.append("colorId", color);
-    if (offerType) params.append("offerType", offerType);
     if (engineVolume) params.append("engineVolume", engineVolume);
-    if (cylinders) params.append("cylinders", cylinders);
-    if (doors) params.append("doors", doors);
 
     if (parsedYear.yearFrom) params.append("yearFrom", parsedYear.yearFrom);
     if (parsedYear.yearTo) params.append("yearTo", parsedYear.yearTo);
 
-    if (parsedPrice.priceFrom)
-      params.append("priceFrom", parsedPrice.priceFrom.toString());
-    if (parsedPrice.priceTo)
-      params.append("priceTo", parsedPrice.priceTo.toString());
-
-    if (parsedMileage.mileageFrom)
-      params.append("mileageFrom", parsedMileage.mileageFrom.toString());
-    if (parsedMileage.mileageTo)
-      params.append("mileageTo", parsedMileage.mileageTo.toString());
+    if (minPrice) params.append("priceFrom", minPrice);
+    if (maxPrice) params.append("priceTo", maxPrice);
 
     navigate(`/all-cars?${params.toString()}`);
   };
@@ -188,23 +136,13 @@ const SearchForm = () => {
       );
   }, [regions, citySearch]);
 
-  const filteredSubcats = useMemo(() => {
-    if (!category || !subCats?.data.rows) return subCats?.data.rows || [];
-
-    return subCats.data.rows.filter((subcat) => subcat.categoryId === category);
-  }, [category, subCats]);
-
   const tabs = [
-    { id: "all" as const, label: "Все" },
-    { id: "new" as const, label: "Новые" },
+    { id: "all" as const, label: t("common.all") },
+    { id: "new" as const, label: t("common.new") },
   ];
 
   const years = ["2024", "2023", "2022", "2021", "2020", "2019"];
-  const mileageRanges = ["0-10000", "10000-50000", "50000-100000", "100000+"];
-  const priceRanges = ["0-10000", "10000-20000", "20000-50000", "50000+"];
   const engineVolumes = ["1.0-1.5", "1.6-2.0", "2.1-3.0", "3.0+"];
-  const cylinderOptions = ["3", "4", "6", "8", "12"];
-  const doorOptions = ["2", "3", "4", "5"];
 
   return (
     <div
@@ -239,7 +177,7 @@ const SearchForm = () => {
               }`}
             ></div>
           </div>
-          Расширенный поиск
+          {t("filters.advancedSearch")}
         </button>
       </div>
 
@@ -249,12 +187,12 @@ const SearchForm = () => {
             {/* Марка */}
             <div className="relative">
               <Select value={brand} onValueChange={setBrand}>
-                <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+                <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
                   <div className="flex flex-col gap-2 items-start w-full">
                     <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                      Марка
+                      {t("filters.brand")}
                     </span>
-                    <SelectValue placeholder="Выберите марку" />
+                    <SelectValue placeholder={t("filters.chooseBrand")} />
                   </div>
                 </SelectTrigger>
                 <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
@@ -285,14 +223,14 @@ const SearchForm = () => {
             {/* Модель */}
             <div className="relative">
               <Select value={model} onValueChange={setModel} disabled={!brand}>
-                <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed">
+                <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed">
                   <div className="flex flex-col gap-2 items-start w-full">
                     <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                      Модель
+                      {t("filters.model")}
                     </span>
                     <SelectValue
                       placeholder={
-                        brand ? "Выберите модель" : "Сначала выберите марку"
+                        brand ? t("filters.chooseModel") : t("filters.firstSelectBrand")
                       }
                     />
                   </div>
@@ -322,50 +260,15 @@ const SearchForm = () => {
               )}
             </div>
 
-            <div className="relative">
-              <Select value={price} onValueChange={setPrice}>
-                <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
-                  <div className="flex flex-col gap-2 items-start w-full">
-                    <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                      Цена
-                    </span>
-                    <SelectValue placeholder="Выберите цену" />
-                  </div>
-                </SelectTrigger>
-                <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                  {priceRanges.map((pr) => (
-                    <SelectItem
-                      key={pr}
-                      value={pr}
-                      className="text-base font-rale cursor-pointer"
-                    >
-                      {pr}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {price && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setPrice("");
-                  }}
-                  className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
-                >
-                  <IoCloseCircle size={20} />
-                </button>
-              )}
-            </div>
-
             {/* Год */}
             <div className="relative">
               <Select value={year} onValueChange={setYear}>
-                <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+                <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
                   <div className="flex flex-col gap-2 items-start w-full">
                     <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                      Год
+                      {t("filters.minYear")}
                     </span>
-                    <SelectValue placeholder="Выберите год" />
+                    <SelectValue placeholder={t("filters.chooseYear")} />
                   </div>
                 </SelectTrigger>
                 <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
@@ -393,6 +296,52 @@ const SearchForm = () => {
               )}
             </div>
 
+            <div>
+              <div className="text-sm font-medium text-gray-500 font-rale mb-1.5">
+                {t("filters.price")}
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 mb-2">
+                <div className="relative">
+                  <Input
+                    type="number"
+                    value={minPrice}
+                    onChange={(e) => {
+                      setMinPrice(e.target.value);
+                      setPriceRange([Number(e.target.value), priceRange[1]]);
+                    }}
+                    className="w-full h-[40px] px-3 py-2 border border-[#E1E1E1] rounded-lg bg-white font-dm text-xs text-textPrimary"
+                    placeholder={t("filters.minPrice")}
+                  />
+                </div>
+
+                <div className="relative">
+                  <Input
+                    type="number"
+                    value={maxPrice}
+                    onChange={(e) => {
+                      setMaxPrice(e.target.value);
+                      setPriceRange([priceRange[0], Number(e.target.value)]);
+                    }}
+                    className="w-full h-[40px] px-3 py-2 border border-[#E1E1E1] rounded-lg bg-white font-dm text-xs text-textPrimary"
+                    placeholder={t("filters.maxPrice")}
+                  />
+                </div>
+              </div>
+
+              <Slider
+                value={priceRange}
+                onValueChange={(value) => {
+                  setPriceRange(value as [number, number]);
+                  setMinPrice(value[0].toString());
+                  setMaxPrice(value[1].toString());
+                }}
+                max={100000}
+                step={1000}
+                className="w-full **:data-[slot=slider-track]:h-[2px] **:data-[slot=slider-track]:bg-headerBorder **:data-[slot=slider-range]:bg-textPrimary"
+              />
+            </div>
+
             <Button
               size="none"
               onClick={handleSearch}
@@ -400,11 +349,11 @@ const SearchForm = () => {
             >
               <CiSearch />
               <div>
-                Поиск{" "}
+                {t("filters.searchButton")}{" "}
                 <span className="underline">
                   {postsLoading ? "..." : posts?.data?.count || 0}
                 </span>{" "}
-                авто
+                {t("filters.cars")}
               </div>
             </Button>
 
@@ -431,18 +380,18 @@ const SearchForm = () => {
                       value={cityRegion}
                       onValueChange={setCityRegion}
                     >
-                      <SearchableSelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SearchableSelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                            Город / Регион
+                            {t("filters.cityRegion")}
                           </span>
-                          <SearchableSelectValue placeholder="Выберите город" />
+                          <SearchableSelectValue placeholder={t("filters.chooseCity")} />
                         </div>
                       </SearchableSelectTrigger>
                       <SearchableSelectContent
                         className="rounded-xl bg-white border border-[#7B3FF2]/20"
                         onSearchChange={setCitySearch}
-                        searchPlaceholder="Поиск города..."
+                        searchPlaceholder={t("filters.searchCity")}
                       >
                         {filteredRegions.length > 0 ? (
                           filteredRegions.map((region) => (
@@ -463,7 +412,7 @@ const SearchForm = () => {
                           ))
                         ) : (
                           <div className="py-6 text-center text-sm text-gray-500">
-                            Город не найден
+                            {t("filters.cityNotFound")}
                           </div>
                         )}
                       </SearchableSelectContent>
@@ -484,12 +433,12 @@ const SearchForm = () => {
                   {/* Состояние */}
                   <div className="relative">
                     <Select value={condition} onValueChange={setCondition}>
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                            Состояние
+                            {t("filters.condition")}
                           </span>
-                          <SelectValue placeholder="Выберите состояние" />
+                          <SelectValue placeholder={t("filters.chooseCondition")} />
                         </div>
                       </SelectTrigger>
                       <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
@@ -518,9 +467,9 @@ const SearchForm = () => {
                   </div>
 
                   {/* Категория */}
-                  <div className="relative">
+                  {/* <div className="relative">
                     <Select value={category} onValueChange={setCategory}>
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             Категория
@@ -551,29 +500,19 @@ const SearchForm = () => {
                         <IoCloseCircle size={20} />
                       </button>
                     )}
-                  </div>
+                  </div> */}
                   <div className="relative">
-                    <Select
-                      value={bodyType}
-                      onValueChange={setBodyType}
-                      disabled={!category}
-                    >
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex disabled:opacity-50 disabled:cursor-not-allowed">
+                    <Select value={bodyType} onValueChange={setBodyType}>
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                            Тип кузова
+                            {t("filters.bodyType")}
                           </span>
-                          <SelectValue
-                            placeholder={
-                              category
-                                ? "Выберите тип"
-                                : "Сначала выберите категорию"
-                            }
-                          />
+                          <SelectValue placeholder={t("filters.chooseType")} />
                         </div>
                       </SelectTrigger>
                       <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                        {filteredSubcats?.map((bt) => (
+                        {subCats?.data.rows.map((bt) => (
                           <SelectItem
                             key={bt.id}
                             value={bt.id}
@@ -598,9 +537,9 @@ const SearchForm = () => {
                   </div>
 
                   {/* Тип предложения */}
-                  <div className="relative">
+                  {/* <div className="relative">
                     <Select value={offerType} onValueChange={setOfferType}>
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             Характеристики
@@ -631,17 +570,17 @@ const SearchForm = () => {
                         <IoCloseCircle size={20} />
                       </button>
                     )}
-                  </div>
+                  </div> */}
 
                   {/* Тип привода */}
                   <div className="relative">
                     <Select value={driveType} onValueChange={setDriveType}>
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                            Тип привода
+                            {t("filters.driveType")}
                           </span>
-                          <SelectValue placeholder="Выберите тип" />
+                          <SelectValue placeholder={t("filters.chooseType")} />
                         </div>
                       </SelectTrigger>
                       <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
@@ -670,9 +609,9 @@ const SearchForm = () => {
                   </div>
 
                   {/* Пробег */}
-                  <div className="relative">
+                  {/* <div className="relative">
                     <Select value={mileage} onValueChange={setMileage}>
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             Пробег
@@ -703,15 +642,15 @@ const SearchForm = () => {
                         <IoCloseCircle size={20} />
                       </button>
                     )}
-                  </div>
+                  </div> */}
 
                   {/* Трансмиссия */}
-                  <div className="relative">
+                  {/* <div className="relative">
                     <Select
                       value={transmission}
                       onValueChange={setTransmission}
                     >
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             Трансмиссия
@@ -742,12 +681,12 @@ const SearchForm = () => {
                         <IoCloseCircle size={20} />
                       </button>
                     )}
-                  </div>
+                  </div> */}
 
-                  {/* Тип топлива */}
+                  {/* Тип топлива
                   <div className="relative">
                     <Select value={fuelType} onValueChange={setFuelType}>
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             Тип топлива
@@ -778,7 +717,7 @@ const SearchForm = () => {
                         <IoCloseCircle size={20} />
                       </button>
                     )}
-                  </div>
+                  </div> */}
 
                   {/* Объем двигателя */}
                   <div className="relative">
@@ -786,12 +725,12 @@ const SearchForm = () => {
                       value={engineVolume}
                       onValueChange={setEngineVolume}
                     >
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                            Объем двигателя
+                            {t("filters.engineVolume")}
                           </span>
-                          <SelectValue placeholder="Выберите объем" />
+                          <SelectValue placeholder={t("filters.chooseVolume")} />
                         </div>
                       </SelectTrigger>
                       <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
@@ -819,10 +758,10 @@ const SearchForm = () => {
                     )}
                   </div>
 
-                  {/* Цилиндры */}
+                  {/* Цилиндры
                   <div className="relative">
                     <Select value={cylinders} onValueChange={setCylinders}>
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             Цилиндры
@@ -853,17 +792,17 @@ const SearchForm = () => {
                         <IoCloseCircle size={20} />
                       </button>
                     )}
-                  </div>
+                  </div> */}
 
                   {/* Цвет */}
                   <div className="relative">
                     <Select value={color} onValueChange={setColor}>
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                            Цвет
+                            {t("filters.color")}
                           </span>
-                          <SelectValue placeholder="Выберите цвет" />
+                          <SelectValue placeholder={t("filters.chooseColor")} />
                         </div>
                       </SelectTrigger>
                       <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
@@ -892,9 +831,9 @@ const SearchForm = () => {
                   </div>
 
                   {/* Двери */}
-                  <div className="relative">
+                  {/* <div className="relative">
                     <Select value={doors} onValueChange={setDoors}>
-                      <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             Двери
@@ -925,7 +864,7 @@ const SearchForm = () => {
                         <IoCloseCircle size={20} />
                       </button>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -940,11 +879,11 @@ const SearchForm = () => {
           >
             <CiSearch />
             <div>
-              Поиск{" "}
+              {t("filters.searchButton")}{" "}
               <span className="underline">
                 {postsLoading ? "..." : posts?.data?.count || 0}
               </span>{" "}
-              авто
+              {t("filters.cars")}
             </div>
           </Button>
         </div>

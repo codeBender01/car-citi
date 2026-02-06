@@ -149,7 +149,7 @@ const Banners = () => {
                     />
                   </div>
                 </TableCell>
-                <TableCell className="font-medium">
+                <TableCell className="font-medium max-w-[200px] truncate">
                   <a
                     href={banner.link}
                     target="_blank"

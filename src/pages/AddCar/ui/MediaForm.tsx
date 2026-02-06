@@ -10,15 +10,13 @@ import { BASE_URL } from "@/api";
 interface MediaFormProps {
   formData: NewPostReq;
   setFormData: React.Dispatch<React.SetStateAction<NewPostReq>>;
-  onSubmit: () => Promise<void>;
-  isSubmitting: boolean;
+  onNext: () => void;
 }
 
 const MediaForm = ({
   formData,
   setFormData,
-  onSubmit,
-  isSubmitting,
+  onNext,
 }: MediaFormProps) => {
   const uploadSingle = useUploadSingle();
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -105,12 +103,11 @@ const MediaForm = ({
 
       <div className="col-span-4">
         <Button
-          onClick={onSubmit}
-          disabled={isSubmitting}
+          onClick={onNext}
           size="none"
-          className="text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] cursor-pointer rounded-xl flex items-center mt-[30px] gap-2.5 py-4 px-[25px] ml-auto w-fit disabled:opacity-50 disabled:cursor-not-allowed"
+          className="text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] cursor-pointer rounded-xl flex items-center mt-[30px] gap-2.5 py-4 px-[25px] ml-auto w-fit"
         >
-          {isSubmitting ? "Отправка..." : "Далее"}
+          Далее
           <BsArrowUpRight />
         </Button>
       </div>

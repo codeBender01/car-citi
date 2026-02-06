@@ -29,12 +29,10 @@ import { useGetRegions } from "@/api/regions/useGetRegions";
 import { useGetSaleTypeClient } from "@/api/carSpecsClient/useGetSaleTypeClient";
 import { useGetDriveTypeClient } from "@/api/carSpecsClient/useGetDriveTypeClient";
 import { useGetTransmissionClient } from "@/api/carSpecsClient/useGetTransmissionClient";
-import { useGetFuelTypeClient } from "@/api/carSpecsClient/useGetFuelTypeClient";
 import { useGetColorsClient } from "@/api/carSpecsClient/useGetColorsClient";
-import { useGetCategoriesClient } from "@/api/carSpecsClient/useGetCategoryClient";
 import { useGetSubcategoriesClient } from "@/api/carSpecsClient/useGetSubcategoriesClient";
 import { useGetCarEquipment } from "@/api/carSpecsClient/useGetCarEquipmentAll";
-import { useGetOneCarMark } from "@/api/carMarks/useGetOneCarMark";
+import { useGetOneCarMarkClient } from "@/api/carMarks/useGetOneCarMarkClient";
 import type { OneCarModel } from "@/interfaces/carMarks.interface";
 
 export interface CarDetailsFormProps {
@@ -81,8 +79,6 @@ const CarDetailsForm = ({
     }
   };
 
-  const cylinderOptions = ["3", "4", "6", "8", "12"];
-  const doorOptions = ["2", "3", "4", "5"];
   const engineVolumes = [
     1.0, 1.2, 1.4, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.5, 2.7, 3.0, 3.5, 4.0, 4.5,
     5.0, 5.5, 6.0,
@@ -94,12 +90,10 @@ const CarDetailsForm = ({
   const { data: saleTypes } = useGetSaleTypeClient(i18n.language);
   const { data: driveTypes } = useGetDriveTypeClient(i18n.language);
   const { data: transmissions } = useGetTransmissionClient(i18n.language);
-  const { data: fuelTypes } = useGetFuelTypeClient(i18n.language);
   const { data: colors } = useGetColorsClient(i18n.language);
-  const { data: categories } = useGetCategoriesClient(i18n.language);
   const { data: subcategories } = useGetSubcategoriesClient(i18n.language);
   const { data: equipment } = useGetCarEquipment(i18n.language);
-  const { data: carMark } = useGetOneCarMark(selectedCarMark);
+  const { data: carMark } = useGetOneCarMarkClient(selectedCarMark);
 
   const filteredRegions = useMemo(() => {
     if (!regions?.data?.rows) return [];
@@ -127,13 +121,20 @@ const CarDetailsForm = ({
     }
   }, [selectedCarMark, carMark]);
 
+  console.log(activeCarModels);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <div className="col-span-full relative w-full min-h-[60px]">
         <Input
           type="text"
           value={formData.title}
-          onChange={(e) => handleInputChange("title", e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length <= 50) {
+              handleInputChange("title", e.target.value);
+            }
+          }}
+          maxLength={50}
           className="w-full h-full px-4 pt-7 pb-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale focus:outline-none focus:border-[#7B3FF2] focus:ring-2 focus:ring-[#7B3FF2]/20 placeholder:text-base"
         />
         <span className="absolute left-4 top-3 text-sm font-medium text-gray-500 font-rale pointer-events-none">
@@ -304,35 +305,6 @@ const CarDetailsForm = ({
         </SelectContent>
       </Select>
 
-      {/* Категория */}
-      <Select
-        value={formData.categoryId}
-        onValueChange={(value) => handleInputChange("categoryId", value)}
-      >
-        <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
-          <div className="flex flex-col gap-2 items-start w-full min-w-0 pr-8">
-            <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-              Категория
-            </span>
-            <SelectValue
-              className="truncate"
-              placeholder="Выберите категорию"
-            />
-          </div>
-        </SelectTrigger>
-        <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-          {categories?.data.rows.map((cat) => (
-            <SelectItem
-              key={cat.id}
-              value={cat.id}
-              className="text-base font-rale cursor-pointer"
-            >
-              {cat.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
       <Select
         value={formData.subcategoryId}
         onValueChange={(value) => handleInputChange("subcategoryId", value)}
@@ -459,32 +431,6 @@ const CarDetailsForm = ({
         </SelectContent>
       </Select>
 
-      {/* Тип топлива */}
-      <Select
-        value={formData.fuelTypeId}
-        onValueChange={(value) => handleInputChange("fuelTypeId", value)}
-      >
-        <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
-          <div className="flex flex-col gap-2 items-start w-full min-w-0 pr-8">
-            <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-              Тип топлива
-            </span>
-            <SelectValue className="truncate" placeholder="Выберите тип" />
-          </div>
-        </SelectTrigger>
-        <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-          {fuelTypes?.data.rows.map((ft) => (
-            <SelectItem
-              key={ft.id}
-              value={ft.id}
-              className="text-base font-rale cursor-pointer"
-            >
-              {ft.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
       {/* Объем двигателя */}
       <Select
         value={String(formData.engineVolume)}
@@ -508,32 +454,6 @@ const CarDetailsForm = ({
               className="text-base font-rale cursor-pointer"
             >
               {ev} L
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      {/* Цилиндры */}
-      <Select
-        value={formData.cylinders}
-        onValueChange={(value) => handleInputChange("cylinders", value)}
-      >
-        <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
-          <div className="flex flex-col gap-2 items-start w-full min-w-0 pr-8">
-            <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-              Цилиндры
-            </span>
-            <SelectValue className="truncate" placeholder="Выберите кол-во" />
-          </div>
-        </SelectTrigger>
-        <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-          {cylinderOptions.map((cyl) => (
-            <SelectItem
-              key={cyl}
-              value={cyl}
-              className="text-base font-rale cursor-pointer"
-            >
-              {cyl}
             </SelectItem>
           ))}
         </SelectContent>
@@ -566,30 +486,6 @@ const CarDetailsForm = ({
       </Select>
 
       {/* Двери */}
-      <Select
-        value={String(formData.doors)}
-        onValueChange={(value) => handleInputChange("doors", Number(value))}
-      >
-        <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
-          <div className="flex flex-col gap-2 items-start w-full min-w-0 pr-8">
-            <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-              Двери
-            </span>
-            <SelectValue className="truncate" placeholder="Выберите кол-во" />
-          </div>
-        </SelectTrigger>
-        <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-          {doorOptions.map((door) => (
-            <SelectItem
-              key={door}
-              value={door}
-              className="text-base font-rale cursor-pointer"
-            >
-              {door}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
 
       {/* VIN / ID */}
       <div className="relative w-full min-h-[60px]">
@@ -608,8 +504,8 @@ const CarDetailsForm = ({
       {/* Комплектация */}
       <div className="relative">
         <Select
-          value={formData.carEquipment}
-          onValueChange={(value) => handleInputChange("carEquipment", value)}
+          value={formData.carEquipmentId}
+          onValueChange={(value) => handleInputChange("carEquipmentId", value)}
         >
           <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
             <div className="flex flex-col gap-2 items-start w-full">

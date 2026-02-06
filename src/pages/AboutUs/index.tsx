@@ -67,8 +67,8 @@ const AboutUs = () => {
       <div className="hero-background bg-black h-[95vh] w-full flex items-center px-10 lg:items-start flex-col">
         <div className="lg:my-auto my-[140px] flex flex-col lg:items-start items-center justify-start w-full lg:w-[55%] lg:pl-12 2xl:pl-[180px] text-white gap-12">
           <h1 className="h1 lg:text-left text-center">
-            <span className="text-greenPrimary">Автомаркетплейс №1</span>{" "}
-            CarCiti— продавай легко, покупай уверенно.
+            <span className="text-greenPrimary">{t("about.marketplaceNumber1")}</span>{" "}
+            {t("about.tagline")}
           </h1>
           <p className="font-dm text-[15px] w-[85%] lg:text-left text-center">
             {t("about.heroDescription")}
@@ -77,7 +77,7 @@ const AboutUs = () => {
             size="none"
             className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl flex items-center gap-2.5 py-4 px-[25px] w-fit"
           >
-            Узнать
+            {t("about.learn")}
             <BsArrowDown />
           </Button>
         </div>
@@ -86,13 +86,13 @@ const AboutUs = () => {
 
       <div className="mt-[75px] rounded-t-2xl lg:bg-transparent bg-primary px-[30px] lg:mt-[180px] py-6  mx-4 md:px-12 xl:px-[120px] 2xl:px-[118px] flex xl:flex-row flex-col gap-5">
         <LogoCar />
-        <div className="h2 text-white">продавай легко, покупай уверенно.</div>
+        <div className="h2 text-white">{t("about.tagline")}</div>
       </div>
 
       <div className="lg:bg-transparent bg-[#0C1002] lg:mt-[180px] py-6 mx-4 px-[30px] md:px-12 xl:px-[120px] 2xl:px-[118px] flex xl:flex-row flex-col gap-5">
         <div className="w-full xl:w-[60%]">
           <div className="h2 text-white lg:text-textPrimary">
-            Мы дорожим каждым клиентом и стремимся сделать их опыт приятным
+            {t("about.weValueClients")}
           </div>
           <div className="xl:block hidden">
             <GreenArrow />
@@ -100,14 +100,10 @@ const AboutUs = () => {
         </div>
         <div className="w-full xl:w-[40%] font-dm text-white lg:text-textPrimary flex flex-col gap-8">
           <p>
-            CarCiti — это онлайн-платформа, созданная для удобной и безопасной
-            покупки и продажи автомобилей в Туркменистане. Мы помогаем
-            пользователям находить честные предложения и экономить время при
-            выборе автомобиля.
+            {t("about.platformDescription1")}
           </p>
           <p>
-            Мы ценим доверие наших клиентов и стремимся сделать каждый опыт
-            взаимодействия с платформой простым, понятным и комфортным.
+            {t("about.platformDescription2")}
           </p>
         </div>
       </div>
@@ -154,7 +150,7 @@ const AboutUs = () => {
       <div className="lg:bg-transparent bg-[#0C1002] lg:rounded-0 rounded-b-2xl lg:mt-[180px] py-6 mx-4 px-[30px] md:px-12 xl:px-[120px] 2xl:px-[118px] flex xl:flex-row flex-col gap-5">
         <div className="w-full xl:w-[60%]">
           <div className="h2 text-white lg:text-textPrimary">
-            Миссия и видение
+            {t("about.missionVision")}
           </div>
           <div className="xl:block hidden">
             <GreenArrow />
@@ -162,22 +158,13 @@ const AboutUs = () => {
         </div>
         <div className="w-full xl:w-[40%] font-dm text-white lg:text-textPrimary flex flex-col gap-8">
           <p>
-            Наша миссия — сделать покупку и продажу автомобилей в Туркменистане
-            простой, понятной и безопасной для каждого. Мы стремимся создать
-            платформу, где пользователи могут доверять информации, экономить
-            время и принимать решения без лишних сомнений.
+            {t("about.missionDescription1")}
           </p>
           <p>
-            Наше видение — стать надёжным автомобильным сервисом, которому
-            доверяют по всей стране. CarCiti развивается как единое
-            пространство, объединяющее покупателей и продавцов, где ценятся
-            честность, прозрачность и уважение к клиенту.
+            {t("about.missionDescription2")}
           </p>
           <p>
-            Мы верим, что современный автомобильный рынок должен быть открытым и
-            удобным. Именно поэтому мы постоянно улучшаем сервис, прислушиваемся
-            к пользователям и адаптируем платформу под реальные потребности
-            рынка Туркменистана.
+            {t("about.missionDescription3")}
           </p>
         </div>
       </div>
@@ -200,23 +187,23 @@ const AboutUs = () => {
         ></div>
         <div className="relative z-10">
           <div className="h1 relative">
-            Мы представляем лучших <br /> автодилеров страны{" "}
+            {t("about.wePresentBestDealers")}
           </div>
           <div className="text-base md:text-[40px] font-rale font-medium">
-            Для вашего качественного выбора
+            {t("about.forQualityChoice")}
           </div>
           <Button
             size="none"
             className="bg-transparent border w-[300px] hover:bg-textPrimary duration-200 border-white  mt-[60px] text-white font-dm text-[15px] cursor-pointer rounded-xl hidden lg:flex items-center gap-2.5 py-4"
           >
-            Узнать больше
+            {t("about.learnMore")}
             <BsArrowUpRight />
           </Button>
         </div>
       </div>
 
       <div className="flex flex-col gap-8 md:gap-16 mt-[75px] md:mt-[120px] lg:mt-[180px] px-4 md:px-10 lg:px-[120px] 2xl:px-[118px]">
-        <div className="h2">Наша команда</div>
+        <div className="h2">{t("about.ourTeam")}</div>
         <div className="grid grid-cols-1 md:grid-cols-2 content-center lg:flex items-center gap-6">
           {[...Array(5)].map((_, i) => {
             return <UserCard key={i} />;
@@ -231,7 +218,7 @@ const AboutUs = () => {
               <div key={i} className="flex items-center gap-2 px-8">
                 <img className="h-[27px]" src={logoBlack} alt="" />
                 <div className="font-rale font-bold text-[20px]">
-                  — продавай легко, покупай уверенно
+                  — {t("about.tagline")}
                 </div>
               </div>
             );
@@ -245,7 +232,7 @@ const AboutUs = () => {
 
       <div className="mt-[75px] lg:mt-[100px] mx-auto w-[95%] lg:w-[70%] flex flex-col items-center">
         <div className="text-[26px] md:text-[40px] font-dm font-bold">
-          Часто задаваемые вопросы
+          {t("about.faq")}
         </div>
         <ul className="flex flex-col mt-[63px]">
           {faqs?.data.rows.map((q, i) => {

@@ -2,26 +2,27 @@ import FullList from "@/svgs/FullList";
 import PriceTag from "@/svgs/PriceTag";
 import Diamond from "@/svgs/Diamond";
 import CarService from "@/svgs/CarService";
+import type { TFunction } from "i18next";
 
-export const whyUs = [
+export const getWhyUs = (t: TFunction) => [
   {
-    title: "CarCiti — безопасность при покупке авто",
-    text: "Мы проверяем продавцов и автомобили перед публикацией. Вы видите только реальные предложения без фейков, скрученных пробегов и скрытых проблем.",
+    title: t("whyUs.securityTitle"),
+    text: t("whyUs.securityDesc"),
     icon: <FullList />,
   },
   {
-    title: "Уникально для рынка Туркменистана",
-    text: "CarCiti — первая платформа, где автомобили проходят проверку перед размещением. Мы создаём новый стандарт доверия между продавцом и покупателем.",
+    title: t("whyUs.uniqueTitle"),
+    text: t("whyUs.uniqueDesc"),
     icon: <Diamond />,
   },
   {
-    title: "Без переплат и посредников",
-    text: "Вы покупаете автомобиль напрямую у владельца или дилера. Никаких скрытых комиссий и навязанных услуг.",
+    title: t("whyUs.noMiddlemanTitle"),
+    text: t("whyUs.noMiddlemanDesc"),
     icon: <PriceTag />,
   },
   {
-    title: "Только проверенные автомобили",
-    text: "Каждое объявление проходит модерацию. В каталоге — только актуальные, честные и проверенные авто.",
+    title: t("whyUs.verifiedOnlyTitle"),
+    text: t("whyUs.verifiedOnlyDesc"),
     icon: <CarService />,
   },
 ];

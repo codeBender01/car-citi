@@ -1,18 +1,20 @@
-export const stats = [
+import type { TFunction } from "i18next";
+
+export const getStats = (t: TFunction) => [
   {
     num: "1,445",
-    text: "Объявлений",
+    text: t("stats.listings"),
   },
   {
     num: "166",
-    text: "Дилеров",
+    text: t("stats.dealers"),
   },
   {
     num: "10123",
-    text: "Пользователей",
+    text: t("stats.users"),
   },
   {
     num: "556",
-    text: "Успешных сделок",
+    text: t("stats.successfulDeals"),
   },
 ];

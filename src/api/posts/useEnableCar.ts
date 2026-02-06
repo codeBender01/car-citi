@@ -2,22 +2,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../index";
 import type { ApiResponse } from "@/interfaces/apiResponse.interface";
 
-interface UpdateCarStatusPayload {
-  carId: string;
-  status: "checking" | "confirmed" | "rejected";
-}
-
-export const useUpdateCarStatus = () => {
+export const useEnableCar = () => {
   const queryClient = useQueryClient();
   const token = localStorage.getItem("adminAccessToken");
-
   return useMutation({
-    mutationFn: async (
-      payload: UpdateCarStatusPayload,
-    ): Promise<ApiResponse<any>> => {
-      const { data } = await apiClient.patch(
-        `/cars/car-status`,
-        { status: payload.status, carId: payload.carId },
+    mutationFn: async (payload: string): Promise<ApiResponse<string>> => {
+      const { data } = await apiClient.put(
+        `/cars/enable/` + payload,
+        undefined,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -26,9 +18,10 @@ export const useUpdateCarStatus = () => {
       );
       return data;
     },
+    mutationKey: ["enableCar"],
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminCars"] });
+      queryClient.invalidateQueries({ queryKey: ["getAllPosts"] });
     },
-    mutationKey: ["updateCarStatus"],
   });
 };

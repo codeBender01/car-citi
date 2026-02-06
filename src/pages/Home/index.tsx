@@ -3,16 +3,16 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import SearchForm from "./ui/SearchForm";
 import CarsCarousel from "./ui/CarsCarousel";
 import BrandsSection from "./ui/BrandsSection";
 import CarCard from "@/components/CarCard";
 import { Button } from "@/components/ui/button";
-import MobileApp from "./ui/MobileApp";
 import NewsBlock from "./ui/NewsBlock";
 import { types } from "./lib/types";
-import { whyUs } from "./lib/whyUs";
+import { getWhyUs } from "./lib/whyUs";
 
 import "swiper/css";
 
@@ -34,7 +34,6 @@ import LogoSection from "@/svgs/LogoSection";
 import GreenCheck from "@/svgs/GreenCheck";
 
 import StatsSection from "./ui/StatSection";
-import Reviews from "./ui/Reviews";
 
 import { useGetHomeClient } from "@/api/home/useGetHomeClient";
 import { useGetBanners } from "@/api/banners/useGetAllBanners";
@@ -43,15 +42,17 @@ import { BASE_URL } from "@/api";
 import i18n from "@/i18n";
 
 const Home = () => {
+  const { t } = useTranslation();
   const swiperRef = useRef<SwiperType | null>(null);
-  const [activeTab, setActiveTab] = useState<"recent" | "popular" | "all">(
-    "recent",
-  );
+  const [activeTab, setActiveTab] = useState<
+    "recent" | "popular" | "verified" | "all"
+  >("recent");
 
   const tabs = [
-    { id: "recent" as const, label: "Недавние" },
-    { id: "popular" as const, label: "Популярные" },
-    { id: "all" as const, label: "Все", showOnSmall: true },
+    { id: "recent" as const, label: t("home.new") },
+    { id: "verified" as const, label: t("home.verified") },
+    { id: "popular" as const, label: t("home.popular") },
+    { id: "all" as const, label: t("common.all"), showOnSmall: true },
   ];
 
   const { data: homeData } = useGetHomeClient();
@@ -59,6 +60,7 @@ const Home = () => {
   const { data: carMarks } = useGetCarMarksClient(1, 5, i18n.language);
 
   const navigate = useNavigate();
+  const whyUs = getWhyUs(t);
 
   const getActiveCars = () => {
     if (!homeData?.data) return [];
@@ -66,6 +68,8 @@ const Home = () => {
     switch (activeTab) {
       case "recent":
         return homeData.data.carRecent || [];
+      case "verified":
+        return homeData.data.verifiedCars || [];
       case "popular":
         return homeData.data.carPopular || [];
 
@@ -75,8 +79,6 @@ const Home = () => {
   };
 
   const activeCars = getActiveCars();
-
-  console.log(homeData);
 
   return (
     <div className="pt-[75px]">
@@ -90,7 +92,7 @@ const Home = () => {
             onSwiper={(swiper) => (swiperRef.current = swiper)}
           >
             {banners?.data?.rows && banners.data.rows.length > 0 ? (
-              banners.data.rows.slice(2).map((banner) => (
+              banners.data.rows.map((banner) => (
                 <SwiperSlide key={banner.id}>
                   <div
                     className="w-full h-[420px] lg:h-[660px] lg:rounded-2xl flex items-center justify-end md:justify-center text-center flex-col relative"
@@ -102,10 +104,10 @@ const Home = () => {
                   >
                     <div className="absolute inset-0 bg-black/30 rounded-2xl" />
                     <div className="relative z-10 text-[16px] md:text-xl lg:text-2xl text-primary font-rale">
-                      Все самые новые и подержанные
+                      {t("home.heroSubtitle")}
                     </div>
                     <h1 className="relative z-10 text-2xl md:text-[48px] mb-4 md:mb-0 lg:text-[70px] text-white font-rale font-bold">
-                      марки автомобилей <br /> всегда только на carciti.com
+                      {t("home.heroTitle")}
                     </h1>
                   </div>
                 </SwiperSlide>
@@ -122,10 +124,10 @@ const Home = () => {
                 >
                   <div className="absolute inset-0 bg-black/30 rounded-2xl" />
                   <div className="relative z-10 text-[16px] md:text-xl lg:text-2xl text-primary font-rale">
-                    Все самые новые и подержанные
+                    {t("home.heroSubtitle")}
                   </div>
                   <h1 className="relative z-10 text-2xl md:text-[48px] mb-4 md:mb-0 lg:text-[70px] text-white font-rale font-bold">
-                    марки автомобилей <br /> всегда только на carciti.com
+                    {t("home.heroTitle")}
                   </h1>
                 </div>
               </SwiperSlide>
@@ -152,7 +154,7 @@ const Home = () => {
         <div className="mt-[72px] md:mt-[120px] xl:mt-[200px] w-[90%] mx-auto">
           <div className="flex items-center justify-between">
             <div className="font-rale text-[26px] md:text-[40px] text-textPrimary font-bold">
-              Изучите все автомобили
+              {t("home.exploreAllCars")}
             </div>
             <div
               onClick={() => {
@@ -160,7 +162,7 @@ const Home = () => {
               }}
               className="hidden md:flex items-center gap-2 font-dm font-medium cursor-pointer"
             >
-              Посмотреть все
+              {t("common.viewAll")}
               <BsArrowUpRight />
             </div>
           </div>
@@ -194,9 +196,8 @@ const Home = () => {
             })}
           </div>
         </div>
-        <BrandsSection carMarks={carMarks?.data.rows} />
       </main>
-      <div className="bg-textPrimary flex flex-col md:flex-row md:h-[500px] mx-4  md:mx-0">
+      <div className="bg-textPrimary mt-20 flex flex-col md:flex-row md:h-[500px] mx-4  md:mx-0">
         <div className="w-full md:w-[50%] h-full">
           <img
             src={banner}
@@ -206,21 +207,14 @@ const Home = () => {
         </div>
         <div className="w-full md:w-[40%] mx-auto flex md:items-center flex-col px-[30px] md:px-0 md:py-0 py-[35px] justify-center gap-10 h-full text-white">
           <div className="text-[26px] md:text-[40px] font-rale font-bold">
-            Локальные автодилеры и лучшие предложения
+            {t("home.dealersTitle")}
           </div>
-          <p className="font-dm text-base ">
-            Мы сотрудничаем с проверенными продавцами и частными владельцами,
-            помогая размещать только реальные и актуальные объявления. Каждый
-            автомобиль, прошедший проверку CarCiti, получает приоритетное
-            размещение и повышенное доверие со стороны покупателей. Вы видите
-            лучшие предложения в вашем регионе — без фейков, скрученных пробегов
-            и скрытых проблем.
-          </p>
+          <p className="font-dm text-base ">{t("home.dealersDescription")}</p>
           <Button
             size="none"
             className="bg-transparent self-start text-white font-dm text-[15px] cursor-pointer rounded-xl w-full md:w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25px] border border-white"
           >
-            <div>Весь список</div>
+            <div>{t("home.fullList")}</div>
             <BsArrowUpRight />
           </Button>
         </div>
@@ -231,10 +225,10 @@ const Home = () => {
       <div className="mt-[60px] md:mt-[75px] px-4 md:px-10 lg:px-[100px] 2xl:px-[118px]">
         <div className="flex items-center justify-between">
           <div className="font-rale text-[26px] md:text-[40px] text-textPrimary font-bold">
-            Поиск по типу
+            {t("home.searchByBodyType")}
           </div>
           <div className="hidden lg:flex items-center gap-2 font-dm font-medium">
-            Посмотреть все
+            {t("common.viewAll")}
             <BsArrowUpRight />
           </div>
         </div>
@@ -282,9 +276,11 @@ const Home = () => {
               ))}
         </ul>
 
+        <BrandsSection carMarks={carMarks?.data.rows} />
+
         <div className="mt-[75px] md:mt-[120px]">
           <div className="font-rale text-[26px] md:text-[40px] text-center text-textPrimary font-bold">
-            Мы учитываем все аспекты <br /> при выборе нового авто:
+            {t("home.weConsiderAllAspects")}
           </div>
           <ul className="mt-10 grid grid-cols-1 md:grid-cols-3 md:gap-4 md:min-h-[400px]">
             <li className="h-[345px] md:h-full overflow-hidden md:rounded-2xl">
@@ -292,19 +288,19 @@ const Home = () => {
             </li>
             <li className="flex h-[345px] md:h-auto flex-col justify-between bg-primary text-white p-5 md:rounded-2xl">
               <div className="text-[32px] font-rale font-bold">
-                CarCiti — новый уровень безопасности при покупке авто
+                {t("home.newSecurityLevel")}
               </div>
               <div className="flex items-center gap-2 font-dm font-medium">
-                Подробнее
+                {t("common.learnMore")}
                 <BsArrowUpRight />
               </div>
             </li>
             <li className="flex h-[345px] md:h-auto flex-col relative justify-between bg-black text-white p-5 md:rounded-2xl overflow-hidden">
               <div className="text-[32px] font-rale font-bold relative z-10">
-                «Полный цикл от А до Я»
+                «{t("whyUs.fullCycle")}»
               </div>
               <div className="flex items-center gap-2 font-dm font-medium relative z-10">
-                Подробнее
+                {t("common.learnMore")}
                 <BsArrowUpRight />
               </div>
 
@@ -317,7 +313,7 @@ const Home = () => {
 
         <div className="mt-[75px]  md:mt-[120px] lg:mt-[300px] relative">
           <div className="font-rale text-[26px] md:text-[40px] relative z-10 text-center text-textPrimary font-bold">
-            Почему выбирают нас?
+            {t("home.whyChooseUs")}
           </div>
 
           <div className="absolute bg-[#FBFCF9] w-[60%] h-[400px] md:h-[620px] top-[50%] -translate-y-1/2 left-[50%] -translate-x-1/2 "></div>
@@ -369,44 +365,38 @@ const Home = () => {
 
           <div className="w-[60%] xl:w-[40%] flex flex-col">
             <div className="font-rale text-[40px] text-textPrimary font-bold">
-              Получите реальную цену за свой автомобиль
+              {t("home.getRealPrice")}
             </div>
             <p className="font-dm font-medium text-textPrimary mt-[30px]">
-              Мы поможем определить объективную рыночную стоимость вашего
-              автомобиля с учётом состояния, пробега и текущего спроса на рынке
-              Туркменистана. Никаких догадок и занижений — только честная и
-              актуальная цена.
+              {t("home.priceEvaluationDescription")}
             </p>
 
             <ul className="mt-[66px] font-dm text-textPrimary flex flex-col gap-[34px]">
               <li className="flex items-center gap-2.5">
-                <GreenCheck /> Оценка по реальному рынку — на основе актуальных
-                предложений
+                <GreenCheck /> {t("home.evaluationPoint1")}
               </li>
               <li className="flex items-center gap-2.5">
-                <GreenCheck /> Учёт состояния автомобиля — пробег, комплектация,
-                история
+                <GreenCheck /> {t("home.evaluationPoint2")}
               </li>
               <li className="flex items-center gap-2.5">
-                <GreenCheck /> Без обязательств — вы сами решаете, продавать или
-                нет Кнопка Заказать оценку авто
+                <GreenCheck /> {t("home.evaluationPoint3")}
               </li>
             </ul>
             <Button
               size="none"
               className="bg-primary self-start text-white font-dm mt-4 text-[15px] cursor-pointer rounded-xl w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25px] border border-white"
             >
-              <div>Заказать оценку авто</div>
+              <div>{t("home.orderEvaluation")}</div>
               <BsArrowUpRight />
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="bg-textPrimary py-10 md:py-20 lg:py-[110px] mt-10 px-10 lg:px-[120px] 2xl:px-[200px] lg:mt-[230px]">
+      {/* <div className="bg-textPrimary py-10 md:py-20 lg:py-[110px] mt-10 px-10 lg:px-[120px] 2xl:px-[200px] lg:mt-[230px]">
         <Reviews variant="white" />
-      </div>
-      <MobileApp />
+      </div> */}
+      {/* <MobileApp /> */}
       <NewsBlock />
     </div>
   );

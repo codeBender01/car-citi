@@ -25,21 +25,21 @@ const ContactUs = () => {
   const offices = [
     {
       id: 1,
-      city: "Ашхабад",
+      cityKey: "cities.ashgabat",
       address: "Magtymguly şaýoly, No:88, Bagtyýarlyk etraby",
       phone: "+993 (12) 123-45-67",
       email: "ashgabat@carciti.com",
     },
     {
       id: 2,
-      city: "Туркменбаши",
+      cityKey: "cities.turkmenbashi",
       address: "Lorem ipsum dolor sit amet",
       phone: "+993 (422) 123-45-67",
       email: "turkmenabat@carciti.com",
     },
     {
       id: 3,
-      city: "Мары",
+      cityKey: "cities.mary",
       address: "Lorem ipsum dolor sit amet",
       phone: "+993 (522) 123-45-67",
       email: "mary@carciti.com",
@@ -96,8 +96,8 @@ const ContactUs = () => {
       setErrors({});
     } catch (error) {
       toast({
-        title: "Ошибка",
-        description: "Не удалось отправить сообщение. Попробуйте снова.",
+        title: t("contact.error.title"),
+        description: t("contact.error.description"),
         variant: "destructive",
       });
     } finally {
@@ -342,7 +342,7 @@ const ContactUs = () => {
               className="bg-white border border-headerBorder rounded-2xl p-6 hover:shadow-lg transition-shadow"
             >
               <h3 className="text-[20px] font-rale font-bold mb-4">
-                {office.city}
+                {t(office.cityKey)}
               </h3>
 
               <div className="flex flex-col gap-3 font-dm text-[15px]">

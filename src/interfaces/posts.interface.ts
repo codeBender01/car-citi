@@ -27,7 +27,7 @@ export interface AdminCarsParams {
   page?: number;
   pageSize?: number;
   search?: string;
-  status?: "checking" | "confirmed" | "rejected";
+  status?: "checking" | "confirmed" | "rejected" | "verified";
   language?: string;
 }
 
@@ -81,8 +81,11 @@ export interface OnePost {
     name: string;
   };
   viewed: false;
-  status?: "checking" | "confirmed" | "rejected";
+  status?: "checking" | "confirmed" | "rejected" | "verified";
+  enabled?: boolean;
   isFavorite?: boolean;
+  verifiedStatus: string;
+  isActive: boolean;
   characteristics?: {
     id: string;
     name: string;
@@ -96,7 +99,6 @@ export interface OnePost {
 export interface NewPostReq {
   tags?: string[];
   engineVolume: number;
-  doors: number;
   regionId: string;
   saleTypeId: string;
   cityId: string;
@@ -105,23 +107,17 @@ export interface NewPostReq {
   issueYear: string;
   subcategoryId: string;
   carConditionId: string;
-  fuelTypeId: string;
   driveTypeId: string;
   transmissionId: string;
   colorId: string;
   mileage: number;
-  carEquipment: string;
+  carEquipmentId: string;
   damage: string;
-  categoryId: string;
   phone: string;
   title: string;
-  cylinders: string;
   vin: string;
   carPrice: {
     price: number;
-    prefixPrice: string;
-    suffixPrice: string;
-    customPrice: string;
   };
   carImages: {
     images: {
@@ -139,4 +135,14 @@ export interface NewPostReq {
     characteristicItemId: string;
     checked: boolean;
   }[];
+}
+
+export interface CheckCarOtpReq {
+  phone: string;
+  otp: string;
+}
+
+export interface VerifyCar {
+  carId: string;
+  verifiedStatus: "verified" | "notVerified";
 }

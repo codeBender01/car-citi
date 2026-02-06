@@ -1,31 +1,34 @@
 import type { HomeData } from "@/interfaces/home.interface";
-import { stats } from "../lib/stats";
+import { getStats } from "../lib/stats";
+import { useTranslation } from "react-i18next";
 
 interface StatsSectionProps {
   counts?: HomeData["counts"];
 }
 
 const StatsSection = ({ counts }: StatsSectionProps) => {
+  const { t } = useTranslation();
+
   const statsData = counts
     ? [
         {
           num: counts.postCount.toLocaleString(),
-          text: "Объявлений",
+          text: t("stats.listings"),
         },
         {
           num: counts.dealerCount.toLocaleString(),
-          text: "Дилеров",
+          text: t("stats.dealers"),
         },
         {
           num: counts.userCount.toLocaleString(),
-          text: "Пользователей",
+          text: t("stats.users"),
         },
         {
           num: counts.successfulTransactionCount.toLocaleString(),
-          text: "Успешных сделок",
+          text: t("stats.successfulDeals"),
         },
       ]
-    : stats;
+    : getStats(t);
 
   return (
     <div className="px-10 md:px-[120px] 2xl:px-[118px] border-b border-headerBorder">

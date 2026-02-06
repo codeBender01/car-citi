@@ -30,14 +30,28 @@
   "home": {
     "favorites": "Halanlarym",
     "recent": "Soňky",
+    "new": "Täze",
     "popular": "Meşhur",
-    "exploreAllCars": "Ähli awtoula glary öwren",
-    "searchByType": "Görnüşi boýunça gözleg",
+    "verified": "Barlanlan",
+    "exploreAllCars": "Ähli awtoulaglary öwren",
+    "searchByType": "Beden görnüşi boýunça gözleg",
+    "searchByBodyType": "Beden görnüşi boýunça gözleg",
     "whyChooseUs": "Näme üçin bizi saýlamaly?",
     "getRealPrice": "Awtoulagyňyz üçin hakyky bahany alyň",
     "weConsiderAllAspects": "Täze awtoulag saýlanyňyzda ähli taraplary göz öňünde tutýarys:",
     "freshBlogPosts": "Täze blog ýazgylary",
-    "news": "Habarlar"
+    "news": "Habarlar",
+    "heroSubtitle": "Iň täze we ulanylýan ähli",
+    "heroTitle": "awtoulag markalary hemişe diňe carciti.com-da",
+    "fullList": "Ähli sanaw",
+    "dealersTitle": "Ýerli awtoulag satyjylary we iň gowy teklipler",
+    "dealersDescription": "Biz barlanlan satyjylar we hususy eýeler bilen hyzmatdaşlyk edýäris, diňe hakyky we täze yglanlar ýerleşdirmäge kömek edýäris. CarCiti tarapyndan barlanan her awtoulag ileri tutulýan ýerleşmäni we alyjylardan ýokary ynamyň gazanýar. Siz öz sebitiňizde iň gowy teklipleri görýärsiňiz — galp maglumatlar, aýlanmalar we gizlin problemalar ýok.",
+    "newSecurityLevel": "CarCiti — awtoulag satyn almakda täze howpsuzlyk derejesi",
+    "priceEvaluationDescription": "Türkmenistan bazaryndaky häzirki islegini, ýagdaýyny we geçilen ýoluny göz öňünde tutup, awtoulagyňyzyň obýektiw bazar bahasyny kesgitlemäge kömek ederis. Hiç hili çaklamalar we peseltmeler ýok — diňe dogry we täze baha.",
+    "orderEvaluation": "Awtoulag bahalandyrmagyny sargyt et",
+    "evaluationPoint1": "Hakyky bazara esaslanan baha — häzirki tekliplere görä",
+    "evaluationPoint2": "Awtoulagyň ýagdaýyny göz öňünde tutmak — geçilen ýol, komplektasiýa, taryhy",
+    "evaluationPoint3": "Borçsyz — satmagy ýa-da satmagy öz başyňyza karar berýärsiňiz"
   },
   "whyUs": {
     "fullCycle": "A-dan Ż-ä çenli doly aýlaw",
@@ -47,7 +61,15 @@
     "noOverpayments": "Artykmaç töleg ýok",
     "noOverpaymentsDesc": "Gizlin komissiýasyz adalatly bahalar.",
     "verifiedCars": "Diňe barlanlan awtoulaglar",
-    "verifiedCarsDesc": "Her awtoulag ýerleşdirilmezden ozal düýpli barlagdan geçýär."
+    "verifiedCarsDesc": "Her awtoulag ýerleşdirilmezden ozal düýpli barlagdan geçýär.",
+    "securityTitle": "CarCiti — awtoulag satyn almakda howpsuzlyk",
+    "securityDesc": "Neşir etmezden ozal satyjylary we awtoula glary barlaýarys. Diňe hakyky teklipleri görýärsiňiz.",
+    "uniqueTitle": "Türkmenistan bazary üçin üýtgeşik",
+    "uniqueDesc": "CarCiti — awtoula glaryň ýerleşdirilmezden ozal barlagdan geçýän ilkinji platforma. Biz satyjy bilen alyjynyň arasynda ynamyň täze ölçegini döredýäris.",
+    "noMiddlemanTitle": "Artykmaç töleg we araçylar ýok",
+    "noMiddlemanDesc": "Awtoulagy göni eýesinden ýa-da dilerden satyn alýarsyňyz. Gizlin komissiýalar we mejbury hyzmatlar ýok.",
+    "verifiedOnlyTitle": "Diňe barlanlan awtoulaglar",
+    "verifiedOnlyDesc": "Her yglan moderasiýadan geçýär. Katalogda — diňe täze, dogry we barlanlan awtoulaglar."
   },
   "carTypes": {
     "suv": "SUV",
@@ -69,11 +91,19 @@
     "heroDescription": "Awtoulagy artykmaç kynçylyklarsyz sat we hususy şahslardan hem-de awtosalonlardan hödürlenýän hakyky teklipleri deňeşdirip, awtoulag saýla.",
     "learn": "Öwren",
     "weValueClients": "Her bir müşderimize gymmat berýäris we olaryň tejribesini ýakymly etmäge çalyşýarys",
+    "platformDescription1": "CarCiti — Türkmenistanda awtoulag satyn almak we satmak üçin amatly we howpsuz onlaýn platforma. Biz ulanyjylara dogry teklipleri tapmaga we awtoulag saýlanynda wagty tygşytlamaga kömek edýäris.",
+    "platformDescription2": "Müşderilerimize ynamyny gymmatlaýarys we platformamyz bilen her gatnaşygyň ýönekeý, düşnükli we rahat bolmagyna çalyşýarys.",
     "missionVision": "Missiýa we görüş",
+    "missionDescription1": "Biziň missiýamyz — Türkmenistanda awtoulag satyn almagy we satmagy her bir adam üçin ýönekeý, düşnükli we howpsuz etmek. Ulanyjylaryň maglumata ynanmak, wagt tygşytlamak we şübhesiz karar kabul etmek üçin platforma döretmäge çalyşýarys.",
+    "missionDescription2": "Biziň görnüşimiz — tutuş ýurt boýunça ynanylýan ygtybarly awtoulag hyzmaty bolmak. CarCiti alyjylary we satyjylary birleşdirýän ýeke giňişlik hökmünde ösýär, bu ýerde dogrulyk, aýdyňlyk we müşderä hormat goýmak gymmatlanýar.",
+    "missionDescription3": "Häzirki zaman awtoulag bazarynyň açyk we amatly bolmalydygyna ynanýarys. Şonuň üçin hyzmaty yzygiderli gowulandyrýarys, ulanyjylary diňleýäris we platformany Türkmenistan bazarynyň hakyky isleglerine uýgunlaşdyrýarys.",
     "wePresentBestDealers": "Ýurduň iň gowy awtoulag dilerlerini hödürleýäris",
     "forQualityChoice": "Hil saýlawyňyz üçin",
+    "learnMore": "Has giňişleýin",
     "ourTeam": "Biziň topar",
-    "faq": "Köp berilýän soraglar"
+    "faq": "Köp berilýän soraglar",
+    "teamMemberName": "Ady Familiýasy",
+    "teamMemberRole": "Programma üpjünçilik dolandyryjysy"
   },
   "faq": {
     "q1": "Saýtyňyz arkaly awtoulag nädip tapyp, satyn alyp bilerin?",
@@ -118,7 +148,25 @@
     "saveSearchSettings": "Gözleg sazlamalaryny ýatda sakla",
     "searchResults": "Gözleg netijeleri",
     "vehicles": "awtoulag",
-    "showing": "{{total}} awtoulagyň {{from}}-den {{to}}-e çenli görkezilýär"
+    "showing": "{{total}} awtoulagyň {{from}}-den {{to}}-e çenli görkezilýär",
+    "advancedSearch": "Giňişleýin gözleg",
+    "chooseBrand": "Marka saýla",
+    "chooseModel": "Model saýla",
+    "chooseYear": "Ýyl saýla",
+    "price": "Baha",
+    "minPrice": "Min.",
+    "maxPrice": "Maks.",
+    "searchButton": "Gözleg",
+    "cars": "awtoulag",
+    "cityRegion": "Şäher / Sebit",
+    "searchCity": "Şäher gözle...",
+    "cityNotFound": "Şäher tapylmady",
+    "chooseCondition": "Ýagdaýy saýla",
+    "chooseType": "Görnüşi saýla",
+    "engineVolume": "Hereketlendirijiniň göwrümi",
+    "chooseVolume": "Göwrümi saýla",
+    "chooseColor": "Reňk saýla",
+    "firstSelectBrand": "Ilki bilen marka saýlaň"
   },
   "cities": {
     "ashgabat": "Aşgabat",
@@ -239,6 +287,9 @@
     "price": "Baha",
     "characteristics": "Aýratynlyklar",
     "media": "Media",
+    "contacts": "Habarlaşmak",
+    "submit": "Iber",
+    "submitting": "Iberilýär...",
     "location": "Ýerleşýän ýeri"
   },
   "myPosts": {
@@ -273,7 +324,7 @@
   "contact": {
     "hero": {
       "title": "Biziň bilen habarlaşyň",
-      "subtitle": "Islendik soraglaryňyz bilen size kömek etmäge taýýarys"
+      "subtitle": "Awtoulag satyn almak ýa-da satmak barada soraglaryňyz barmy? Bize ýazyň — CarCiti topary düşünmäge kömek eder, maslahat berer we geleşigiň her etabynda size ýol görkezer."
     },
     "form": {
       "title": "Bize ýazyň",
@@ -290,7 +341,7 @@
       "address": "Salgy",
       "email": "Elektron poçta",
       "phone": "Telefon",
-      "social": "Sosial ulgamlar"
+      "social": "Täzelenmeleri yzarlaň:"
     },
     "offices": {
       "title": "Biziň ofislerimiz"
@@ -304,6 +355,111 @@
     "success": {
       "title": "Habar iberildi!",
       "description": "Habaryňyzy aldyk we ýakyn wagtda size habarlaşarys."
+    },
+    "error": {
+      "title": "Ýalňyşlyk",
+      "description": "Habar iberip bolmady. Täzeden synanyşyň."
+    }
+  },
+  "footer": {
+    "newsletter": {
+      "title": "Ähli wakalara we aksiýalara gözegçilik etmek üçin habarnama ýazylmak",
+      "placeholder": "E-poçta",
+      "subscribe": "Ýazylmak",
+      "emailRequired": "Elektron poçta salgyňyzy giriziň",
+      "emailInvalid": "Dogry elektron poçta salgyňyzy giriziň"
+    },
+    "dealersBanner": {
+      "title": "Ýerli awtoulag satyjylary we iň gowy teklipler",
+      "description": "Biz barlanlan satyjylar we hususy eýeler bilen hyzmatdaşlyk edýäris, diňe hakyky we täze yglanlar ýerleşdirmäge kömek edýäris. CarCiti tarapyndan barlanan her awtoulag ileri tutulýan ýerleşmäni we alyjylardan ýokary ynamyň gazanýar.",
+      "fullList": "Ähli sanaw"
+    },
+    "contact": {
+      "title": "Habarlaşmak",
+      "address": "Salgy",
+      "email": "Poçta",
+      "phone": "Telefon"
+    },
+    "menu": {
+      "title": "Menýu",
+      "about": "Biz barada",
+      "blog": "Blog",
+      "contacts": "Habarlaşmak"
+    },
+    "dealers": {
+      "title": "Awtoulag satyjylary"
+    },
+    "carTypes": {
+      "title": "Awtoulag görnüşleri",
+      "sedan": "Sedan",
+      "hatchback": "Hetçbek",
+      "suv": "Ýol-ulag ulagynyň görnüşi",
+      "minivan": "Miniven",
+      "van": "Furgon",
+      "pickup": "Pikap",
+      "electric": "Elektrikli",
+      "hybrid": "Gibrid"
+    },
+    "app": {
+      "title": "Biziň programmamyz",
+      "downloadOn": "Download on the",
+      "appStore": "Apple Store",
+      "getItOn": "Get in on",
+      "googlePlay": "Google Play"
+    },
+    "social": {
+      "title": "Biziň sosial ulgamlarymyz"
+    },
+    "bottom": {
+      "copyright": "© 2025 Carciti.com. Ähli hukuklar goragly",
+      "terms": "Düzgünler",
+      "privacy": "Gizlinlik şertleri"
+    }
+  },
+  "allCars": {
+    "breadcrumb": {
+      "home": "Baş sahypa",
+      "search": "Gözleg"
+    },
+    "searchResults": "Gözleg netijeleri",
+    "vehicles": "awtoulag",
+    "filters": "Filtrler",
+    "showing": "{{total}} awtoulagyň {{from}}-den {{to}}-e çenli görkezilýär",
+    "sortBy": "Tertiplemek",
+    "new": "Täze",
+    "loading": "Ýüklenýär...",
+    "noResults": "Awtoulag tapylmady"
+  },
+  "carDetailsPage": {
+    "breadcrumb": {
+      "home": "Baş sahypa",
+      "carsForSale": "Satylýan awtoulaglar"
+    },
+    "description": "Düşündiriş",
+    "features": "Aýratynlyklar",
+    "technicalSpecs": "Tehniki aýratynlyklar",
+    "send": "Iber",
+    "save": "Ýatda sakla",
+    "price": "Baha",
+    "noNegotiation": "Söwda ýok",
+    "makeOffer": "Teklip ber",
+    "similarListings": "Meňzeş yglanlar",
+    "viewAll": "Hemmesini gör",
+    "dimensions": {
+      "length": "Uzynlygy",
+      "width": "Ini",
+      "height": "Belentligi",
+      "wheelbase": "Tigir binýady",
+      "frontTrack": "Öň yz",
+      "rearTrack": "Yzky yz"
+    },
+    "favorites": {
+      "added": "Halanlara goşuldy",
+      "removed": "Halanlardan aýryldy",
+      "addedDescription": "Yglan halanlara goşuldy",
+      "removedDescription": "Yglan halanlardan aýryldy",
+      "error": "Ýalňyşlyk",
+      "errorDescription": "Halanlary täzeläp bolmady"
     }
   }
 }

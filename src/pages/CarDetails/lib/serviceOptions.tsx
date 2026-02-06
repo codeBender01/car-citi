@@ -3,25 +3,25 @@ import Brochure from "@/svgs/Brochure";
 import CheckGreen from "@/svgs/CheckGreen";
 import SteeringWheel from "@/svgs/SteeringWheel";
 
-export const serviceOptions = [
+export const getServiceOptions = (t: (key: string) => string) => [
   {
     id: 1,
     icon: <CheckGreen />,
-    text: "Проверено экспертами CarCiti",
+    text: t("serviceOptions.verifiedByExperts"),
   },
   {
     id: 2,
     icon: <SteeringWheel />,
-    text: "Запланируйте тест-драйв",
+    text: t("serviceOptions.scheduleTestDrive"),
   },
   {
     id: 3,
     icon: <Brochure />,
-    text: "Брошюра об авто",
+    text: t("serviceOptions.carBrochure"),
   },
   {
     id: 4,
     icon: <Report />,
-    text: "VIN репорт",
+    text: t("serviceOptions.vinReport"),
   },
 ];

@@ -433,9 +433,6 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
 
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-textPrimary font-dm text-sm">
-                $
-              </span>
               <Input
                 type="number"
                 value={minPrice}
@@ -449,9 +446,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
             </div>
 
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-textPrimary font-dm text-sm">
-                $
-              </span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-textPrimary font-dm text-sm"></span>
               <Input
                 type="number"
                 value={maxPrice}

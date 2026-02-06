@@ -19,7 +19,7 @@ import { useGetPosts } from "@/api/posts";
 
 const AllCars = () => {
   const [searchParams] = useSearchParams();
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Get all filter parameters from URL
@@ -65,16 +65,16 @@ const AllCars = () => {
     <div className="pt-[160px] md:pt-[180px] pb-20 px-4 md:px-12 lg:px-20 2xl:px-[118px]">
       <div className="font-dm text-[15px] flex gap-1">
         <Link to="/home" className="text-primary hover:underline">
-          Домашняя страница
+          {t("allCars.breadcrumb.home")}
         </Link>{" "}
-        / <span>Поиск</span>
+        / <span>{t("allCars.breadcrumb.search")}</span>
       </div>
       <div className="h2 mt-5">
-        Результаты поиска{" "}
+        {t("allCars.searchResults")}{" "}
         <span className="text-primary border-b-2 border-primary">
           {postsLoading ? "..." : totalCount}
         </span>{" "}
-        автомобилей
+        {t("allCars.vehicles")}
       </div>
 
       {/* Mobile Filter Button */}
@@ -86,7 +86,7 @@ const AllCars = () => {
               className="w-full bg-primary text-white font-dm text-[15px] rounded-xl py-4 px-6 flex items-center justify-center gap-2"
             >
               <HiAdjustmentsHorizontal className="w-5 h-5" />
-              Фильтры
+              {t("allCars.filters")}
               {totalCount > 0 && ` (${totalCount})`}
             </Button>
           </SheetTrigger>
@@ -96,7 +96,7 @@ const AllCars = () => {
           >
             <SheetHeader>
               <SheetTitle className="text-textPrimary font-rale text-xl">
-                Фильтры
+                {t("allCars.filters")}
               </SheetTitle>
             </SheetHeader>
             <div className="mt-6">
@@ -116,12 +116,12 @@ const AllCars = () => {
         <div className="w-full lg:w-[70%]">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between font-dm text-base gap-4">
             <div className="text-textPrimary">
-              Показаны от 1 до {displayedCount} из {totalCount} автомобилей
+              {t("allCars.showing", { from: 1, to: displayedCount, total: totalCount })}
             </div>
             <div className="flex items-center gap-2.5">
-              <span className="text-textGray">Сортировать по</span>
+              <span className="text-textGray">{t("allCars.sortBy")}</span>
               <span className="flex items-center gap-2">
-                Новые
+                {t("allCars.new")}
                 <FiChevronDown />
               </span>
             </div>
@@ -130,7 +130,7 @@ const AllCars = () => {
           <div className="mt-[50px] grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-7">
             {postsLoading ? (
               <div className="col-span-full text-center py-16">
-                <p className="font-dm text-textGray">Загрузка...</p>
+                <p className="font-dm text-textGray">{t("allCars.loading")}</p>
               </div>
             ) : posts?.data.rows && posts.data.rows.length > 0 ? (
               posts.data.rows.map((car, idx) => {
@@ -139,7 +139,7 @@ const AllCars = () => {
             ) : (
               <div className="col-span-full text-center py-16">
                 <p className="font-dm text-textGray text-lg">
-                  Автомобили не найдены
+                  {t("allCars.noResults")}
                 </p>
               </div>
             )}
