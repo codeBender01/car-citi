@@ -157,6 +157,7 @@
     "minPrice": "Мин.",
     "maxPrice": "Макс.",
     "searchButton": "Поиск",
+    "searchCars": "Поиск авто",
     "cars": "авто",
     "cityRegion": "Город / Регион",
     "searchCity": "Поиск города...",
@@ -202,6 +203,9 @@
     "carplay": "Apple CarPlay/Android Auto",
     "airbagDriver": "SRS Airbag - водитель",
     "abs": "ABS"
+  },
+  "carCard": {
+    "verified": "Проверено"
   },
   "carDetails": {
     "description": "Описание",

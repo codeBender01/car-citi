@@ -24,8 +24,6 @@ import logoBlack from "@assets/images/logoBlack.png";
 
 import Faq from "./ui/Faq";
 
-import LogoCar from "@/svgs/LogoCar";
-
 import { useGetFaqs } from "@/api/faq/useGetFaqs";
 
 const AboutUs = () => {
@@ -67,7 +65,9 @@ const AboutUs = () => {
       <div className="hero-background bg-black h-[95vh] w-full flex items-center px-10 lg:items-start flex-col">
         <div className="lg:my-auto my-[140px] flex flex-col lg:items-start items-center justify-start w-full lg:w-[55%] lg:pl-12 2xl:pl-[180px] text-white gap-12">
           <h1 className="h1 lg:text-left text-center">
-            <span className="text-greenPrimary">{t("about.marketplaceNumber1")}</span>{" "}
+            <span className="text-greenPrimary">
+              {t("about.marketplaceNumber1")}
+            </span>{" "}
             {t("about.tagline")}
           </h1>
           <p className="font-dm text-[15px] w-[85%] lg:text-left text-center">
@@ -84,11 +84,6 @@ const AboutUs = () => {
       </div>
       <StatsSection />
 
-      <div className="mt-[75px] rounded-t-2xl lg:bg-transparent bg-primary px-[30px] lg:mt-[180px] py-6  mx-4 md:px-12 xl:px-[120px] 2xl:px-[118px] flex xl:flex-row flex-col gap-5">
-        <LogoCar />
-        <div className="h2 text-white">{t("about.tagline")}</div>
-      </div>
-
       <div className="lg:bg-transparent bg-[#0C1002] lg:mt-[180px] py-6 mx-4 px-[30px] md:px-12 xl:px-[120px] 2xl:px-[118px] flex xl:flex-row flex-col gap-5">
         <div className="w-full xl:w-[60%]">
           <div className="h2 text-white lg:text-textPrimary">
@@ -99,12 +94,8 @@ const AboutUs = () => {
           </div>
         </div>
         <div className="w-full xl:w-[40%] font-dm text-white lg:text-textPrimary flex flex-col gap-8">
-          <p>
-            {t("about.platformDescription1")}
-          </p>
-          <p>
-            {t("about.platformDescription2")}
-          </p>
+          <p>{t("about.platformDescription1")}</p>
+          <p>{t("about.platformDescription2")}</p>
         </div>
       </div>
       <div className="lg:my-12 md:px-12 pb-6 lg:pb-0 xl:px-[120px] px-[30px] 2xl:px-[118px] flex lg:flex-row flex-col lg:bg-transparent bg-[#0C1002] mx-4 lg:mx-0 gap-4 lg:h-[540px]">
@@ -157,15 +148,9 @@ const AboutUs = () => {
           </div>
         </div>
         <div className="w-full xl:w-[40%] font-dm text-white lg:text-textPrimary flex flex-col gap-8">
-          <p>
-            {t("about.missionDescription1")}
-          </p>
-          <p>
-            {t("about.missionDescription2")}
-          </p>
-          <p>
-            {t("about.missionDescription3")}
-          </p>
+          <p>{t("about.missionDescription1")}</p>
+          <p>{t("about.missionDescription2")}</p>
+          <p>{t("about.missionDescription3")}</p>
         </div>
       </div>
 
@@ -186,9 +171,7 @@ const AboutUs = () => {
           }}
         ></div>
         <div className="relative z-10">
-          <div className="h1 relative">
-            {t("about.wePresentBestDealers")}
-          </div>
+          <div className="h1 relative">{t("about.wePresentBestDealers")}</div>
           <div className="text-base md:text-[40px] font-rale font-medium">
             {t("about.forQualityChoice")}
           </div>

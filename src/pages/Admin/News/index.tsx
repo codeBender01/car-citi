@@ -139,77 +139,85 @@ const News = () => {
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleConfirmedDelete}
-        itemName={newsToDelete ? `${newsToDelete.titleRu} / ${newsToDelete.titleTk}` : ''}
+        itemName={
+          newsToDelete
+            ? `${newsToDelete.titleRu} / ${newsToDelete.titleTk}`
+            : ""
+        }
         itemType="новость"
         isLoading={removeNews.isPending}
       />
 
       <div className="mt-10">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="font-semibold">Изображение</TableHead>
-              <TableHead className="font-semibold">Заголовок (тм)</TableHead>
-              <TableHead className="font-semibold">Заголовок (ру)</TableHead>
-              <TableHead className="font-semibold">Описание</TableHead>
-              <TableHead className="font-semibold text-right">
-                Действия
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {news?.data?.rows?.map((newsItem) => (
-              <TableRow
-                key={newsItem.id}
-                className="transition-all duration-200 hover:bg-primary/10"
-              >
-                <TableCell>
-                  {newsItem.image?.url && (
-                    <img
-                      src={BASE_URL + "/" + newsItem.image.url}
-                      alt={newsItem.titleRu}
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                  )}
-                </TableCell>
-                <TableCell className="font-medium">
-                  {newsItem.titleTk}
-                </TableCell>
-                <TableCell className="font-medium">
-                  {newsItem.titleRu}
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground max-w-xs truncate">
-                  {newsItem.descriptionRu}
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEdit(newsItem);
-                      }}
-                      className="p-2 text-blue-600 hover:bg-blue-50 bg-transparent rounded-lg transition-colors"
-                      title="Редактировать"
-                    >
-                      <FiEdit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setNewsToDelete(newsItem);
-                        setDeleteDialogOpen(true);
-                      }}
-                      className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
-                      title="Удалить"
-                    >
-                      <FiTrash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </TableCell>
+        <div className="overflow-x-auto rounded-lg border">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="font-semibold">Изображение</TableHead>
+                <TableHead className="font-semibold">Заголовок (тм)</TableHead>
+                <TableHead className="font-semibold">Заголовок (ру)</TableHead>
+                <TableHead className="font-semibold max-w-[200px]">
+                  Описание
+                </TableHead>
+                <TableHead className="font-semibold text-right sticky right-0 bg-background z-10">
+                  Действия
+                </TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {news?.data?.rows?.map((newsItem) => (
+                <TableRow
+                  key={newsItem.id}
+                  className="transition-all duration-200 hover:bg-primary/10"
+                >
+                  <TableCell>
+                    {newsItem.image?.url && (
+                      <img
+                        src={BASE_URL + "/" + newsItem.image.url}
+                        alt={newsItem.titleRu}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell className="font-medium truncate max-w-[200px]">
+                    {newsItem.titleTk}
+                  </TableCell>
+                  <TableCell className="font-medium truncate max-w-[200px]">
+                    {newsItem.titleRu}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground max-w-[200px]">
+                    <div className="line-clamp-2">{newsItem.descriptionRu}</div>
+                  </TableCell>
+                  <TableCell className="text-right sticky right-0 bg-background z-10">
+                    <div className="flex items-center justify-end gap-2">
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(newsItem);
+                        }}
+                        className="p-2 text-blue-600 hover:bg-blue-50 bg-transparent rounded-lg transition-colors"
+                        title="Редактировать"
+                      >
+                        <FiEdit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setNewsToDelete(newsItem);
+                          setDeleteDialogOpen(true);
+                        }}
+                        className="p-2 text-red-600 hover:bg-red-50 bg-transparent rounded-lg transition-colors"
+                        title="Удалить"
+                      >
+                        <FiTrash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

@@ -31,7 +31,8 @@ const CarConditions = () => {
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [conditionToDelete, setConditionToDelete] = useState<OneCarCondition | null>(null);
+  const [conditionToDelete, setConditionToDelete] =
+    useState<OneCarCondition | null>(null);
   const [newCondition, setNewCondition] = useState<NewCarCondition>({
     id: "",
     nameTk: "",
@@ -142,7 +143,11 @@ const CarConditions = () => {
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleConfirmedDelete}
-        itemName={conditionToDelete ? `${conditionToDelete.nameRu} / ${conditionToDelete.nameTk}` : ''}
+        itemName={
+          conditionToDelete
+            ? `${conditionToDelete.nameRu} / ${conditionToDelete.nameTk}`
+            : ""
+        }
         itemType="состояние"
         isLoading={removeCondition.isPending}
       />
@@ -164,7 +169,7 @@ const CarConditions = () => {
                 <TableHead className="font-semibold min-w-[200px]">
                   Описание (ру)
                 </TableHead>
-                <TableHead className="font-semibold text-right min-w-[120px]">
+                <TableHead className="font-semibold text-right min-w-[120px] sticky right-0 bg-background z-10">
                   Действия
                 </TableHead>
               </TableRow>
@@ -191,8 +196,8 @@ const CarConditions = () => {
                       {condition.descriptionRu}
                     </div>
                   </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
+                  <TableCell className="text-right sticky right-0 bg-background z-10">
+                    <div className="flex items-center justify-end gap-2 bg-white">
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();

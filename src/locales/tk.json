@@ -157,6 +157,7 @@
     "minPrice": "Min.",
     "maxPrice": "Maks.",
     "searchButton": "Gözleg",
+    "searchCars": "Awtoulag gözlegi",
     "cars": "awtoulag",
     "cityRegion": "Şäher / Sebit",
     "searchCity": "Şäher gözle...",
@@ -202,6 +203,9 @@
     "carplay": "Apple CarPlay/Android Auto",
     "airbagDriver": "SRS Airbag - sürüji",
     "abs": "ABS"
+  },
+  "carCard": {
+    "verified": "Barlandy"
   },
   "carDetails": {
     "description": "Düşündiriş",

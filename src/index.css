@@ -32,8 +32,8 @@ body {
 
 @media (min-width: 1024px) {
   .card-gradient {
-    background-image: var(--bg-image),
-      linear-gradient(to top, #222222b2, #22222200);
+    background-image:
+      var(--bg-image), linear-gradient(to top, #222222b2, #22222200);
   }
 }
 
@@ -49,7 +49,7 @@ body {
 }
 
 .h1 {
-  font-size: 60px;
+  font-size: 52px;
   font-family: var(--font-rale);
   font-weight: 700;
 }

@@ -8,6 +8,7 @@ import Calendar from "@/svgs/Calendar";
 
 import { BsArrowUpRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import type { OnePost } from "@/interfaces/posts.interface";
 import type { HomeCarModel } from "@/interfaces/home.interface";
 import { BASE_URL } from "@/api";
@@ -20,6 +21,7 @@ export interface CarCardProps {
 }
 
 const CarCard = ({ car }: CarCardProps) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const swiperRef = useRef<SwiperType | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -128,6 +130,23 @@ const CarCard = ({ car }: CarCardProps) => {
             <BsArrowUpRight />
           </div>
         </div>
+        {car.verifiedStatus === "verified" && (
+          <div className="mt-3 flex items-center gap-1.5 text-green-600 text-xs font-dm font-medium">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="w-4 h-4"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.403 12.652a3 3 0 010-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                clipRule="evenodd"
+              />
+            </svg>
+            {t("carCard.verified")}
+          </div>
+        )}
       </div>
     </div>
   );

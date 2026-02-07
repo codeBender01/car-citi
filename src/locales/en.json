@@ -117,7 +117,8 @@
     "saveSearchSettings": "Save Search Settings",
     "searchResults": "Search Results",
     "vehicles": "vehicles",
-    "showing": "Showing {{from}} to {{to}} of {{total}} vehicles"
+    "showing": "Showing {{from}} to {{to}} of {{total}} vehicles",
+    "searchCars": "Search Cars"
   },
   "cities": {
     "ashgabat": "Ashgabat",

@@ -230,7 +230,9 @@ const SearchForm = () => {
                     </span>
                     <SelectValue
                       placeholder={
-                        brand ? t("filters.chooseModel") : t("filters.firstSelectBrand")
+                        brand
+                          ? t("filters.chooseModel")
+                          : t("filters.firstSelectBrand")
                       }
                     />
                   </div>
@@ -385,7 +387,9 @@ const SearchForm = () => {
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             {t("filters.cityRegion")}
                           </span>
-                          <SearchableSelectValue placeholder={t("filters.chooseCity")} />
+                          <SearchableSelectValue
+                            placeholder={t("filters.chooseCity")}
+                          />
                         </div>
                       </SearchableSelectTrigger>
                       <SearchableSelectContent
@@ -438,7 +442,9 @@ const SearchForm = () => {
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             {t("filters.condition")}
                           </span>
-                          <SelectValue placeholder={t("filters.chooseCondition")} />
+                          <SelectValue
+                            placeholder={t("filters.chooseCondition")}
+                          />
                         </div>
                       </SelectTrigger>
                       <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
@@ -730,7 +736,9 @@ const SearchForm = () => {
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             {t("filters.engineVolume")}
                           </span>
-                          <SelectValue placeholder={t("filters.chooseVolume")} />
+                          <SelectValue
+                            placeholder={t("filters.chooseVolume")}
+                          />
                         </div>
                       </SelectTrigger>
                       <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
@@ -879,11 +887,7 @@ const SearchForm = () => {
           >
             <CiSearch />
             <div>
-              {t("filters.searchButton")}{" "}
-              <span className="underline">
-                {postsLoading ? "..." : posts?.data?.count || 0}
-              </span>{" "}
-              {t("filters.cars")}
+              {t("filters.searchCars")}
             </div>
           </Button>
         </div>

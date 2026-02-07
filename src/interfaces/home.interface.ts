@@ -80,4 +80,5 @@ export interface HomeCarModel {
     name: string;
   };
   viewed: boolean;
+  verifiedStatus?: string;
 }

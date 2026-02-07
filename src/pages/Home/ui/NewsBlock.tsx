@@ -20,9 +20,9 @@ const NewsBlock = () => {
   const newsSwiperRef = useRef<SwiperType | null>(null);
   const [currentSlide, setCurrentSlide] = useState(1);
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const { data: newsResponse, isLoading } = useGetNews();
+  const { data: newsResponse, isLoading } = useGetNews(i18n.language);
   const newsData = newsResponse?.data?.rows || [];
 
   const getLocalizedTitle = (news: OneNews): string => {
@@ -62,13 +62,13 @@ const NewsBlock = () => {
     <div className="2xl:px-[200px] px-4 md:px-20 lg:px-[120px] mt-[75px] lg:mt-[140px]">
       <div className="flex items-center justify-between w-full">
         <div className="font-rale text-[26px] md:text-[40px] text-textPrimary font-bold">
-          Свежие записи в блоге
+          {t("home.freshBlogPosts")}
         </div>
         <div
           onClick={() => navigate("/news")}
           className="hidden lg:flex items-center gap-2 font-dm font-medium cursor-pointer hover:opacity-70 transition-opacity"
         >
-          Посмотреть все
+          {t("common.viewAll")}
           <BsArrowUpRight />
         </div>
       </div>

@@ -5,7 +5,7 @@ import type { ApiResponse } from "@/interfaces/apiResponse.interface";
 import { apiClient } from "..";
 import type { NewsList } from "@/interfaces/news.interface";
 
-export const useGetNews = () => {
+export const useGetNews = (lang?: string) => {
   const token = localStorage.getItem("accessToken");
   return useQuery({
     queryFn: async (): Promise<ApiResponse<NewsList>> => {
@@ -19,7 +19,7 @@ export const useGetNews = () => {
       );
       return data;
     },
-    queryKey: ["getAllNews"],
+    queryKey: ["getAllNews", lang],
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
