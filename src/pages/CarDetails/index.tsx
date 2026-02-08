@@ -44,8 +44,22 @@ const CarDetails = () => {
 
   const car = oneCar?.data;
 
-  const serviceOptions = getServiceOptions(t);
+  const serviceOptions = getServiceOptions(t, car?.verifiedStatus);
   const techChars = getTechChars(t);
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      await navigator.share({ title: `${car?.carMark?.name} ${car?.carModel?.name}`, url });
+    } else {
+      await navigator.clipboard.writeText(url);
+      toast({
+        title: t("carDetailsPage.linkCopied"),
+        variant: "success",
+        duration: 2000,
+      });
+    }
+  };
 
   const handleBookmark = async () => {
     if (!id) return;
@@ -77,9 +91,17 @@ const CarDetails = () => {
   return (
     <div className="pt-8 lg:pt-[120px] xl:pt-[180px] px-0 lg:px-10 xl:px-20 2xl:px-[118px]">
       <div className="font-dm text-[15px] hidden lg:flex gap-1">
-        <Link to="/" className="text-primary hover:underline">{t("carDetailsPage.breadcrumb.home")}</Link> /{" "}
-        <Link to="/all-cars" className="text-primary hover:underline">{t("carDetailsPage.breadcrumb.carsForSale")}</Link> /{" "}
-        <span>{car?.carMark?.name} {car?.carModel?.name}</span>
+        <Link to="/" className="text-primary hover:underline">
+          {t("carDetailsPage.breadcrumb.home")}
+        </Link>{" "}
+        /{" "}
+        <Link to="/all-cars" className="text-primary hover:underline">
+          {t("carDetailsPage.breadcrumb.carsForSale")}
+        </Link>{" "}
+        /{" "}
+        <span>
+          {car?.carMark?.name} {car?.carModel?.name}
+        </span>
       </div>
       <div className="lg:flex hidden h2 mt-5">
         {car?.carMark?.name}, {car?.carModel?.name}
@@ -114,12 +136,16 @@ const CarDetails = () => {
             </p>
           </div>
           <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
-            <div className="text-[22px] md:text-[26px]">{t("carDetailsPage.description")}</div>
+            <div className="text-[22px] md:text-[26px]">
+              {t("carDetailsPage.description")}
+            </div>
             <p className="mt-6 lg:mt-10 text-base font-light">{car?.damage}</p>
           </div>
           {car?.characteristics && car.characteristics.length > 0 && (
             <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
-              <div className="text-[22px] md:text-[26px]">{t("carDetailsPage.features")}</div>
+              <div className="text-[22px] md:text-[26px]">
+                {t("carDetailsPage.features")}
+              </div>
               <div className="mt-6 lg:mt-10 md:flex grid grid-cols-1 sm:grid-cols-2 md:gap-0 gap-8 justify-between">
                 {car.characteristics
                   .filter((char) => char.items && char.items.length > 0)
@@ -216,12 +242,15 @@ const CarDetails = () => {
         </div>
         <div className="hidden lg:flex flex-col gap-[30px] self-stretch">
           <div className="flex items-center justify-end gap-7 font-dm text-base">
-            <div className="flex items-center gap-2">
+            <button
+              onClick={handleShare}
+              className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+            >
               {t("carDetailsPage.send")}
               <div className=" bg-white border border-headerBorder p-3 rounded-full">
                 <PiUpload size={14} />
               </div>
-            </div>
+            </button>
             <button
               onClick={handleBookmark}
               disabled={addToFavorites.isPending}
@@ -243,11 +272,9 @@ const CarDetails = () => {
               <span>{t("carDetailsPage.price")}</span>
             </div>
             <div className="font-dm text-[30px] my-5 font-bold">
-              {car?.carPrice?.prefixPrice}
               {car?.carPrice?.price
                 ? `${car.carPrice.price.toLocaleString()} TMT`
-                : car?.carPrice?.customPrice}
-              {car?.carPrice?.suffixPrice}
+                : ""}
             </div>
             <div>{t("carDetailsPage.noNegotiation")}</div>
             <Button

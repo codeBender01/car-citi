@@ -33,7 +33,9 @@ const CarMarks = () => {
   const [pageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [carMarkToDelete, setCarMarkToDelete] = useState<OneCarMark | null>(null);
+  const [carMarkToDelete, setCarMarkToDelete] = useState<OneCarMark | null>(
+    null,
+  );
   const [newCarMark, setNewCarMark] = useState<NewCarMark>({
     id: "",
     nameTk: "",
@@ -147,7 +149,11 @@ const CarMarks = () => {
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleConfirmedDelete}
-        itemName={carMarkToDelete ? `${carMarkToDelete.nameRu} / ${carMarkToDelete.name}` : ''}
+        itemName={
+          carMarkToDelete
+            ? `${carMarkToDelete.nameRu} / ${carMarkToDelete.name}`
+            : ""
+        }
         itemType="марку"
         isLoading={removeCarMark.isPending}
       />

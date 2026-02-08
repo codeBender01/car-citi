@@ -6,9 +6,12 @@ import Gearbox from "@/svgs/Gearbox";
 import Speedometer from "@/svgs/Speedometer";
 import Calendar from "@/svgs/Calendar";
 
-import { BsArrowUpRight } from "react-icons/bs";
+import { BsArrowUpRight, BsBookmark, BsBookmarkFill } from "react-icons/bs";
+import { FiCheck } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useAddPostToFavorites } from "@/api/posts/useAddToFavorites";
+import { useToast } from "@/hooks/use-toast";
+import type { AxiosError } from "axios";
 import type { OnePost } from "@/interfaces/posts.interface";
 import type { HomeCarModel } from "@/interfaces/home.interface";
 import { BASE_URL } from "@/api";
@@ -21,10 +24,38 @@ export interface CarCardProps {
 }
 
 const CarCard = ({ car }: CarCardProps) => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const swiperRef = useRef<SwiperType | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const addToFavorites = useAddPostToFavorites();
+
+  const handleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToFavorites.mutate(car.id, {
+      onSuccess: () => {
+        toast({
+          title: "isFavorite" in car && car.isFavorite
+            ? "Удалено из избранного"
+            : "Добавлено в избранное",
+          duration: 1000,
+        });
+      },
+      onError: (error) => {
+        const axiosError = error as AxiosError;
+        if (axiosError.response?.status === 401) {
+          navigate("/auth");
+          return;
+        }
+        toast({
+          title: "Ошибка",
+          description: "Не удалось обновить избранное",
+          variant: "destructive",
+          duration: 3000,
+        });
+      },
+    });
+  };
 
   const getCarImages = () => {
     if (!car.images) return [];
@@ -71,6 +102,24 @@ const CarCard = ({ car }: CarCardProps) => {
         className="h-[220px] relative overflow-hidden"
         onMouseMove={handleMouseMove}
       >
+        <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
+          {car.verifiedStatus === "verified" && (
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <FiCheck className="w-4 h-4 text-white" strokeWidth={3} />
+            </div>
+          )}
+          <div
+            onClick={handleFavorite}
+            className="w-8 h-8 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors"
+          >
+            {"isFavorite" in car && car.isFavorite ? (
+              <BsBookmarkFill className="w-4 h-4 text-primary" />
+            ) : (
+              <BsBookmark className="w-4 h-4 text-textPrimary" />
+            )}
+          </div>
+        </div>
+
         {images.length > 0 ? (
           <Swiper
             spaceBetween={0}
@@ -123,30 +172,13 @@ const CarCard = ({ car }: CarCardProps) => {
         </div>
 
         <div className="my-6 h-0.5 w-full bg-headerBorder"></div>
-        <div className="flex items-center justify-between">
-          <div>${car.carPrice.price}</div>
-          <div className="flex items-center text-primary gap-2 font-dm font-medium">
+        <div className="flex items-center justify-between font-bold">
+          <div>{car.carPrice.price} TMT</div>
+          <div className="flex items-center cursor-pointer text-primary gap-2 font-dm font-medium">
             Подробно
             <BsArrowUpRight />
           </div>
         </div>
-        {car.verifiedStatus === "verified" && (
-          <div className="mt-3 flex items-center gap-1.5 text-green-600 text-xs font-dm font-medium">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-4 h-4"
-            >
-              <path
-                fillRule="evenodd"
-                d="M16.403 12.652a3 3 0 010-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                clipRule="evenodd"
-              />
-            </svg>
-            {t("carCard.verified")}
-          </div>
-        )}
       </div>
     </div>
   );

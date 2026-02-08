@@ -10,7 +10,6 @@ import {
   SearchableSelectContent,
   SearchableSelectGroup,
   SearchableSelectItem,
-  SearchableSelectLabel,
   SearchableSelectTrigger,
   SearchableSelectValue,
 } from "@/components/ui/searchable-select";
@@ -43,7 +42,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
   const [brand, setBrand] = useState(searchParams.get("carMarkId") || "");
   const [model, setModel] = useState(searchParams.get("carModelId") || "");
   const [cityRegion, setCityRegion] = useState(
-    searchParams.get("cityId") || "",
+    searchParams.get("cityId") || searchParams.get("regionId") || "",
   );
   const [condition, setCondition] = useState(
     searchParams.get("carConditionId") || "",
@@ -87,7 +86,8 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
 
     if (brand) params.set("carMarkId", brand);
     if (model) params.set("carModelId", model);
-    if (cityRegion) params.set("cityId", cityRegion);
+    if (resolvedLocation.regionId) params.set("regionId", resolvedLocation.regionId);
+    if (resolvedLocation.cityId) params.set("cityId", resolvedLocation.cityId);
     if (fuelType) params.set("fuelTypeId", fuelType);
     if (driveType) params.set("driveTypeId", driveType);
     if (transmission) params.set("transmissionId", transmission);
@@ -114,6 +114,21 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     maxPrice,
     setSearchParams,
   ]);
+
+  const resolvedLocation = useMemo(() => {
+    if (!cityRegion || !regions?.data?.rows)
+      return { regionId: undefined, cityId: undefined };
+
+    const isRegion = regions.data.rows.some((r) => r.id === cityRegion);
+    if (isRegion) return { regionId: cityRegion, cityId: undefined };
+
+    for (const region of regions.data.rows) {
+      const city = region.cities.find((c) => c.id === cityRegion);
+      if (city) return { regionId: region.id, cityId: city.id };
+    }
+
+    return { regionId: undefined, cityId: undefined };
+  }, [cityRegion, regions]);
 
   const filteredRegions = useMemo(() => {
     if (!regions?.data?.rows) return [];
@@ -170,9 +185,12 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
               {filteredRegions.length > 0 ? (
                 filteredRegions.map((region) => (
                   <SearchableSelectGroup key={region.id}>
-                    <SearchableSelectLabel className="text-gray-700 font-medium">
+                    <SearchableSelectItem
+                      value={region.id}
+                      className="text-base font-rale cursor-pointer font-medium text-gray-700"
+                    >
                       {region.name}
-                    </SearchableSelectLabel>
+                    </SearchableSelectItem>
                     {region.cities.map((city) => (
                       <SearchableSelectItem
                         key={city.id}

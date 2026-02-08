@@ -5,12 +5,10 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { BsArrowDown, BsArrowUpRight } from "react-icons/bs";
+import { BsArrowUpRight } from "react-icons/bs";
 import GreenArrow from "@/svgs/GreenArrow";
 
 import StatsSection from "../Home/ui/StatSection";
-import UserCard from "./ui/UserCard";
-import Reviews from "../Home/ui/Reviews";
 
 import motto from "@assets/aboutUs/motto.png";
 import benz from "@assets/aboutUs/benzOld.png";
@@ -73,13 +71,6 @@ const AboutUs = () => {
           <p className="font-dm text-[15px] w-[85%] lg:text-left text-center">
             {t("about.heroDescription")}
           </p>
-          <Button
-            size="none"
-            className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl flex items-center gap-2.5 py-4 px-[25px] w-fit"
-          >
-            {t("about.learn")}
-            <BsArrowDown />
-          </Button>
         </div>
       </div>
       <StatsSection />
@@ -185,14 +176,14 @@ const AboutUs = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-8 md:gap-16 mt-[75px] md:mt-[120px] lg:mt-[180px] px-4 md:px-10 lg:px-[120px] 2xl:px-[118px]">
+      {/* <div className="flex flex-col gap-8 md:gap-16 mt-[75px] md:mt-[120px] lg:mt-[180px] px-4 md:px-10 lg:px-[120px] 2xl:px-[118px]">
         <div className="h2">{t("about.ourTeam")}</div>
         <div className="grid grid-cols-1 md:grid-cols-2 content-center lg:flex items-center gap-6">
           {[...Array(5)].map((_, i) => {
             return <UserCard key={i} />;
           })}
         </div>
-      </div>
+      </div> */}
 
       <div className="green-gradient mt-[75px] md:mt-[120px] lg:mt-[180px] py-3.5 overflow-hidden whitespace-nowrap">
         <div className="flex animate-scroll gap-20">
@@ -209,9 +200,9 @@ const AboutUs = () => {
         </div>
       </div>
 
-      <div className="mt-[75px] md:mt-[120px] lg:mt-[180px] px-10 lg:px-[120px] bg-textPrimary lg:py-[110px] py-6 2xl:px-[118px]">
+      {/* <div className="mt-[75px] md:mt-[120px] lg:mt-[180px] px-10 lg:px-[120px] bg-textPrimary lg:py-[110px] py-6 2xl:px-[118px]">
         <Reviews variant="white" headingClassName="text-white" />
-      </div>
+      </div> */}
 
       <div className="mt-[75px] lg:mt-[100px] mx-auto w-[95%] lg:w-[70%] flex flex-col items-center">
         <div className="text-[26px] md:text-[40px] font-dm font-bold">

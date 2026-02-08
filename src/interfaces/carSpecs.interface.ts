@@ -32,6 +32,11 @@ export interface NewCarSpecsSubcategory {
   categoryId: string;
 }
 
+export interface CarSpecsSubcategoriesList {
+  count: number;
+  rows: OneCarSpecsSubcategory[];
+}
+
 export interface NewCarCondition {
   id: string;
   nameTk: string;

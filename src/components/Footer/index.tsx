@@ -5,6 +5,7 @@ import land from "@assets/images/landscape.png";
 
 import { useLocation, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useGetSubcategoriesClient } from "@/api/carSpecsClient/useGetSubcategoriesClient";
 
 import { BsArrowUpRight } from "react-icons/bs";
 
@@ -12,7 +13,8 @@ import { MdEmail } from "react-icons/md";
 
 const Footer = () => {
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { data: subcategories } = useGetSubcategoriesClient(i18n.language);
 
   return (
     <>
@@ -119,30 +121,16 @@ const Footer = () => {
                 {t("footer.carTypes.title")}
               </h3>
               <ul className="space-y-3 font-dm text-[15px]">
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  {t("footer.carTypes.sedan")}
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  {t("footer.carTypes.hatchback")}
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  {t("footer.carTypes.suv")}
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  {t("footer.carTypes.minivan")}
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  {t("footer.carTypes.van")}
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  {t("footer.carTypes.pickup")}
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  {t("footer.carTypes.electric")}
-                </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  {t("footer.carTypes.hybrid")}
-                </li>
+                {subcategories?.data?.rows?.map((sub) => (
+                  <li key={sub.id}>
+                    <Link
+                      to={`/all-cars?subcategoryId=${sub.id}`}
+                      className="cursor-pointer hover:text-primary transition-colors"
+                    >
+                      {sub.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 

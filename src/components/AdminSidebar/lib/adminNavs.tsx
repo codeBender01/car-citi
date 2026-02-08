@@ -33,6 +33,10 @@ export const adminNavs: AdminNav[] = [
         path: "/admin/car-specs/categories",
       },
       {
+        name: "Тип кузова",
+        path: "/admin/car-specs/subcategories",
+      },
+      {
         name: "Состояние",
         path: "/admin/car-specs/condition",
       },

@@ -420,6 +420,12 @@
       "privacy": "Gizlinlik şertleri"
     }
   },
+  "allBrands": {
+    "title": "Ähli markalar",
+    "breadcrumb": "Ähli markalar",
+    "details": "Giňişleýin",
+    "models": "model"
+  },
   "allCars": {
     "breadcrumb": {
       "home": "Baş sahypa",
@@ -443,6 +449,7 @@
     "features": "Aýratynlyklar",
     "technicalSpecs": "Tehniki aýratynlyklar",
     "send": "Iber",
+    "linkCopied": "Salgylanma göçürildi",
     "save": "Ýatda sakla",
     "price": "Baha",
     "noNegotiation": "Söwda ýok",

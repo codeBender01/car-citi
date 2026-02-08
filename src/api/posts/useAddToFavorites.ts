@@ -21,9 +21,9 @@ export const useAddPostToFavorites = () => {
     },
     mutationKey: ["addPost"],
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["getOnePost", "getAllPosts"],
-      });
+      queryClient.invalidateQueries({ queryKey: ["getOnePost"] });
+      queryClient.invalidateQueries({ queryKey: ["getAllPosts"] });
+      queryClient.invalidateQueries({ queryKey: ["getHomeClient"] });
     },
   });
 };

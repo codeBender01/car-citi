@@ -25,13 +25,15 @@ const AllCars = () => {
   // Get all filter parameters from URL
   const brand = searchParams.get("carMarkId") || undefined;
   const model = searchParams.get("carModelId") || undefined;
-  const cityRegion = searchParams.get("cityId") || undefined;
+  const regionId = searchParams.get("regionId") || undefined;
+  const cityId = searchParams.get("cityId") || undefined;
   const condition = searchParams.get("carConditionId") || undefined;
   const driveType = searchParams.get("driveTypeId") || undefined;
   const transmission = searchParams.get("transmissionId") || undefined;
   const fuelType = searchParams.get("fuelTypeId") || undefined;
   const color = searchParams.get("colorId") || undefined;
   const category = searchParams.get("categoryId") || undefined;
+  const subcategoryId = searchParams.get("subcategoryId") || undefined;
   const yearFrom = searchParams.get("yearFrom") || undefined;
   const yearTo = searchParams.get("yearTo") || undefined;
   const priceFrom = searchParams.get("priceFrom")
@@ -44,12 +46,14 @@ const AllCars = () => {
   const { data: posts, isLoading: postsLoading } = useGetPosts({
     carMarkId: brand,
     carModelId: model,
-    cityId: cityRegion,
+    regionId: regionId,
+    cityId: cityId,
     fuelTypeId: fuelType,
     driveTypeId: driveType,
     transmissionId: transmission,
     carConditionId: condition,
     categoryId: category,
+    subcategoryId: subcategoryId,
     colorId: color,
     yearFrom: yearFrom,
     yearTo: yearTo,

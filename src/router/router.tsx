@@ -11,6 +11,7 @@ import Dashboard from "@/pages/Dashboard";
 const AboutUs = lazy(() => import("@pages/AboutUs"));
 const CarDetails = lazy(() => import("@pages/CarDetails"));
 const AllCars = lazy(() => import("@pages/AllCars"));
+const AllBrands = lazy(() => import("@pages/AllBrands"));
 const MyPosts = lazy(() => import("@pages/MyPosts"));
 const Favorites = lazy(() => import("@pages/Favorites"));
 const SavedSearch = lazy(() => import("@pages/SavedSearch"));
@@ -50,6 +51,9 @@ const CharacteristicChildren = lazy(
   () => import("@pages/Admin/CarSpecs/Characteristics/Children"),
 );
 const Colors = lazy(() => import("@pages/Admin/CarSpecs/Color"));
+const AllSubcategories = lazy(
+  () => import("@pages/Admin/CarSpecs/AllSubcategories"),
+);
 const CarMarks = lazy(() => import("@pages/Admin/CarMarks"));
 const CarModels = lazy(() => import("@pages/Admin/CarMarks/Models"));
 const Stats = lazy(() => import("@pages/Admin/Stats"));
@@ -84,6 +88,10 @@ export default function Router() {
         {
           path: "/all-cars",
           element: <AllCars />,
+        },
+        {
+          path: "/all-brands",
+          element: <AllBrands />,
         },
         {
           path: "/saved",
@@ -220,6 +228,10 @@ export default function Router() {
         {
           path: "car-specs/color",
           element: <Colors />,
+        },
+        {
+          path: "car-specs/subcategories",
+          element: <AllSubcategories />,
         },
         {
           path: "car-marks",

@@ -32,7 +32,7 @@ const BrandsSection = ({ carMarks }: BrandsSectionProps) => {
           Познакомьтесь с нашими партнерами
         </div>
         <div
-          onClick={() => navigate("/all-cars")}
+          onClick={() => navigate("/all-brands")}
           className="hidden md:flex cursor-pointer items-center gap-2 font-dm font-medium hover:text-primary transition-colors"
         >
           Посмотреть все

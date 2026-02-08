@@ -38,6 +38,7 @@ import StatsSection from "./ui/StatSection";
 import { useGetHomeClient } from "@/api/home/useGetHomeClient";
 import { useGetBanners } from "@/api/banners/useGetAllBanners";
 import { useGetCarMarksClient } from "@/api/carMarks/useGetCarMarksClient";
+import { useGetSubcategoriesClient } from "@/api/carSpecsClient/useGetSubcategoriesClient";
 import { BASE_URL } from "@/api";
 import i18n from "@/i18n";
 
@@ -58,6 +59,7 @@ const Home = () => {
   const { data: homeData } = useGetHomeClient();
   const { data: banners } = useGetBanners(1, 100);
   const { data: carMarks } = useGetCarMarksClient(1, 5, i18n.language);
+  const { data: subcategories } = useGetSubcategoriesClient(i18n.language);
 
   const navigate = useNavigate();
   const whyUs = getWhyUs(t);
@@ -234,46 +236,32 @@ const Home = () => {
         </div>
 
         <ul className="flex lg:grid grid-cols-5 flex-col items-center justify-between gap-[25px] mt-10">
-          {homeData?.data?.carCategories &&
-          homeData.data.carCategories.length > 0
-            ? homeData.data.carCategories.map((category, idx) => (
-                <li
-                  key={category.mark.id}
-                  className="h-[300px] bg-black! card-gradient lg:bg-none lg:w-auto w-full lg:block flex flex-row-reverse justify-between flex-1 rounded-2xl px-[30px] py-5 lg:py-[38px] text-white font-dm"
-                  style={
-                    {
-                      "--bg-image": `url(${
-                        types[idx % types.length]?.img || types[0].img
-                      })`,
-                      backgroundSize: "cover",
-                      backgroundRepeat: "no-repeat",
-                    } as React.CSSProperties
+          {types.map((typeItem, idx) => {
+            const subcategory = subcategories?.data?.rows?.[idx];
+            return (
+              <li
+                key={typeItem.type}
+                onClick={() => {
+                  if (subcategory) {
+                    navigate(`/all-cars?subcategoryId=${subcategory.id}`);
                   }
-                >
-                  <div>{category.count}</div>
-                  <div className="flex items-center gap-2">
-                    {category.mark.name}
-                  </div>
-                </li>
-              ))
-            : types.map((t) => (
-                <li
-                  key={t.type}
-                  className="h-[300px] bg-black! card-gradient lg:bg-none lg:w-auto w-full lg:block flex flex-row-reverse justify-between flex-1 rounded-2xl px-[30px] py-5 lg:py-[38px] text-white font-dm"
-                  style={
-                    {
-                      "--bg-image": `url(${t.img})`,
-                      backgroundSize: "cover",
-                    } as React.CSSProperties
-                  }
-                >
-                  <div>{t.num}</div>
-                  <div className="flex items-center gap-2">
-                    <div className="flex lg:hidden">{t.icon}</div>
-                    {t.type}
-                  </div>
-                </li>
-              ))}
+                }}
+                className="h-[300px] bg-black! card-gradient lg:bg-none lg:w-auto w-full lg:block flex flex-row-reverse justify-between flex-1 rounded-2xl px-[30px] py-5 lg:py-[38px] text-white font-dm cursor-pointer"
+                style={
+                  {
+                    "--bg-image": `url(${typeItem.img})`,
+                    backgroundSize: "cover",
+                  } as React.CSSProperties
+                }
+              >
+                <div>{typeItem.num}</div>
+                <div className="flex items-center gap-2">
+                  <div className="flex lg:hidden">{typeItem.icon}</div>
+                  {subcategory?.name || typeItem.type}
+                </div>
+              </li>
+            );
+          })}
         </ul>
 
         <BrandsSection carMarks={carMarks?.data.rows} />

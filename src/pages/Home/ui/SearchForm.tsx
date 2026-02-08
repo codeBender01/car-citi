@@ -14,7 +14,6 @@ import {
   SearchableSelectContent,
   SearchableSelectGroup,
   SearchableSelectItem,
-  SearchableSelectLabel,
   SearchableSelectTrigger,
   SearchableSelectValue,
 } from "@/components/ui/searchable-select";
@@ -80,10 +79,28 @@ const SearchForm = () => {
     };
   }, [year]);
 
+  const resolveLocation = (value: string) => {
+    if (!value || !regions?.data?.rows)
+      return { regionId: undefined, cityId: undefined };
+
+    const isRegion = regions.data.rows.some((r) => r.id === value);
+    if (isRegion) return { regionId: value, cityId: undefined };
+
+    for (const region of regions.data.rows) {
+      const city = region.cities.find((c) => c.id === value);
+      if (city) return { regionId: region.id, cityId: city.id };
+    }
+
+    return { regionId: undefined, cityId: undefined };
+  };
+
+  const resolvedLocation = resolveLocation(cityRegion);
+
   const { data: posts, isLoading: postsLoading } = useGetPosts({
     carMarkId: brand || undefined,
     carModelId: model || undefined,
-    cityId: cityRegion || undefined,
+    regionId: resolvedLocation.regionId,
+    cityId: resolvedLocation.cityId,
     driveTypeId: driveType || undefined,
     carConditionId: condition || undefined,
     subcategoryId: bodyType || undefined,
@@ -97,10 +114,12 @@ const SearchForm = () => {
 
   const handleSearch = () => {
     const params = new URLSearchParams();
+    const location = resolveLocation(cityRegion);
 
     if (brand) params.append("carMarkId", brand);
     if (model) params.append("carModelId", model);
-    if (cityRegion) params.append("cityId", cityRegion);
+    if (location.regionId) params.append("regionId", location.regionId);
+    if (location.cityId) params.append("cityId", location.cityId);
     if (driveType) params.append("driveTypeId", driveType);
     if (condition) params.append("carConditionId", condition);
     if (bodyType) params.append("subcategoryId", bodyType);
@@ -400,9 +419,12 @@ const SearchForm = () => {
                         {filteredRegions.length > 0 ? (
                           filteredRegions.map((region) => (
                             <SearchableSelectGroup key={region.id}>
-                              <SearchableSelectLabel className="text-gray-700 font-medium">
+                              <SearchableSelectItem
+                                value={region.id}
+                                className="text-base font-rale cursor-pointer font-medium text-gray-700"
+                              >
                                 {region.name}
-                              </SearchableSelectLabel>
+                              </SearchableSelectItem>
                               {region.cities.map((city) => (
                                 <SearchableSelectItem
                                   key={city.id}
