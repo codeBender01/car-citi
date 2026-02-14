@@ -77,23 +77,33 @@ const Footer = () => {
                 {t("footer.dealers.title")}
               </h3>
               <ul className="space-y-3 font-dm text-[15px]">
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Toyota
+                <li>
+                  <Link to="/auto-dealers" className="cursor-pointer hover:text-primary transition-colors">
+                    Toyota
+                  </Link>
                 </li>
 
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  BMW
+                <li>
+                  <Link to="/auto-dealers" className="cursor-pointer hover:text-primary transition-colors">
+                    BMW
+                  </Link>
                 </li>
 
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Mercedes Benz
+                <li>
+                  <Link to="/auto-dealers" className="cursor-pointer hover:text-primary transition-colors">
+                    Mercedes Benz
+                  </Link>
                 </li>
 
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Kia
+                <li>
+                  <Link to="/auto-dealers" className="cursor-pointer hover:text-primary transition-colors">
+                    Kia
+                  </Link>
                 </li>
-                <li className="cursor-pointer hover:text-primary transition-colors">
-                  Hyundai
+                <li>
+                  <Link to="/auto-dealers" className="cursor-pointer hover:text-primary transition-colors">
+                    Hyundai
+                  </Link>
                 </li>
               </ul>
             </div>

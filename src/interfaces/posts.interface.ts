@@ -51,21 +51,7 @@ export interface OnePost {
   };
   damage: string;
   carPrice: {
-    customPrice: string;
-    prefixPrice: string;
     price: number;
-    suffixPrice: string;
-  };
-  carMap: {
-    address: string;
-    latitude: string;
-    location: string;
-    longitude: string;
-    mapUrl: string;
-  };
-  fuelType: {
-    id: string;
-    name: string;
   };
   id: string;
   images: {
@@ -89,6 +75,14 @@ export interface OnePost {
   isFavorite?: boolean;
   verifiedStatus: string;
   isActive: boolean;
+  fuelType?: {
+    id: string;
+    name: string;
+  };
+  subcategory?: {
+    id: string;
+    name: string;
+  };
   characteristics?: {
     id: string;
     name: string;

@@ -50,7 +50,10 @@ const CarDetails = () => {
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
-      await navigator.share({ title: `${car?.carMark?.name} ${car?.carModel?.name}`, url });
+      await navigator.share({
+        title: `${car?.carMark?.name} ${car?.carModel?.name}`,
+        url,
+      });
     } else {
       await navigator.clipboard.writeText(url);
       toast({
@@ -107,8 +110,7 @@ const CarDetails = () => {
         {car?.carMark?.name}, {car?.carModel?.name}
       </div>
       <p className="font-dm text-base lg:flex hidden">
-        {car?.transmission?.name} • {car?.fuelType?.name} •{" "}
-        {dayjs(car?.issueYear).format("DD.MM.YYYY")}
+        {car?.transmission?.name} • {dayjs(car?.issueYear).format("DD.MM.YYYY")}
       </p>
       <div className="mt-5 flex justify-between gap-4 xl:gap-0">
         <div className="w-full lg:w-[65%]">
@@ -131,7 +133,7 @@ const CarDetails = () => {
               {car?.carMark?.name}, {car?.carModel?.name}
             </div>
             <p className="font-dm text-base lg:hidden flex">
-              {car?.transmission?.name} • {car?.fuelType?.name} •{" "}
+              {car?.transmission?.name} •{" "}
               {dayjs(car?.issueYear).format("DD.MM.YYYY")}
             </p>
           </div>

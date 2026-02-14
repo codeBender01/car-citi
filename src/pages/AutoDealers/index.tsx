@@ -17,7 +17,12 @@ const AutoDealers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
 
-  const { data: users } = useGetUsers(currentPage, PAGE_SIZE, "Business", search || undefined);
+  const { data: users } = useGetUsers(
+    currentPage,
+    PAGE_SIZE,
+    "Business",
+    search || undefined,
+  );
 
   const dealers = users?.data?.users || [];
   const totalItems = users?.data?.count || 0;
@@ -43,18 +48,18 @@ const AutoDealers = () => {
             setCurrentPage(1);
           }}
           placeholder={t("autoDealers.searchPlaceholder")}
-          className="w-full pl-12 pr-4 py-4 bg-gray-100 rounded-xl font-dm text-base text-textPrimary placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-primary/20"
+          className="w-full md:max-w-[300px] pl-12 pr-4 py-4 bg-gray-100 rounded-xl font-dm text-base text-textPrimary placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-primary/20"
         />
       </div>
 
-      <div className="mt-[50px] grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-7">
+      <div className="mt-8 md:mt-[50px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-7">
         {dealers.length > 0 ? (
           dealers.map((dealer) => (
             <div
               key={dealer.id}
-              className="flex flex-col items-center bg-white border border-grayBorder rounded-2xl p-6 gap-4"
+              className="flex flex-col items-center bg-white border border-grayBorder rounded-2xl p-4 md:p-6 gap-3 md:gap-4"
             >
-              <div className="w-[140px] h-[140px] rounded-full overflow-hidden bg-gray-100">
+              <div className="w-[100px] h-[100px] md:w-[140px] md:h-[140px] rounded-full overflow-hidden bg-gray-100">
                 {dealer.businesProfile?.logo ? (
                   <img
                     src={`${BASE_URL}/${dealer.userProfile?.avatar}`}
@@ -68,7 +73,7 @@ const AutoDealers = () => {
                 )}
               </div>
 
-              <div className="text-xl font-rale font-bold text-textPrimary text-center">
+              <div className="text-base md:text-xl font-rale font-bold text-textPrimary text-center">
                 {dealer.businesProfile?.name || t("autoDealers.unnamed")}
               </div>
 
@@ -81,7 +86,7 @@ const AutoDealers = () => {
               <Button
                 size="none"
                 onClick={() => navigate(`/all-cars?dealerId=${dealer.id}`)}
-                className="w-full bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl flex items-center justify-center gap-2.5 py-[14px] font-medium"
+                className="w-full bg-primary text-white font-dm text-sm md:text-[15px] cursor-pointer rounded-xl flex items-center justify-center gap-2 md:gap-2.5 py-3 md:py-[14px] font-medium"
               >
                 {t("autoDealers.details")}
                 <BsArrowUpRight />

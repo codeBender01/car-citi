@@ -27,6 +27,11 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import dayjs from "dayjs";
 import { BASE_URL } from "@/api";
+import type { OnePost } from "@/interfaces/posts.interface";
+import CarPreviewDrawer from "./ui/CarPreviewDrawer";
+import CarImageGallery from "./ui/CarImageGallery";
+
+import { Image } from "lucide-react";
 
 const AdminCars = () => {
   const { toast } = useToast();
@@ -36,6 +41,10 @@ const AdminCars = () => {
     "checking" | "confirmed" | "rejected" | "all"
   >("all");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [selectedCar, setSelectedCar] = useState<OnePost | null>(null);
+  const [galleryImages, setGalleryImages] = useState<
+    { hashblur: string; url: string }[] | null
+  >(null);
 
   const ITEMS_PER_PAGE = 10;
 
@@ -56,6 +65,8 @@ const AdminCars = () => {
     status: statusFilter === "all" ? undefined : statusFilter,
     language: "ru",
   });
+
+  console.log(adminCars);
 
   const updateCarStatus = useUpdateCarStatus();
   const enableCar = useEnableCar();
@@ -106,7 +117,8 @@ const AdminCars = () => {
     try {
       await verifyCar.mutateAsync({
         carId,
-        verifiedStatus: currentStatus === "verified" ? "notVerified" : "verified",
+        verifiedStatus:
+          currentStatus === "verified" ? "notVerified" : "verified",
       });
       toast({
         title: "Успешно",
@@ -200,127 +212,134 @@ const AdminCars = () => {
           </div>
         ) : (
           <>
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-mainBg hover:bg-mainBg border-none">
-                  <TableHead className="font-dm font-medium text-base text-primary">
-                    Объявление
-                  </TableHead>
-                  <TableHead className="font-dm font-medium text-base text-primary">
-                    Марка
-                  </TableHead>
-                  <TableHead className="font-dm font-medium text-base text-primary">
-                    Год
-                  </TableHead>
-                  <TableHead className="font-dm font-medium text-base text-primary">
-                    КП
-                  </TableHead>
-                  <TableHead className="font-dm font-medium text-base text-primary">
-                    Тип топлива
-                  </TableHead>
-                  <TableHead className="font-dm font-medium text-base text-primary">
-                    Статус
-                  </TableHead>
-                  <TableHead className="font-dm font-medium text-base text-primary">
-                    Вкл/Выкл
-                  </TableHead>
-                  <TableHead className="font-dm font-medium text-base text-primary">
-                    Проверенные
-                  </TableHead>
-                  <TableHead className="font-dm font-medium text-base text-primary">
-                    Действие
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {posts.map((post) => (
-                  <TableRow key={post.id} className="hover:bg-mainBg/50">
-                    <TableCell>
-                      <div className="flex items-center gap-4">
-                        <img
-                          src={
-                            post.images?.images?.[0]?.url
-                              ? `${BASE_URL}/${post.images.images[0].url}`
-                              : "https://via.placeholder.com/135x110"
-                          }
-                          alt={`${post.carMark?.name} ${post.carModel?.name}`}
-                          className="w-[135px] h-[110px] rounded-lg object-cover"
-                        />
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-dm text-sm text-textSecondary">
-                      {post.carMark?.name} {post.carModel?.name}
-                    </TableCell>
-                    <TableCell className="font-dm text-sm text-textSecondary">
-                      {post.issueYear
-                        ? dayjs(post.issueYear).format("YYYY")
-                        : "-"}
-                    </TableCell>
-                    <TableCell className="font-dm text-sm text-textSecondary">
-                      {post.transmission?.name || "-"}
-                    </TableCell>
-                    <TableCell className="font-dm text-sm text-textSecondary">
-                      {post.fuelType?.name || "-"}
-                    </TableCell>
-                    <TableCell>
-                      <span
-                        className={`font-dm text-sm font-medium ${getStatusColor(
-                          post.status || "checking",
-                        )}`}
-                      >
-                        {getStatusLabel(post.status || "checking")}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Switch
-                        checked={post.isActive ?? false}
-                        onCheckedChange={() => handleEnableToggle(post.id)}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Checkbox
-                        checked={post.verifiedStatus === "verified"}
-                        onCheckedChange={() =>
-                          handleVerifyToggle(post.id, post.verifiedStatus)
-                        }
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Select
-                          defaultValue={post.status || "checking"}
-                          onValueChange={(value) =>
-                            handleStatusChange(post.id, value)
-                          }
-                        >
-                          <SelectTrigger className="w-[140px] h-9 text-xs">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="bg-white">
-                            <SelectItem value="checking">
-                              На проверке
-                            </SelectItem>
-                            <SelectItem value="confirmed">
-                              Подтвердить
-                            </SelectItem>
-                            <SelectItem value="rejected">Отклонить</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <button
-                          onClick={() =>
-                            window.open(`/car-details/${post.id}`, "_blank")
-                          }
-                          className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-primary"
-                          title="Просмотр"
-                        >
-                          <FiEye size={18} />
-                        </button>
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-mainBg hover:bg-mainBg border-none">
+                    <TableHead className="font-dm font-medium text-base text-primary">
+                      Объявление
+                    </TableHead>
+                    <TableHead className="font-dm font-medium text-base text-primary">
+                      Марка
+                    </TableHead>
+                    <TableHead className="font-dm font-medium text-base text-primary">
+                      Год
+                    </TableHead>
+                    <TableHead className="font-dm font-medium text-base text-primary">
+                      КП
+                    </TableHead>
+                    <TableHead className="font-dm font-medium text-base text-primary">
+                      Тип топлива
+                    </TableHead>
+
+                    <TableHead className="font-dm font-medium text-base text-primary">
+                      Вкл/Выкл
+                    </TableHead>
+                    <TableHead className="font-dm font-medium text-base text-primary">
+                      Проверенные
+                    </TableHead>
+                    <TableHead className="font-dm font-medium text-base text-primary sticky right-0 bg-mainBg z-10">
+                      Действие
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {posts.map((post) => (
+                    <TableRow key={post.id} className="hover:bg-mainBg/50">
+                      <TableCell>
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={
+                              post.images?.images?.[0]?.url
+                                ? `${BASE_URL}/${post.images.images[0].url}`
+                                : "https://via.placeholder.com/135x110"
+                            }
+                            alt={`${post.carMark?.name} ${post.carModel?.name}`}
+                            className="w-[135px] h-[110px] rounded-lg object-cover"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-dm text-sm text-textSecondary">
+                        {post.carMark?.name} {post.carModel?.name}
+                      </TableCell>
+                      <TableCell className="font-dm text-sm text-textSecondary">
+                        {post.issueYear
+                          ? dayjs(post.issueYear).format("YYYY")
+                          : "-"}
+                      </TableCell>
+                      <TableCell className="font-dm text-sm text-textSecondary">
+                        {post.transmission?.name || "-"}
+                      </TableCell>
+
+                      <TableCell>
+                        <span
+                          className={`font-dm text-sm font-medium ${getStatusColor(
+                            post.status || "checking",
+                          )}`}
+                        >
+                          {getStatusLabel(post.status || "checking")}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <Switch
+                          checked={post.isActive ?? false}
+                          onCheckedChange={() => handleEnableToggle(post.id)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Checkbox
+                          checked={post.verifiedStatus === "verified"}
+                          onCheckedChange={() =>
+                            handleVerifyToggle(post.id, post.verifiedStatus)
+                          }
+                        />
+                      </TableCell>
+                      <TableCell className="sticky right-0 bg-white z-10">
+                        <div className="flex items-center gap-3">
+                          <Select
+                            defaultValue={post.status || "checking"}
+                            onValueChange={(value) =>
+                              handleStatusChange(post.id, value)
+                            }
+                          >
+                            <SelectTrigger className="w-[140px] h-9 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white">
+                              <SelectItem value="checking">
+                                На проверке
+                              </SelectItem>
+                              <SelectItem value="confirmed">
+                                Подтвердить
+                              </SelectItem>
+                              <SelectItem value="rejected">
+                                Отклонить
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <button
+                            onClick={() =>
+                              setGalleryImages(post.images?.images || [])
+                            }
+                            className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-primary"
+                            title="Фото"
+                          >
+                            <Image size={18} />
+                          </button>
+                          <button
+                            onClick={() => setSelectedCar(post)}
+                            className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-primary"
+                            title="Просмотр"
+                          >
+                            <FiEye size={18} />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
 
             {posts.length === 0 && !isLoading && (
               <div className="bg-white rounded-2xl px-9 py-16 border border-grayBorder text-center">
@@ -343,6 +362,18 @@ const AdminCars = () => {
           </>
         )}
       </div>
+
+      <CarPreviewDrawer
+        car={selectedCar}
+        onClose={() => setSelectedCar(null)}
+        onStatusChange={handleStatusChange}
+      />
+
+      <CarImageGallery
+        images={galleryImages || []}
+        open={!!galleryImages}
+        onClose={() => setGalleryImages(null)}
+      />
     </div>
   );
 };
