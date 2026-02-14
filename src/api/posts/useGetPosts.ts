@@ -25,6 +25,9 @@ export const useGetPosts = ({
   mileageFrom,
   mileageTo,
   colorId,
+  characteristicIds,
+  characteristicItemIds,
+  dealerId,
   "Accept-Language": acceptLanguage,
 }: PostsFilters = {}) => {
   return useQuery<ApiResponse<PostsList>>({
@@ -51,6 +54,9 @@ export const useGetPosts = ({
       mileageFrom,
       mileageTo,
       colorId,
+      characteristicIds,
+      characteristicItemIds,
+      dealerId,
       acceptLanguage,
     ],
     queryFn: async () => {
@@ -77,6 +83,9 @@ export const useGetPosts = ({
           mileageFrom,
           mileageTo,
           colorId,
+          characteristicIds,
+          characteristicItemIds,
+          dealerId,
         },
         headers: acceptLanguage
           ? {

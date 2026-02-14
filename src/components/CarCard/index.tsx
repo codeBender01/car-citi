@@ -7,7 +7,7 @@ import Speedometer from "@/svgs/Speedometer";
 import Calendar from "@/svgs/Calendar";
 
 import { BsArrowUpRight, BsBookmark, BsBookmarkFill } from "react-icons/bs";
-import { FiCheck } from "react-icons/fi";
+import { HiShieldCheck } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { useAddPostToFavorites } from "@/api/posts/useAddToFavorites";
 import { useToast } from "@/hooks/use-toast";
@@ -35,9 +35,10 @@ const CarCard = ({ car }: CarCardProps) => {
     addToFavorites.mutate(car.id, {
       onSuccess: () => {
         toast({
-          title: "isFavorite" in car && car.isFavorite
-            ? "Удалено из избранного"
-            : "Добавлено в избранное",
+          title:
+            "isFavorite" in car && car.isFavorite
+              ? "Удалено из избранного"
+              : "Добавлено в избранное",
           duration: 1000,
         });
       },
@@ -104,8 +105,8 @@ const CarCard = ({ car }: CarCardProps) => {
       >
         <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
           {car.verifiedStatus === "verified" && (
-            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-              <FiCheck className="w-4 h-4 text-white" strokeWidth={3} />
+            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+              <HiShieldCheck className=" text-primary" size={22} />
             </div>
           )}
           <div

@@ -36,3 +36,33 @@ export interface AdminSignInResp {
     password: string;
   };
 }
+
+export interface UsersResp {
+  count: number;
+  users: OneUser[];
+}
+
+export interface OneUser {
+  accountType: string;
+  created: string;
+  id: string;
+  phone: string;
+  smsSubscribtion: string;
+  businesProfile?: {
+    baranchAddresses: string[];
+    emails: string[];
+    id: string;
+    logo: string;
+    name: string;
+    socialMedia: {
+      name: string;
+      url: string;
+    }[];
+  };
+  userProfile?: {
+    avatar: string;
+    email: string;
+    id: string;
+    name: string;
+  };
+}

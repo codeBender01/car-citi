@@ -4,6 +4,11 @@ export interface ProfileRes {
   id: string;
   phone: string;
   smsSubscribtion: boolean;
+  userProfile?: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
 }
 
 export interface AdminProfileRes {

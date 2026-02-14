@@ -82,3 +82,10 @@ export interface HomeCarModel {
   viewed: boolean;
   verifiedStatus?: string;
 }
+
+export interface StatsResp {
+  postCount: number;
+  dealerCount: number;
+  userCount: number;
+  successfulTransactionCount: number;
+}

@@ -1,8 +1,8 @@
 export interface PostsFilters {
   search?: string;
   vin?: string;
-  regionId?: string;
-  cityId?: string;
+  regionId?: string | string[];
+  cityId?: string | string[];
   carMarkId?: string;
   carModelId?: string;
   fuelTypeId?: string;
@@ -20,6 +20,9 @@ export interface PostsFilters {
   mileageFrom?: number;
   mileageTo?: number;
   colorId?: string;
+  characteristicIds?: string[];
+  characteristicItemIds?: string[];
+  dealerId?: string;
   "Accept-Language"?: string;
 }
 

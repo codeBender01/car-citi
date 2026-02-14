@@ -1,13 +1,9 @@
 import { BsApple, BsGooglePlay } from "react-icons/bs";
 import { FaTelegramPlane, FaInstagram, FaWhatsapp } from "react-icons/fa";
-import { Button } from "../ui/button";
-import land from "@assets/images/landscape.png";
-
 import { useLocation, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetSubcategoriesClient } from "@/api/carSpecsClient/useGetSubcategoriesClient";
-
-import { BsArrowUpRight } from "react-icons/bs";
+import DealersBanner from "@/components/DealersBanner";
 
 import { MdEmail } from "react-icons/md";
 
@@ -19,25 +15,12 @@ const Footer = () => {
   return (
     <>
       {location.pathname === "/all-cars" && (
-        <div className="bg-textPrimary flex h-[600px] mt-[200px]">
-          <div className="w-[50%] h-full">
-            <img src={land} alt="" className="object-cover h-full" />
-          </div>
-          <div className="w-[40%] mx-auto flex items-center flex-col justify-center gap-10 h-full text-white">
-            <div className="text-[40px] font-rale font-bold">
-              {t("footer.dealersBanner.title")}
-            </div>
-            <p className="font-dm text-base ">
-              {t("footer.dealersBanner.description")} 
-            </p>
-            <Button
-              size="none"
-              className="bg-transparent self-start text-white font-dm text-[15px] cursor-pointer rounded-xl w-fit flex items-center gap-2.5 py-[22.5px] font-medium px-[25px] border border-white"
-            >
-              <div>{t("footer.dealersBanner.fullList")}</div>
-              <BsArrowUpRight />
-            </Button>
-          </div>
+        <div className="mt-[200px]">
+          <DealersBanner
+            title={t("footer.dealersBanner.title")}
+            description={t("footer.dealersBanner.description")}
+            buttonText={t("footer.dealersBanner.fullList")}
+          />
         </div>
       )}
 

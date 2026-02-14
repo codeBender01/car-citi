@@ -426,6 +426,14 @@
     "details": "Giňişleýin",
     "models": "model"
   },
+  "autoDealers": {
+    "title": "Awtoulag satyjylary",
+    "breadcrumb": "Awtoulag satyjylary",
+    "details": "Giňişleýin",
+    "unnamed": "Ady ýok",
+    "searchPlaceholder": "Diler gözle...",
+    "noResults": "Diler tapylmady"
+  },
   "allCars": {
     "breadcrumb": {
       "home": "Baş sahypa",

@@ -6,20 +6,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  SearchableSelect,
-  SearchableSelectContent,
-  SearchableSelectGroup,
-  SearchableSelectItem,
-  SearchableSelectTrigger,
-  SearchableSelectValue,
-} from "@/components/ui/searchable-select";
+  MultiSearchableSelect,
+  MultiSearchableSelectContent,
+  MultiSearchableSelectGroup,
+  MultiSearchableSelectItem,
+  MultiSearchableSelectTrigger,
+  MultiSearchableSelectValue,
+} from "@/components/ui/multi-searchable-select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
-import { IoCloseCircle } from "react-icons/io5";
+import { IoCloseCircle, IoBookmarkOutline } from "react-icons/io5";
 
 import { useGetRegions } from "@/api/regions/useGetRegions";
 import { useGetCarSpecsConditionsClient } from "@/api/carSpecsClient/useGetCarConditionsClient";
@@ -41,9 +41,10 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
   // Initialize state from URL params
   const [brand, setBrand] = useState(searchParams.get("carMarkId") || "");
   const [model, setModel] = useState(searchParams.get("carModelId") || "");
-  const [cityRegion, setCityRegion] = useState(
-    searchParams.get("cityId") || searchParams.get("regionId") || "",
-  );
+  const [cityRegions, setCityRegions] = useState<string[]>(() => [
+    ...searchParams.getAll("regionId"),
+    ...searchParams.getAll("cityId"),
+  ]);
   const [condition, setCondition] = useState(
     searchParams.get("carConditionId") || "",
   );
@@ -57,6 +58,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     searchParams.get("fuelTypeId") || "",
   );
   const [color, setColor] = useState(searchParams.get("colorId") || "");
+  const [subcategory] = useState(searchParams.get("subcategoryId") || "");
   const [yearFrom, setYearFrom] = useState(searchParams.get("yearFrom") || "");
   const [yearTo, setYearTo] = useState(searchParams.get("yearTo") || "");
   const [minPrice, setMinPrice] = useState(
@@ -70,8 +72,13 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     Number(searchParams.get("priceTo") || 100000),
   ]);
   const [citySearch, setCitySearch] = useState("");
+  const [selectedChars, setSelectedChars] = useState<string[]>(() =>
+    searchParams.getAll("characteristicIds"),
+  );
+  const [selectedCharItems, setSelectedCharItems] = useState<string[]>(() =>
+    searchParams.getAll("characteristicItemIds"),
+  );
 
-  // Fetch data from APIs
   const { data: regions } = useGetRegions(i18n.language);
   const { data: conditions } = useGetCarSpecsConditionsClient(i18n.language);
   const { data: driveTypes } = useGetDriveTypeClient(i18n.language);
@@ -80,55 +87,104 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
   const { data: chars } = useGetCharsClient(i18n.language);
   const { data: colors } = useGetColorsClient(i18n.language);
 
+  const handleCityRegionsChange = (newValues: string[]) => {
+    if (!regions?.data?.rows) {
+      setCityRegions(newValues);
+      return;
+    }
+    const added = newValues.filter((v) => !cityRegions.includes(v));
+    const removed = cityRegions.filter((v) => !newValues.includes(v));
+    let result = [...newValues];
+
+    for (const id of added) {
+      const region = regions.data.rows.find((r) => r.id === id);
+      if (region) {
+        const cityIds = region.cities.map((c) => c.id);
+        result = [...new Set([...result, ...cityIds])];
+      }
+    }
+
+    for (const id of removed) {
+      const region = regions.data.rows.find((r) => r.id === id);
+      if (region) {
+        const cityIds = new Set(region.cities.map((c) => c.id));
+        result = result.filter((v) => !cityIds.has(v));
+      }
+    }
+
+    setCityRegions(result);
+  };
+
+  const resolvedLocations = useMemo(() => {
+    const regionIds: string[] = [];
+    const cityIds: string[] = [];
+    if (!regions?.data?.rows || cityRegions.length === 0)
+      return { regionIds, cityIds };
+
+    for (const value of cityRegions) {
+      const isRegion = regions.data.rows.some((r) => r.id === value);
+      if (isRegion) {
+        regionIds.push(value);
+        continue;
+      }
+      for (const region of regions.data.rows) {
+        const city = region.cities.find((c) => c.id === value);
+        if (city) {
+          cityIds.push(city.id);
+          break;
+        }
+      }
+    }
+    return { regionIds, cityIds };
+  }, [cityRegions, regions]);
+
   // Update URL when filters change
   useEffect(() => {
     const params = new URLSearchParams();
 
+    // Preserve params not managed by Filters
+    const dealerId = searchParams.get("dealerId");
+    const categoryId = searchParams.get("categoryId");
+    if (dealerId) params.set("dealerId", dealerId);
+    if (categoryId) params.set("categoryId", categoryId);
+
     if (brand) params.set("carMarkId", brand);
     if (model) params.set("carModelId", model);
-    if (resolvedLocation.regionId) params.set("regionId", resolvedLocation.regionId);
-    if (resolvedLocation.cityId) params.set("cityId", resolvedLocation.cityId);
+    for (const id of resolvedLocations.regionIds) params.append("regionId", id);
+    for (const id of resolvedLocations.cityIds) params.append("cityId", id);
     if (fuelType) params.set("fuelTypeId", fuelType);
     if (driveType) params.set("driveTypeId", driveType);
     if (transmission) params.set("transmissionId", transmission);
     if (condition) params.set("carConditionId", condition);
     if (color) params.set("colorId", color);
+    if (subcategory) params.set("subcategoryId", subcategory);
     if (yearFrom) params.set("yearFrom", yearFrom);
     if (yearTo) params.set("yearTo", yearTo);
     if (minPrice && minPrice !== "0") params.set("priceFrom", minPrice);
     if (maxPrice && maxPrice !== "100000") params.set("priceTo", maxPrice);
+    for (const id of selectedChars) params.append("characteristicIds", id);
+    for (const id of selectedCharItems) params.append("characteristicItemIds", id);
 
     setSearchParams(params, { replace: true });
   }, [
     brand,
     model,
-    cityRegion,
+    cityRegions,
     fuelType,
     driveType,
     transmission,
     condition,
     color,
+    subcategory,
     yearFrom,
     yearTo,
     minPrice,
     maxPrice,
+    selectedChars,
+    selectedCharItems,
     setSearchParams,
+    resolvedLocations,
   ]);
-
-  const resolvedLocation = useMemo(() => {
-    if (!cityRegion || !regions?.data?.rows)
-      return { regionId: undefined, cityId: undefined };
-
-    const isRegion = regions.data.rows.some((r) => r.id === cityRegion);
-    if (isRegion) return { regionId: cityRegion, cityId: undefined };
-
-    for (const region of regions.data.rows) {
-      const city = region.cities.find((c) => c.id === cityRegion);
-      if (city) return { regionId: region.id, cityId: city.id };
-    }
-
-    return { regionId: undefined, cityId: undefined };
-  }, [cityRegion, regions]);
 
   const filteredRegions = useMemo(() => {
     if (!regions?.data?.rows) return [];
@@ -168,52 +224,66 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
       <div className="w-full border border-grayBorder rounded-2xl p-5">
         {/* Регион / Город */}
         <div className="relative">
-          <SearchableSelect value={cityRegion} onValueChange={setCityRegion}>
-            <SearchableSelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+          <MultiSearchableSelect
+            values={cityRegions}
+            onValuesChange={handleCityRegionsChange}
+          >
+            <MultiSearchableSelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
               <div className="flex flex-col gap-2 items-start w-full">
                 <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                   Регион / Город
                 </span>
-                <SearchableSelectValue placeholder="Выберите город" />
+                <MultiSearchableSelectValue
+                  placeholder="Выберите город"
+                  getLabel={(id) => {
+                    if (!regions?.data?.rows) return id;
+                    for (const r of regions.data.rows) {
+                      if (r.id === id) return r.name;
+                      const city = r.cities.find((c) => c.id === id);
+                      if (city) return city.name;
+                    }
+                    return id;
+                  }}
+                />
               </div>
-            </SearchableSelectTrigger>
-            <SearchableSelectContent
+            </MultiSearchableSelectTrigger>
+            <MultiSearchableSelectContent
               className="rounded-xl bg-white border border-[#7B3FF2]/20"
               onSearchChange={setCitySearch}
               searchPlaceholder="Поиск города..."
             >
               {filteredRegions.length > 0 ? (
                 filteredRegions.map((region) => (
-                  <SearchableSelectGroup key={region.id}>
-                    <SearchableSelectItem
+                  <MultiSearchableSelectGroup key={region.id}>
+                    <MultiSearchableSelectItem
                       value={region.id}
                       className="text-base font-rale cursor-pointer font-medium text-gray-700"
                     >
                       {region.name}
-                    </SearchableSelectItem>
+                    </MultiSearchableSelectItem>
                     {region.cities.map((city) => (
-                      <SearchableSelectItem
+                      <MultiSearchableSelectItem
                         key={city.id}
                         value={city.id}
                         className="text-base font-rale cursor-pointer pl-6"
                       >
                         {city.name}
-                      </SearchableSelectItem>
+                      </MultiSearchableSelectItem>
                     ))}
-                  </SearchableSelectGroup>
+                  </MultiSearchableSelectGroup>
                 ))
               ) : (
                 <div className="py-6 text-center text-sm text-gray-500">
                   Город не найден
                 </div>
               )}
-            </SearchableSelectContent>
-          </SearchableSelect>
-          {cityRegion && (
+            </MultiSearchableSelectContent>
+          </MultiSearchableSelect>
+          {cityRegions.length > 0 && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setCityRegion("");
+                setCityRegions([]);
               }}
               className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
             >
@@ -591,11 +661,51 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
 
           <div className="flex flex-col gap-4">
             {chars?.data.rows.slice(0, 8).map((char) => (
-              <div key={char.id} className="flex items-center gap-3">
-                <Checkbox className="w-5 h-5 data-[state=checked]:bg-[#0C1002]! data-[state=checked]:text-white! data-[state=checked]:border-[#0C1002]! border-[#0C1002]!" />
-                <label className="text-base font-rale text-textPrimary cursor-pointer">
-                  {char.name}
-                </label>
+              <div key={char.id} className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <Checkbox
+                    checked={selectedChars.includes(char.id)}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setSelectedChars((prev) => [...prev, char.id]);
+                        const itemIds = char.items?.map((item) => item.id) || [];
+                        setSelectedCharItems((prev) => [...new Set([...prev, ...itemIds])]);
+                      } else {
+                        setSelectedChars((prev) => prev.filter((id) => id !== char.id));
+                        const itemIds = new Set(char.items?.map((item) => item.id) || []);
+                        setSelectedCharItems((prev) => prev.filter((id) => !itemIds.has(id)));
+                      }
+                    }}
+                    className="w-5 h-5 data-[state=checked]:bg-[#0C1002]! data-[state=checked]:text-white! data-[state=checked]:border-[#0C1002]! border-[#0C1002]!"
+                  />
+                  <label className="text-base font-rale text-textPrimary cursor-pointer font-medium">
+                    {char.name}
+                  </label>
+                </div>
+                {char.items?.map((item) => (
+                  <div key={item.id} className="flex items-center gap-3 pl-6">
+                    <Checkbox
+                      checked={selectedCharItems.includes(item.id)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          const newItems = [...selectedCharItems, item.id];
+                          setSelectedCharItems(newItems);
+                          const allItemIds = char.items?.map((i) => i.id) || [];
+                          if (allItemIds.every((id) => newItems.includes(id))) {
+                            setSelectedChars((prev) => [...new Set([...prev, char.id])]);
+                          }
+                        } else {
+                          setSelectedCharItems((prev) => prev.filter((id) => id !== item.id));
+                          setSelectedChars((prev) => prev.filter((id) => id !== char.id));
+                        }
+                      }}
+                      className="w-5 h-5 data-[state=checked]:bg-[#0C1002]! data-[state=checked]:text-white! data-[state=checked]:border-[#0C1002]! border-[#0C1002]!"
+                    />
+                    <label className="text-base font-rale text-textPrimary cursor-pointer">
+                      {item.name}
+                    </label>
+                  </div>
+                ))}
               </div>
             ))}
           </div>
@@ -611,6 +721,11 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
       <div className="text-base font-rale text-textPrimary">
         Найдено: {postsLoading ? "..." : postsCount} авто
       </div>
+
+      <button className="w-full flex items-center justify-center cursor-pointer gap-3 py-4 px-6 border border-[#88BA00] rounded-2xl bg-[#FBFCF9] text-[#88BA00] font-rale text-base font-medium hover:bg-[#f5f7f0] transition-colors">
+        <IoBookmarkOutline size={20} />
+        Сохранить поисковые настройки
+      </button>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
+import { BASE_URL } from "@/api";
 import { useGetProfile } from "@/api/auth/useGetProfile";
 import { useUpdatePersonalProfile } from "@/api/profile/useUpdatePersonalProfile";
 import { useUploadSingle } from "@/api/upload/useUploadSingle";
@@ -15,7 +16,7 @@ import { useDeleteAccount } from "@/api/profile/useDeleteAccount";
 import type { UpdatePersonalProfileReq } from "@/interfaces/profile.interface";
 
 const Profile = () => {
-  const { data: profile } = useGetProfile();
+  const { data: profile, isLoading: profileLoading } = useGetProfile();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -37,7 +38,12 @@ const Profile = () => {
         setPersonalProfile({
           ...personalProfile,
           smsSubscribtion: profile.data.smsSubscribtion,
+          name: profile.data.userProfile?.name || "",
+          avatar: profile.data.userProfile?.avatar || "",
         });
+        if (profile.data.userProfile?.avatar) {
+          setAvatarPreview(`${BASE_URL}/${profile.data.userProfile.avatar}`);
+        }
       }
     }
   }, [profile]);
@@ -101,6 +107,14 @@ const Profile = () => {
       });
     }
   };
+
+  if (profileLoading) {
+    return (
+      <div className="p-4 md:p-[35px] 2xl:p-[60px] flex items-center justify-center min-h-[50vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 md:p-[35px] 2xl:p-[60px]">
@@ -167,6 +181,7 @@ const Profile = () => {
                 name: e.target.value,
               });
             }}
+            value={personalProfile.name}
             label="Имя"
             placeholder="Введите ваше имя"
           />

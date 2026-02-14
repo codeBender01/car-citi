@@ -25,8 +25,8 @@ const AllCars = () => {
   // Get all filter parameters from URL
   const brand = searchParams.get("carMarkId") || undefined;
   const model = searchParams.get("carModelId") || undefined;
-  const regionId = searchParams.get("regionId") || undefined;
-  const cityId = searchParams.get("cityId") || undefined;
+  const regionIds = searchParams.getAll("regionId");
+  const cityIds = searchParams.getAll("cityId");
   const condition = searchParams.get("carConditionId") || undefined;
   const driveType = searchParams.get("driveTypeId") || undefined;
   const transmission = searchParams.get("transmissionId") || undefined;
@@ -42,12 +42,15 @@ const AllCars = () => {
   const priceTo = searchParams.get("priceTo")
     ? Number(searchParams.get("priceTo"))
     : undefined;
+  const characteristicIds = searchParams.getAll("characteristicIds");
+  const characteristicItemIds = searchParams.getAll("characteristicItemIds");
+  const dealerId = searchParams.get("dealerId") || undefined;
 
   const { data: posts, isLoading: postsLoading } = useGetPosts({
     carMarkId: brand,
     carModelId: model,
-    regionId: regionId,
-    cityId: cityId,
+    regionId: regionIds.length > 0 ? regionIds : undefined,
+    cityId: cityIds.length > 0 ? cityIds : undefined,
     fuelTypeId: fuelType,
     driveTypeId: driveType,
     transmissionId: transmission,
@@ -59,6 +62,9 @@ const AllCars = () => {
     yearTo: yearTo,
     priceFrom: priceFrom,
     priceTo: priceTo,
+    characteristicIds: characteristicIds.length > 0 ? characteristicIds : undefined,
+    characteristicItemIds: characteristicItemIds.length > 0 ? characteristicItemIds : undefined,
+    dealerId,
     "Accept-Language": i18n.language,
   });
 

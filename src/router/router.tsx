@@ -12,6 +12,7 @@ const AboutUs = lazy(() => import("@pages/AboutUs"));
 const CarDetails = lazy(() => import("@pages/CarDetails"));
 const AllCars = lazy(() => import("@pages/AllCars"));
 const AllBrands = lazy(() => import("@pages/AllBrands"));
+const AutoDealers = lazy(() => import("@pages/AutoDealers"));
 const MyPosts = lazy(() => import("@pages/MyPosts"));
 const Favorites = lazy(() => import("@pages/Favorites"));
 const SavedSearch = lazy(() => import("@pages/SavedSearch"));
@@ -92,6 +93,10 @@ export default function Router() {
         {
           path: "/all-brands",
           element: <AllBrands />,
+        },
+        {
+          path: "/auto-dealers",
+          element: <AutoDealers />,
         },
         {
           path: "/saved",

@@ -10,13 +10,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  SearchableSelect,
-  SearchableSelectContent,
-  SearchableSelectGroup,
-  SearchableSelectItem,
-  SearchableSelectTrigger,
-  SearchableSelectValue,
-} from "@/components/ui/searchable-select";
+  MultiSearchableSelect,
+  MultiSearchableSelectContent,
+  MultiSearchableSelectGroup,
+  MultiSearchableSelectItem,
+  MultiSearchableSelectTrigger,
+  MultiSearchableSelectValue,
+} from "@/components/ui/multi-searchable-select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -44,7 +44,7 @@ const SearchForm = () => {
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
   const [bodyType, setBodyType] = useState("");
-  const [cityRegion, setCityRegion] = useState("");
+  const [cityRegions, setCityRegions] = useState<string[]>([]);
   const [condition, setCondition] = useState("");
   const [driveType, setDriveType] = useState("");
   const [minPrice, setMinPrice] = useState("0");
@@ -79,28 +79,63 @@ const SearchForm = () => {
     };
   }, [year]);
 
-  const resolveLocation = (value: string) => {
-    if (!value || !regions?.data?.rows)
-      return { regionId: undefined, cityId: undefined };
+  const resolveLocations = (values: string[]) => {
+    const regionIds: string[] = [];
+    const cityIds: string[] = [];
+    if (!regions?.data?.rows) return { regionIds, cityIds };
 
-    const isRegion = regions.data.rows.some((r) => r.id === value);
-    if (isRegion) return { regionId: value, cityId: undefined };
-
-    for (const region of regions.data.rows) {
-      const city = region.cities.find((c) => c.id === value);
-      if (city) return { regionId: region.id, cityId: city.id };
+    for (const value of values) {
+      const isRegion = regions.data.rows.some((r) => r.id === value);
+      if (isRegion) {
+        regionIds.push(value);
+        continue;
+      }
+      for (const region of regions.data.rows) {
+        const city = region.cities.find((c) => c.id === value);
+        if (city) {
+          cityIds.push(city.id);
+          break;
+        }
+      }
     }
-
-    return { regionId: undefined, cityId: undefined };
+    return { regionIds, cityIds };
   };
 
-  const resolvedLocation = resolveLocation(cityRegion);
+  const handleCityRegionsChange = (newValues: string[]) => {
+    if (!regions?.data?.rows) {
+      setCityRegions(newValues);
+      return;
+    }
+    const added = newValues.filter((v) => !cityRegions.includes(v));
+    const removed = cityRegions.filter((v) => !newValues.includes(v));
+    let result = [...newValues];
+
+    for (const id of added) {
+      const region = regions.data.rows.find((r) => r.id === id);
+      if (region) {
+        const cityIds = region.cities.map((c) => c.id);
+        result = [...new Set([...result, ...cityIds])];
+      }
+    }
+
+    for (const id of removed) {
+      const region = regions.data.rows.find((r) => r.id === id);
+      if (region) {
+        const cityIds = new Set(region.cities.map((c) => c.id));
+        result = result.filter((v) => !cityIds.has(v));
+      }
+    }
+
+    setCityRegions(result);
+  };
+
+  const resolvedLocations = resolveLocations(cityRegions);
 
   const { data: posts, isLoading: postsLoading } = useGetPosts({
     carMarkId: brand || undefined,
     carModelId: model || undefined,
-    regionId: resolvedLocation.regionId,
-    cityId: resolvedLocation.cityId,
+    regionId: resolvedLocations.regionIds.length > 0 ? resolvedLocations.regionIds : undefined,
+    cityId: resolvedLocations.cityIds.length > 0 ? resolvedLocations.cityIds : undefined,
     driveTypeId: driveType || undefined,
     carConditionId: condition || undefined,
     subcategoryId: bodyType || undefined,
@@ -114,12 +149,12 @@ const SearchForm = () => {
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-    const location = resolveLocation(cityRegion);
+    const locations = resolveLocations(cityRegions);
 
     if (brand) params.append("carMarkId", brand);
     if (model) params.append("carModelId", model);
-    if (location.regionId) params.append("regionId", location.regionId);
-    if (location.cityId) params.append("cityId", location.cityId);
+    for (const id of locations.regionIds) params.append("regionId", id);
+    for (const id of locations.cityIds) params.append("cityId", id);
     if (driveType) params.append("driveTypeId", driveType);
     if (condition) params.append("carConditionId", condition);
     if (bodyType) params.append("subcategoryId", bodyType);
@@ -378,7 +413,6 @@ const SearchForm = () => {
               </div>
             </Button>
 
-            {/* Expandable advanced filters */}
             <div
               className={`hidden lg:contents transition-all duration-300 ease-in-out ${
                 isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
@@ -397,57 +431,66 @@ const SearchForm = () => {
 
                   {/* Город / Регион */}
                   <div className="relative">
-                    <SearchableSelect
-                      value={cityRegion}
-                      onValueChange={setCityRegion}
+                    <MultiSearchableSelect
+                      values={cityRegions}
+                      onValuesChange={handleCityRegionsChange}
                     >
-                      <SearchableSelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <MultiSearchableSelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             {t("filters.cityRegion")}
                           </span>
-                          <SearchableSelectValue
+                          <MultiSearchableSelectValue
                             placeholder={t("filters.chooseCity")}
+                            getLabel={(id) => {
+                              if (!regions?.data?.rows) return id;
+                              for (const r of regions.data.rows) {
+                                if (r.id === id) return r.name;
+                                const city = r.cities.find((c) => c.id === id);
+                                if (city) return city.name;
+                              }
+                              return id;
+                            }}
                           />
                         </div>
-                      </SearchableSelectTrigger>
-                      <SearchableSelectContent
+                      </MultiSearchableSelectTrigger>
+                      <MultiSearchableSelectContent
                         className="rounded-xl bg-white border border-[#7B3FF2]/20"
                         onSearchChange={setCitySearch}
                         searchPlaceholder={t("filters.searchCity")}
                       >
                         {filteredRegions.length > 0 ? (
                           filteredRegions.map((region) => (
-                            <SearchableSelectGroup key={region.id}>
-                              <SearchableSelectItem
+                            <MultiSearchableSelectGroup key={region.id}>
+                              <MultiSearchableSelectItem
                                 value={region.id}
                                 className="text-base font-rale cursor-pointer font-medium text-gray-700"
                               >
                                 {region.name}
-                              </SearchableSelectItem>
+                              </MultiSearchableSelectItem>
                               {region.cities.map((city) => (
-                                <SearchableSelectItem
+                                <MultiSearchableSelectItem
                                   key={city.id}
                                   value={city.id}
                                   className="text-base font-rale cursor-pointer pl-6"
                                 >
                                   {city.name}
-                                </SearchableSelectItem>
+                                </MultiSearchableSelectItem>
                               ))}
-                            </SearchableSelectGroup>
+                            </MultiSearchableSelectGroup>
                           ))
                         ) : (
                           <div className="py-6 text-center text-sm text-gray-500">
                             {t("filters.cityNotFound")}
                           </div>
                         )}
-                      </SearchableSelectContent>
-                    </SearchableSelect>
-                    {cityRegion && (
+                      </MultiSearchableSelectContent>
+                    </MultiSearchableSelect>
+                    {cityRegions.length > 0 && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          setCityRegion("");
+                          setCityRegions([]);
                         }}
                         className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
                       >
@@ -908,9 +951,7 @@ const SearchForm = () => {
             className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl w-[90%] flex items-center gap-2.5 py-[22.5px] font-medium px-[25px]"
           >
             <CiSearch />
-            <div>
-              {t("filters.searchCars")}
-            </div>
+            <div>{t("filters.searchCars")}</div>
           </Button>
         </div>
       </div>

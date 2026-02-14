@@ -267,6 +267,14 @@
     "whatsapp": "WhatsApp",
     "website": "Website"
   },
+  "autoDealers": {
+    "title": "Auto Dealers",
+    "breadcrumb": "Auto Dealers",
+    "details": "Details",
+    "unnamed": "Unnamed",
+    "searchPlaceholder": "Search dealers...",
+    "noResults": "No dealers found"
+  },
   "faqAdmin": {
     "addFaq": "Add faq"
   }

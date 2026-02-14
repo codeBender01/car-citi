@@ -426,6 +426,14 @@
     "details": "Подробнее",
     "models": "моделей"
   },
+  "autoDealers": {
+    "title": "Авто Дилеры",
+    "breadcrumb": "Авто Дилеры",
+    "details": "Подробнее",
+    "unnamed": "Без названия",
+    "searchPlaceholder": "Поиск дилеров...",
+    "noResults": "Дилеры не найдены"
+  },
   "allCars": {
     "breadcrumb": {
       "home": "Домашняя страница",

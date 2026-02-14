@@ -4,6 +4,7 @@ import heroMobile from "@assets/aboutUs/heroMobile.png";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useGetHomeStats } from "@/api/home/useGetHomeCount";
 
 import { BsArrowUpRight } from "react-icons/bs";
 import GreenArrow from "@/svgs/GreenArrow";
@@ -29,6 +30,7 @@ const AboutUs = () => {
   const [openQuestionId, setOpenQuestionId] = useState<null | string>(null);
 
   const { data: faqs } = useGetFaqs(i18n.language);
+  const { data: stats } = useGetHomeStats();
 
   const handleToggle = (id: string) => {
     if (openQuestionId && id === openQuestionId) {
@@ -73,7 +75,7 @@ const AboutUs = () => {
           </p>
         </div>
       </div>
-      <StatsSection />
+      <StatsSection counts={stats?.data} />
 
       <div className="lg:bg-transparent bg-[#0C1002] lg:mt-[180px] py-6 mx-4 px-[30px] md:px-12 xl:px-[120px] 2xl:px-[118px] flex xl:flex-row flex-col gap-5">
         <div className="w-full xl:w-[60%]">
