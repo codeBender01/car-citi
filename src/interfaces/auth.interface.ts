@@ -34,6 +34,7 @@ export interface AdminSignInResp {
     login: string;
     created: string;
     password: string;
+    roles: string[];
   };
 }
 

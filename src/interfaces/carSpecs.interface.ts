@@ -193,3 +193,21 @@ export interface OneCarEquipment {
   id: string;
   name: string;
 }
+
+export interface NewOfferType {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+}
+
+export interface OneOfferType {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+  name: string;
+}
+
+export interface OfferTypesList {
+  count: number;
+  rows: OneOfferType[];
+}

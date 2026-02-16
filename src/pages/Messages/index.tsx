@@ -38,6 +38,7 @@ const Messages = () => {
   const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const currentRoomIdRef = useRef<string | null>(null);
 
   const conversations: Conversation[] = rooms.map((room) => ({
     id: room.id,
@@ -96,6 +97,7 @@ const Messages = () => {
   }, [messages]);
 
   useEffect(() => {
+    currentRoomIdRef.current = currentRoomId;
     if (currentRoomId && isConnected) {
       setMessages([]);
       fetchMessagesForRoom(currentRoomId);
@@ -144,13 +146,15 @@ const Messages = () => {
         setIsConnected(false);
       },
       onNewMessage: (socketMessage: any) => {
-        if (socketMessage.roomId !== currentRoomId) {
+        if (socketMessage.roomId !== currentRoomIdRef.current) {
           return;
         }
 
-        const isUserMessage = !socketMessage.adminId;
+        // Skip own messages — already added optimistically
+        if (!socketMessage.adminId) return;
+
         const authorId =
-          socketMessage.userId || socketMessage.adminId || socketMessage.id;
+          socketMessage.adminId || socketMessage.id;
 
         const newMessage: Message = {
           id:
@@ -163,7 +167,7 @@ const Messages = () => {
             hour: "2-digit",
             minute: "2-digit",
           }),
-          isCurrentUser: isUserMessage,
+          isCurrentUser: false,
         };
 
         setMessages((prev) => [...prev, newMessage]);

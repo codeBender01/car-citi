@@ -108,6 +108,7 @@
     "driveType": "Drive Type",
     "transmission": "Transmission",
     "fuelType": "Fuel Type",
+    "offerType": "Offer Type",
     "color": "Color",
     "interiorColor": "Interior Color",
     "doors": "Doors",

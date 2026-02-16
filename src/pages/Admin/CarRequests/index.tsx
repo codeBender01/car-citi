@@ -2,13 +2,6 @@ import { FiEye } from "react-icons/fi";
 import Pagination from "@/components/Pagination";
 import { CiSearch } from "react-icons/ci";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { useGetAdminCars } from "@/api/posts/useGetAdminCars";
 import { useUpdateCarStatus } from "@/api/posts/useUpdateCarStatus";
@@ -28,18 +21,15 @@ import { useToast } from "@/hooks/use-toast";
 import dayjs from "dayjs";
 import { BASE_URL } from "@/api";
 import type { OnePost } from "@/interfaces/posts.interface";
-import CarPreviewDrawer from "./ui/CarPreviewDrawer";
-import CarImageGallery from "./ui/CarImageGallery";
+import CarPreviewDrawer from "../Cars/ui/CarPreviewDrawer";
+import CarImageGallery from "../Cars/ui/CarImageGallery";
 
 import { Image } from "lucide-react";
 
-const AdminCars = () => {
+const CarRequests = () => {
   const { toast } = useToast();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<
-    "checking" | "confirmed" | "rejected" | "all"
-  >("all");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedCar, setSelectedCar] = useState<OnePost | null>(null);
   const [galleryImages, setGalleryImages] = useState<
@@ -52,7 +42,7 @@ const AdminCars = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-      setCurrentPage(1); // Reset to first page on search
+      setCurrentPage(1);
     }, 500);
 
     return () => clearTimeout(timer);
@@ -62,11 +52,9 @@ const AdminCars = () => {
     page: currentPage,
     pageSize: ITEMS_PER_PAGE,
     search: debouncedSearch || undefined,
-    status: statusFilter === "all" ? undefined : statusFilter,
+    status: "checking",
     language: "ru",
   });
-
-  console.log(adminCars);
 
   const updateCarStatus = useUpdateCarStatus();
   const enableCar = useEnableCar();
@@ -163,14 +151,14 @@ const AdminCars = () => {
   return (
     <div className="p-[35px] 2xl:p-[60px]">
       <div className="font-dm text-textSecondary mb-10">
-        <div className="text-[32px] font-bold">Управление автомобилями</div>
+        <div className="text-[32px] font-bold">Заявки на проверку авто</div>
         <p className="text-textSecondary text-base">
-          Просмотр и модерация объявлений
+          Заявки на проверку автомобилей
         </p>
       </div>
 
       <div className="w-full border border-headerBorder rounded-2xl p-4">
-        {/* Filters */}
+        {/* Search */}
         <div className="my-6 flex justify-between items-center">
           <div className="text-textPrimary flex items-center flex-1 max-w-md">
             <CiSearch />
@@ -180,29 +168,6 @@ const AdminCars = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2.5">
-              <span className="text-textGray text-[15px] font-dm">Статус</span>
-              <Select
-                value={statusFilter}
-                onValueChange={(value) =>
-                  setStatusFilter(
-                    value as "checking" | "confirmed" | "rejected" | "all",
-                  )
-                }
-              >
-                <SelectTrigger className="border-none shadow-none p-0 h-auto gap-2 w-auto focus:ring-0">
-                  <SelectValue className="text-textPrimary text-[15px] font-dm" />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                  <SelectItem value="all">Все</SelectItem>
-                  <SelectItem value="checking">На проверке</SelectItem>
-                  <SelectItem value="confirmed">Подтверждено</SelectItem>
-                  <SelectItem value="rejected">Отклонено</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
           </div>
         </div>
 
@@ -357,4 +322,4 @@ const AdminCars = () => {
   );
 };
 
-export default AdminCars;
+export default CarRequests;

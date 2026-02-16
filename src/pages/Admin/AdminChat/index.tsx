@@ -51,6 +51,7 @@ const AdminChat = () => {
   const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const currentRoomIdRef = useRef<string | null>(null);
 
   const conversations: Conversation[] = rooms.map((room) => ({
     id: room.id,
@@ -102,6 +103,7 @@ const AdminChat = () => {
   };
 
   useEffect(() => {
+    currentRoomIdRef.current = currentRoomId;
     if (currentRoomId && isConnected) {
       setMessages([]);
       fetchMessagesForRoom(currentRoomId);
@@ -148,17 +150,17 @@ const AdminChat = () => {
         setIsConnected(false);
       },
       onNewMessage: (socketMessage: any) => {
-        console.log("📨 New message received:", socketMessage);
-
         // Check if message is from current room
-        if (socketMessage.roomId !== currentRoomId) {
+        if (socketMessage.roomId !== currentRoomIdRef.current) {
           console.log("⏭️ Message from different room, ignoring");
           return;
         }
 
-        const isAdminMessage = !!socketMessage.adminId;
+        // Skip own messages — already added optimistically
+        if (socketMessage.adminId) return;
+
         const authorId =
-          socketMessage.adminId || socketMessage.userId || socketMessage.id;
+          socketMessage.userId || socketMessage.id;
 
         const newMessage: Message = {
           id:
@@ -171,7 +173,7 @@ const AdminChat = () => {
             hour: "2-digit",
             minute: "2-digit",
           }),
-          isCurrentUser: isAdminMessage,
+          isCurrentUser: false,
         };
         setMessages((prev) => [...prev, newMessage]);
       },

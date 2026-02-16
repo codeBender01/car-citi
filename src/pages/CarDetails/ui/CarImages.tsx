@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { FaRegCirclePlay } from "react-icons/fa6";
 import { TiCameraOutline } from "react-icons/ti";
 import {
   MdOutlineKeyboardArrowLeft,
@@ -77,10 +76,10 @@ const CarImages = ({ images }: CarImagesProps) => {
         </button>
       </div>
 
-      <div className="bg-white text-base font-dm rounded-xl flex gap-2.5 items-center w-fit py-3.5 px-5 absolute bottom-2 left-2 z-10">
+      {/* <div className="bg-white text-base font-dm rounded-xl flex gap-2.5 items-center w-fit py-3.5 px-5 absolute bottom-2 left-2 z-10">
         <FaRegCirclePlay />
         Видео
-      </div>
+      </div> */}
       <div className="bg-white text-base font-dm rounded-xl flex gap-2.5 items-center w-fit py-3.5 px-5 absolute bottom-2 right-2 z-10">
         <TiCameraOutline size={20} />
         {carImages.length} фото

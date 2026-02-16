@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
-import { getTechChars } from "./lib/technicalChars";
 import CarsCarousel from "../Home/ui/CarsCarousel";
 import { useGetOnePost } from "@/api/posts/useGetOnePost";
 import { useGetSimilar } from "@/api/posts/useGetSimilar";
@@ -26,12 +25,12 @@ import { useToast } from "@/hooks/use-toast";
 import dayjs from "dayjs";
 
 const CarDetails = () => {
-  const [expandedChars, setExpandedChars] = useState<number[]>([]);
+  const [expandedChars, setExpandedChars] = useState<string[]>([]);
 
   const { id } = useParams();
   const { i18n, t } = useTranslation();
 
-  const toggleChar = (id: number) => {
+  const toggleChar = (id: string) => {
     setExpandedChars((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
@@ -45,7 +44,7 @@ const CarDetails = () => {
   const car = oneCar?.data;
 
   const serviceOptions = getServiceOptions(t, car?.verifiedStatus);
-  const techChars = getTechChars(t);
+
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -176,68 +175,61 @@ const CarDetails = () => {
               </div>
             </div>
           )}
-          <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
-            <div className="text-[22px] md:text-[26px]">
-              {t("carDetailsPage.technicalSpecs")}
-            </div>
-            <div className="mt-6 md:mt-10 flex justify-between flex-col">
-              {techChars.map((c) => {
-                const isExpanded = expandedChars.includes(c.id);
-                return (
-                  <div
-                    key={c.id}
-                    className={`py-[30px] ${
-                      c.id === 3 ? "" : "border-b border-grayBorder font-dm "
-                    }`}
-                  >
-                    <div
-                      className="text-lg flex items-center justify-between cursor-pointer"
-                      onClick={() => toggleChar(c.id)}
-                    >
-                      {c.text}
-                      <IoChevronDownOutline
-                        className={`transition-transform duration-300 ${
-                          isExpanded ? "rotate-180" : ""
+          {car?.characteristics && car.characteristics.length > 0 && (
+            <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
+              <div className="text-[22px] md:text-[26px]">
+                {t("carDetailsPage.technicalSpecs")}
+              </div>
+              <div className="mt-6 md:mt-10 flex justify-between flex-col">
+                {car.characteristics
+                  .filter((c) => c.items && c.items.length > 0)
+                  .map((c, index, arr) => {
+                    const isExpanded = expandedChars.includes(c.id);
+                    return (
+                      <div
+                        key={c.id}
+                        className={`py-[30px] ${
+                          index === arr.length - 1
+                            ? ""
+                            : "border-b border-grayBorder font-dm "
                         }`}
-                      />
-                    </div>
-                    <div
-                      className={`grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 overflow-hidden transition-all duration-300 ${
-                        isExpanded
-                          ? "mt-[15px] md:mt-[30px] max-h-[500px] opacity-100"
-                          : "max-h-0 opacity-0"
-                      }`}
-                    >
-                      <div className="text-base flex items-center w-full justify-between">
-                        <div>{t("carDetailsPage.dimensions.length")}</div>
-                        <div>4950mm</div>
+                      >
+                        <div
+                          className="text-lg flex items-center justify-between cursor-pointer"
+                          onClick={() => toggleChar(c.id)}
+                        >
+                          {c.name}
+                          <IoChevronDownOutline
+                            className={`transition-transform duration-300 ${
+                              isExpanded ? "rotate-180" : ""
+                            }`}
+                          />
+                        </div>
+                        <div
+                          className={`grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 overflow-hidden transition-all duration-300 ${
+                            isExpanded
+                              ? "mt-[15px] md:mt-[30px] max-h-[500px] opacity-100"
+                              : "max-h-0 opacity-0"
+                          }`}
+                        >
+                          {c.items.map((item) => (
+                            <div
+                              key={item.id}
+                              className="text-base flex items-center w-full gap-2.5"
+                            >
+                              <div className="w-5 h-5 rounded-full bg-[#EEF1FB] flex items-center justify-center shrink-0">
+                                <IoIosCheckmark className="text-primary" />
+                              </div>
+                              <div>{item.name}</div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <div className="text-base flex items-center w-full justify-between">
-                        <div>{t("carDetailsPage.dimensions.width")}</div>
-                        <div>2140mm</div>
-                      </div>
-                      <div className="text-base flex items-center w-full justify-between">
-                        <div>{t("carDetailsPage.dimensions.height")}</div>
-                        <div>1776mm</div>
-                      </div>
-                      <div className="text-base flex items-center w-full justify-between">
-                        <div>{t("carDetailsPage.dimensions.wheelbase")}</div>
-                        <div>2984mm</div>
-                      </div>
-                      <div className="text-base flex items-center w-full justify-between">
-                        <div>{t("carDetailsPage.dimensions.frontTrack")}</div>
-                        <div>1668mm</div>
-                      </div>
-                      <div className="text-base flex items-center w-full justify-between">
-                        <div>{t("carDetailsPage.dimensions.rearTrack")}</div>
-                        <div>1671mm</div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })}
+              </div>
             </div>
-          </div>
+          )}
           {/* <Map /> */}
           {/* <Reviews />
           <LeaveReviewForm /> */}

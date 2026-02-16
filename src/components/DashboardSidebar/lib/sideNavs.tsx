@@ -2,7 +2,7 @@ import AddPost from "@/svgs/sidebar/AddPost";
 import MyPosts from "@/svgs/sidebar/MyPosts";
 import { CiBookmark } from "react-icons/ci";
 import { LuMessagesSquare } from "react-icons/lu";
-// import { RiSearchLine } from "react-icons/ri";
+import { RiSearchLine } from "react-icons/ri";
 import { BsPersonSquare } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi";
 
@@ -27,11 +27,11 @@ export const sideNavs = [
     icon: <CiBookmark />,
     path: "/dashboard/favorites",
   },
-  // {
-  //   textKey: "dashboard.savedSearches",
-  //   icon: <RiSearchLine />,
-  //   path: "/dashboard/saved-search",
-  // },
+  {
+    textKey: "dashboard.savedSearches",
+    icon: <RiSearchLine />,
+    path: "/dashboard/saved-search",
+  },
   {
     textKey: "dashboard.messages",
     icon: <LuMessagesSquare />,

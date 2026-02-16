@@ -10,7 +10,7 @@ import axios from "axios";
 const AdminLayout = () => {
   const adminAccessToken = localStorage.getItem("adminAccessToken");
   const navigate = useNavigate();
-  const { isLoading, error } = useGetAdminProfile();
+  const { data: adminProfile, isLoading, error } = useGetAdminProfile();
 
   useEffect(() => {
     if (error && axios.isAxiosError(error)) {
@@ -38,7 +38,7 @@ const AdminLayout = () => {
       <AdminHeader />
 
       <div className="flex justify-between pr-[30px] h-[80%]">
-        <AdminSidebar />
+        <AdminSidebar roles={adminProfile?.data?.roles || []} />
         <div className="flex-1 bg-white rounded-2xl w-[70%]">
           <Outlet />
         </div>

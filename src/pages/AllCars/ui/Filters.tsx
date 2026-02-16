@@ -20,14 +20,20 @@ import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { IoCloseCircle, IoBookmarkOutline } from "react-icons/io5";
+import axios from "axios";
 
 import { useGetRegions } from "@/api/regions/useGetRegions";
+import { useSaveSearch } from "@/api/savedSearch/useSaveSearch";
+import { useToast } from "@/hooks/use-toast";
 import { useGetCarSpecsConditionsClient } from "@/api/carSpecsClient/useGetCarConditionsClient";
 import { useGetDriveTypeClient } from "@/api/carSpecsClient/useGetDriveTypeClient";
 import { useGetTransmissionClient } from "@/api/carSpecsClient/useGetTransmissionClient";
 import { useGetFuelTypeClient } from "@/api/carSpecsClient/useGetFuelTypeClient";
 import { useGetCharsClient } from "@/api/carSpecsClient/useGetCharsClient";
 import { useGetColorsClient } from "@/api/carSpecsClient/useGetColorsClient";
+import { useGetOfferTypesClient } from "@/api/carSpecsClient/useGetOfferTypesClient";
+import { useGetCarMarksClient } from "@/api/carMarks/useGetCarMarksClient";
+import { useGetOneCarMarkClient } from "@/api/carMarks/useGetOneCarMarkClient";
 
 interface FiltersProps {
   postsCount: number;
@@ -35,8 +41,10 @@ interface FiltersProps {
 }
 
 const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const saveSearch = useSaveSearch();
+  const { toast } = useToast();
 
   // Initialize state from URL params
   const [brand, setBrand] = useState(searchParams.get("carMarkId") || "");
@@ -58,6 +66,9 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     searchParams.get("fuelTypeId") || "",
   );
   const [color, setColor] = useState(searchParams.get("colorId") || "");
+  const [offerType, setOfferType] = useState(
+    searchParams.get("offerTypeId") || "",
+  );
   const [subcategory] = useState(searchParams.get("subcategoryId") || "");
   const [yearFrom, setYearFrom] = useState(searchParams.get("yearFrom") || "");
   const [yearTo, setYearTo] = useState(searchParams.get("yearTo") || "");
@@ -86,6 +97,15 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
   const { data: fuelTypes } = useGetFuelTypeClient(i18n.language);
   const { data: chars } = useGetCharsClient(i18n.language);
   const { data: colors } = useGetColorsClient(i18n.language);
+  const { data: offerTypes } = useGetOfferTypesClient(i18n.language);
+  const { data: carMarks } = useGetCarMarksClient(1, 100, i18n.language);
+  const { data: selectedCarMark } = useGetOneCarMarkClient(brand);
+
+  useEffect(() => {
+    if (brand) {
+      setModel("");
+    }
+  }, [brand]);
 
   const handleCityRegionsChange = (newValues: string[]) => {
     if (!regions?.data?.rows) {
@@ -157,13 +177,15 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     if (transmission) params.set("transmissionId", transmission);
     if (condition) params.set("carConditionId", condition);
     if (color) params.set("colorId", color);
+    if (offerType) params.set("offerTypeId", offerType);
     if (subcategory) params.set("subcategoryId", subcategory);
     if (yearFrom) params.set("yearFrom", yearFrom);
     if (yearTo) params.set("yearTo", yearTo);
     if (minPrice && minPrice !== "0") params.set("priceFrom", minPrice);
     if (maxPrice && maxPrice !== "100000") params.set("priceTo", maxPrice);
     for (const id of selectedChars) params.append("characteristicIds", id);
-    for (const id of selectedCharItems) params.append("characteristicItemIds", id);
+    for (const id of selectedCharItems)
+      params.append("characteristicItemIds", id);
 
     setSearchParams(params, { replace: true });
   }, [
@@ -175,6 +197,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     transmission,
     condition,
     color,
+    offerType,
     subcategory,
     yearFrom,
     yearTo,
@@ -218,6 +241,62 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     "2016",
     "2015",
   ];
+
+  const handleSaveSearch = async () => {
+    const payload: Record<string, any> = {};
+
+    if (brand) payload.carMarkId = brand;
+    if (model) payload.carModelId = model;
+    if (resolvedLocations.regionIds.length > 0)
+      payload.regionId = resolvedLocations.regionIds;
+    if (resolvedLocations.cityIds.length > 0)
+      payload.cityId = resolvedLocations.cityIds[0];
+    if (condition) payload.carConditionId = condition;
+    if (driveType) payload.driveTypeId = driveType;
+    if (transmission) payload.transmissionId = transmission;
+    if (color) payload.colorId = color;
+    if (subcategory) payload.subcategoryId = subcategory;
+    if (yearFrom) payload.yearFrom = yearFrom;
+    if (yearTo) payload.yearTo = yearTo;
+    if (minPrice && minPrice !== "0") payload.priceFrom = Number(minPrice);
+    if (maxPrice && maxPrice !== "100000") payload.priceTo = Number(maxPrice);
+    if (selectedChars.length > 0)
+      payload.characteristicIds = selectedChars;
+    if (selectedCharItems.length > 0)
+      payload.characteristicItemIds = selectedCharItems;
+
+    try {
+      await saveSearch.mutateAsync(payload);
+      toast({
+        title:
+          i18n.language === "tk" ? "Gözleg ýatda saklandy" : "Поиск сохранён",
+        variant: "success",
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        toast({
+          title:
+            i18n.language === "tk"
+              ? "Hasaba girmeli"
+              : "Необходимо авторизоваться",
+          description:
+            i18n.language === "tk"
+              ? "Gözlegi ýatda saklamak üçin hasaba giriň"
+              : "Войдите в аккаунт, чтобы сохранить поиск",
+          variant: "destructive",
+        });
+        return;
+      }
+      toast({
+        title: i18n.language === "tk" ? "Ýalňyşlyk" : "Ошибка",
+        description:
+          i18n.language === "tk"
+            ? "Gözlegi ýatda saklap bolmady"
+            : "Не удалось сохранить поиск",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="w-full lg:w-[100%] flex flex-col gap-4">
@@ -338,18 +417,21 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
             <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
               <div className="flex flex-col gap-2 items-start w-full">
                 <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                  Марка
+                  {t("filters.brand")}
                 </span>
-                <SelectValue placeholder="Выберите марку" />
+                <SelectValue placeholder={t("filters.chooseBrand")} />
               </div>
             </SelectTrigger>
             <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-              <SelectItem
-                value="placeholder"
-                className="text-base font-rale cursor-pointer"
-              >
-                Все
-              </SelectItem>
+              {carMarks?.data.rows.map((carMark) => (
+                <SelectItem
+                  key={carMark.id}
+                  value={carMark.id}
+                  className="text-base font-rale cursor-pointer"
+                >
+                  {carMark.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           {brand && (
@@ -369,22 +451,31 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
 
         {/* Модель */}
         <div className="relative">
-          <Select value={model} onValueChange={setModel}>
-            <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+          <Select value={model} onValueChange={setModel} disabled={!brand}>
+            <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed">
               <div className="flex flex-col gap-2 items-start w-full">
                 <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                  Модель
+                  {t("filters.model")}
                 </span>
-                <SelectValue placeholder="Выберите модель" />
+                <SelectValue
+                  placeholder={
+                    brand
+                      ? t("filters.chooseModel")
+                      : t("filters.firstSelectBrand")
+                  }
+                />
               </div>
             </SelectTrigger>
             <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-              <SelectItem
-                value="placeholder"
-                className="text-base font-rale cursor-pointer"
-              >
-                Все
-              </SelectItem>
+              {selectedCarMark?.data.carModels?.map((carModel) => (
+                <SelectItem
+                  key={carModel.id}
+                  value={carModel.id}
+                  className="text-base font-rale cursor-pointer"
+                >
+                  {carModel.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           {model && (
@@ -653,6 +744,44 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
 
         <div className="border-b border-grayBorder my-5 -mx-5"></div>
 
+        {/* Тип предложения */}
+        <div className="relative">
+          <Select value={offerType} onValueChange={setOfferType}>
+            <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <div className="flex flex-col gap-2 items-start w-full">
+                <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
+                  {t("filters.offerType")}
+                </span>
+                <SelectValue placeholder={t("filters.chooseType")} />
+              </div>
+            </SelectTrigger>
+            <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
+              {offerTypes?.data.rows.map((ot) => (
+                <SelectItem
+                  key={ot.id}
+                  value={ot.id}
+                  className="text-base font-rale cursor-pointer"
+                >
+                  {ot.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {offerType && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setOfferType("");
+              }}
+              className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
+            >
+              <IoCloseCircle size={20} />
+            </button>
+          )}
+        </div>
+
+        <div className="border-b border-grayBorder my-5 -mx-5"></div>
+
         {/* Характеристики */}
         <div>
           <div className="text-lg font-rale text-textPrimary mb-4">
@@ -668,12 +797,21 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
                     onCheckedChange={(checked) => {
                       if (checked) {
                         setSelectedChars((prev) => [...prev, char.id]);
-                        const itemIds = char.items?.map((item) => item.id) || [];
-                        setSelectedCharItems((prev) => [...new Set([...prev, ...itemIds])]);
+                        const itemIds =
+                          char.items?.map((item) => item.id) || [];
+                        setSelectedCharItems((prev) => [
+                          ...new Set([...prev, ...itemIds]),
+                        ]);
                       } else {
-                        setSelectedChars((prev) => prev.filter((id) => id !== char.id));
-                        const itemIds = new Set(char.items?.map((item) => item.id) || []);
-                        setSelectedCharItems((prev) => prev.filter((id) => !itemIds.has(id)));
+                        setSelectedChars((prev) =>
+                          prev.filter((id) => id !== char.id),
+                        );
+                        const itemIds = new Set(
+                          char.items?.map((item) => item.id) || [],
+                        );
+                        setSelectedCharItems((prev) =>
+                          prev.filter((id) => !itemIds.has(id)),
+                        );
                       }
                     }}
                     className="w-5 h-5 data-[state=checked]:bg-[#0C1002]! data-[state=checked]:text-white! data-[state=checked]:border-[#0C1002]! border-[#0C1002]!"
@@ -692,11 +830,17 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
                           setSelectedCharItems(newItems);
                           const allItemIds = char.items?.map((i) => i.id) || [];
                           if (allItemIds.every((id) => newItems.includes(id))) {
-                            setSelectedChars((prev) => [...new Set([...prev, char.id])]);
+                            setSelectedChars((prev) => [
+                              ...new Set([...prev, char.id]),
+                            ]);
                           }
                         } else {
-                          setSelectedCharItems((prev) => prev.filter((id) => id !== item.id));
-                          setSelectedChars((prev) => prev.filter((id) => id !== char.id));
+                          setSelectedCharItems((prev) =>
+                            prev.filter((id) => id !== item.id),
+                          );
+                          setSelectedChars((prev) =>
+                            prev.filter((id) => id !== char.id),
+                          );
                         }
                       }}
                       className="w-5 h-5 data-[state=checked]:bg-[#0C1002]! data-[state=checked]:text-white! data-[state=checked]:border-[#0C1002]! border-[#0C1002]!"
@@ -722,9 +866,19 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
         Найдено: {postsLoading ? "..." : postsCount} авто
       </div>
 
-      <button className="w-full flex items-center justify-center cursor-pointer gap-3 py-4 px-6 border border-[#88BA00] rounded-2xl bg-[#FBFCF9] text-[#88BA00] font-rale text-base font-medium hover:bg-[#f5f7f0] transition-colors">
+      <button
+        onClick={handleSaveSearch}
+        disabled={saveSearch.isPending}
+        className="w-full flex items-center justify-center cursor-pointer gap-3 py-4 px-6 border border-[#88BA00] rounded-2xl bg-[#FBFCF9] text-[#88BA00] font-rale text-base font-medium hover:bg-[#f5f7f0] transition-colors disabled:opacity-50"
+      >
         <IoBookmarkOutline size={20} />
-        Сохранить поисковые настройки
+        {saveSearch.isPending
+          ? i18n.language === "tk"
+            ? "Saklanýar..."
+            : "Сохранение..."
+          : i18n.language === "tk"
+            ? "Gözleg sazlamalaryny ýatda sakla"
+            : "Сохранить поисковые настройки"}
       </button>
     </div>
   );

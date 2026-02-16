@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import LabeledInput from "@/components/LabeledInput";
 import { Button } from "@/components/ui/button";
 import { MdLocationOn, MdEmail, MdPhone } from "react-icons/md";
 import { FaTelegramPlane, FaWhatsapp, FaInstagram } from "react-icons/fa";
+import { useSendFeedback } from "@/api/feedback.ts/useSendFeedback";
+import { formatPhoneNumber, validatePhoneNumber, cleanPhoneNumber } from "@/lib/phoneUtils";
+import axios from "axios";
 
 import hero from "@assets/contactUs.png";
 
@@ -12,15 +16,15 @@ const ContactUs = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    address: "",
     phone: "",
     message: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { t } = useTranslation();
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const sendFeedback = useSendFeedback();
 
   const offices = [
     {
@@ -59,6 +63,13 @@ const ContactUs = () => {
       newErrors.email = t("contact.errors.emailInvalid");
     }
 
+    if (formData.phone) {
+      const phoneValidation = validatePhoneNumber(formData.phone);
+      if (!phoneValidation.isValid) {
+        newErrors.phone = phoneValidation.error || "";
+      }
+    }
+
     if (!formData.message.trim()) {
       newErrors.message = t("contact.errors.messageRequired");
     }
@@ -72,12 +83,14 @@ const ContactUs = () => {
 
     if (!validateForm()) return;
 
-    setIsSubmitting(true);
-
     try {
-      // TODO: API integration (placeholder for now)
-      console.log("Contact form submitted:", formData);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await sendFeedback.mutateAsync({
+        title: formData.name,
+        description: formData.message,
+        email: formData.email,
+        phone: formData.phone ? cleanPhoneNumber(formData.phone) : "",
+        fileUrl: "",
+      });
 
       toast({
         title: t("contact.success.title"),
@@ -85,23 +98,23 @@ const ContactUs = () => {
         variant: "success",
       });
 
-      // Clear form
       setFormData({
         name: "",
         email: "",
-        address: "",
         phone: "",
         message: "",
       });
       setErrors({});
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        navigate("/auth");
+        return;
+      }
       toast({
         title: t("contact.error.title"),
         description: t("contact.error.description"),
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -182,20 +195,39 @@ const ContactUs = () => {
                 )}
               </div>
 
-              <LabeledInput
-                label={t("contact.form.address")}
-                value={formData.address}
-                onChange={handleInputChange("address")}
-                placeholder={t("contact.form.address")}
-              />
-
-              <LabeledInput
-                label={t("contact.form.phone")}
-                type="tel"
-                value={formData.phone}
-                onChange={handleInputChange("phone")}
-                placeholder="+993 (___) ___-__-__"
-              />
+              <div>
+                <LabeledInput
+                  label={t("contact.form.phone")}
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => {
+                    const formatted = formatPhoneNumber(e.target.value);
+                    setFormData({ ...formData, phone: formatted });
+                    if (errors.phone) {
+                      setErrors({ ...errors, phone: "" });
+                    }
+                  }}
+                  onFocus={() => {
+                    if (!formData.phone || formData.phone.trim() === "") {
+                      setFormData({ ...formData, phone: "+993 " });
+                    }
+                  }}
+                  onBlur={() => {
+                    if (formData.phone && formData.phone.length > 4) {
+                      const validation = validatePhoneNumber(formData.phone);
+                      if (!validation.isValid) {
+                        setErrors({ ...errors, phone: validation.error || "" });
+                      }
+                    }
+                  }}
+                  placeholder="+993"
+                />
+                {errors.phone && (
+                  <span className="text-red-500 text-sm mt-1 ml-2">
+                    {errors.phone}
+                  </span>
+                )}
+              </div>
 
               {/* Message textarea */}
               <div className="relative w-full min-h-[120px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white">
@@ -218,11 +250,11 @@ const ContactUs = () => {
 
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={sendFeedback.isPending}
                 size="none"
                 className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl flex items-center justify-center gap-2.5 py-4 px-[25px] w-full md:w-fit hover:opacity-90 disabled:opacity-50 transition-opacity"
               >
-                {isSubmitting
+                {sendFeedback.isPending
                   ? t("contact.form.sending")
                   : t("contact.form.submit")}
               </Button>

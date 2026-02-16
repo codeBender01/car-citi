@@ -31,6 +31,7 @@ import { useGetDriveTypeClient } from "@/api/carSpecsClient/useGetDriveTypeClien
 
 import { useGetColorsClient } from "@/api/carSpecsClient/useGetColorsClient";
 import { useGetSubcategoriesClient } from "@/api/carSpecsClient/useGetSubcategoriesClient";
+import { useGetOfferTypesClient } from "@/api/carSpecsClient/useGetOfferTypesClient";
 import { useGetPosts } from "@/api/posts";
 import { useGetCarMarksClient } from "@/api/carMarks/useGetCarMarksClient";
 import { useGetOneCarMarkClient } from "@/api/carMarks/useGetOneCarMarkClient";
@@ -52,6 +53,7 @@ const SearchForm = () => {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
   const [engineVolume, setEngineVolume] = useState("");
   const [color, setColor] = useState("");
+  const [offerType, setOfferType] = useState("");
 
   const [citySearch, setCitySearch] = useState("");
 
@@ -61,6 +63,7 @@ const SearchForm = () => {
 
   const { data: colors } = useGetColorsClient(i18n.language);
   const { data: subCats } = useGetSubcategoriesClient(i18n.language);
+  const { data: offerTypes } = useGetOfferTypesClient(i18n.language);
   const { data: carMarks } = useGetCarMarksClient(1, 100, i18n.language);
   const { data: selectedCarMark } = useGetOneCarMarkClient(brand);
 
@@ -140,6 +143,7 @@ const SearchForm = () => {
     carConditionId: condition || undefined,
     subcategoryId: bodyType || undefined,
     colorId: color || undefined,
+    offerTypeId: offerType || undefined,
     yearFrom: parsedYear.yearFrom,
     yearTo: parsedYear.yearTo,
     priceFrom: minPrice ? Number(minPrice) : undefined,
@@ -159,6 +163,7 @@ const SearchForm = () => {
     if (condition) params.append("carConditionId", condition);
     if (bodyType) params.append("subcategoryId", bodyType);
     if (color) params.append("colorId", color);
+    if (offerType) params.append("offerTypeId", offerType);
     if (engineVolume) params.append("engineVolume", engineVolume);
 
     if (parsedYear.yearFrom) params.append("yearFrom", parsedYear.yearFrom);
@@ -608,24 +613,24 @@ const SearchForm = () => {
                   </div>
 
                   {/* Тип предложения */}
-                  {/* <div className="relative">
+                  <div className="relative">
                     <Select value={offerType} onValueChange={setOfferType}>
                       <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                            Характеристики
+                            {t("filters.offerType")}
                           </span>
-                          <SelectValue placeholder="Выберите тип" />
+                          <SelectValue placeholder={t("filters.chooseType")} />
                         </div>
                       </SelectTrigger>
                       <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                        {chars?.data.rows.map((char) => (
+                        {offerTypes?.data.rows.map((ot) => (
                           <SelectItem
-                            key={char.id}
-                            value={char.id}
+                            key={ot.id}
+                            value={ot.id}
                             className="text-base font-rale cursor-pointer"
                           >
-                            {char.name}
+                            {ot.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -641,7 +646,7 @@ const SearchForm = () => {
                         <IoCloseCircle size={20} />
                       </button>
                     )}
-                  </div> */}
+                  </div>
 
                   {/* Тип привода */}
                   <div className="relative">

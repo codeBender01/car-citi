@@ -1,16 +1,23 @@
 import { useState } from "react";
-import { Button } from "../ui/button";
-import { LuPlus } from "react-icons/lu";
+
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 
 import { adminNavs } from "./lib/adminNavs";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
-const AdminSidebar = () => {
+interface AdminSidebarProps {
+  roles: string[];
+}
+
+const AdminSidebar = ({ roles }: AdminSidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+  const filteredNavs = adminNavs.filter(
+    (n) => !n.roles || n.roles.some((role) => roles.includes(role)),
+  );
 
   const toggleDropdown = (text: string) => {
     setOpenDropdown(openDropdown === text ? null : text);
@@ -18,15 +25,8 @@ const AdminSidebar = () => {
 
   return (
     <aside className="px-[30px] py-[60px] max-w-[340px]">
-      <Button
-        size="none"
-        className="text-white bg-transparent hover:bg-white hover:text-darkGreen border border-white font-dm text-[15px] cursor-pointer rounded-xl flex items-center gap-2.5 py-4 px-[25px] w-full"
-      >
-        <LuPlus />
-        Добавить контент
-      </Button>
       <ul className="mt-[25px]">
-        {adminNavs.map((n) => {
+        {filteredNavs.map((n) => {
           const hasSubPaths = n.subPaths && n.subPaths.length > 0;
           const isOpen = openDropdown === n.text;
 

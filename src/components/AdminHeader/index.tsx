@@ -1,43 +1,10 @@
-import { useTranslation } from "react-i18next";
-import { useState, useRef, useEffect } from "react";
 import LogoDashboard from "@/svgs/LogoDashboard";
 import BurgerMenu from "@/svgs/BurgerMenu";
 import { CiSearch } from "react-icons/ci";
 
 import { Input } from "../ui/input";
 
-const languages = [
-  { code: "ru", name: "Русский", flag: "🇷🇺" },
-  { code: "tk", name: "Türkmençe", flag: "🇹🇲" },
-];
-
 const AdminHeader = () => {
-  const { i18n } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const currentLanguage =
-    languages.find((lang) => lang.code === i18n.language) || languages[0];
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const changeLanguage = (langCode: string) => {
-    i18n.changeLanguage(langCode);
-    setIsOpen(false);
-  };
-
   return (
     <header className="px-10 py-9 2xl:px-[60px] flex items-center justify-between">
       <div className="flex items-center">
@@ -54,7 +21,7 @@ const AdminHeader = () => {
         </div>
       </div>
       <div className="flex items-center">
-        <div className="relative ml-12" ref={dropdownRef}>
+        {/* <div className="relative ml-12" ref={dropdownRef}>
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
@@ -96,7 +63,7 @@ const AdminHeader = () => {
               ))}
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </header>
   );

@@ -24,7 +24,7 @@ const AddCar = () => {
     tags: [],
     engineVolume: 0,
     regionId: "",
-    saleTypeId: "",
+    offerTypeId: "",
     cityId: "",
     carMarkId: "",
     carModelId: "",

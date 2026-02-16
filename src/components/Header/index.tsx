@@ -16,6 +16,7 @@ import { RiArrowDownSLine } from "react-icons/ri";
 import { IoPersonOutline } from "react-icons/io5";
 
 import { useGetProfile } from "@/api/auth/useGetProfile";
+import { BASE_URL } from "@/api";
 
 import { Button } from "../ui/button";
 import HeaderMenu from "./ui/HeaderMenu";
@@ -187,19 +188,33 @@ const Header = () => {
 
             <div
               onClick={() => navigate("/dashboard/profile")}
-              className={`w-11 h-11 rounded-md flex items-center justify-center cursor-pointer transition-colors duration-200 ${
+              className={`w-11 h-11 rounded-md flex items-center justify-center cursor-pointer transition-colors duration-200 overflow-hidden ${
                 isFullyScrolled || isWhiteLogoPathname
                   ? "bg-gray-700 hover:bg-gray-600"
                   : "bg-gray-200 hover:bg-gray-300"
               }`}
             >
-              <IoPersonOutline
-                className={`w-6 h-6 ${
-                  isFullyScrolled || isWhiteLogoPathname
-                    ? "text-white"
-                    : "text-gray-600"
-                }`}
-              />
+              {profile?.data?.businesProfile?.logo ? (
+                <img
+                  src={`${BASE_URL}/${profile.data.businesProfile.logo}`}
+                  alt="avatar"
+                  className="w-full h-full object-cover"
+                />
+              ) : profile?.data?.userProfile?.avatar ? (
+                <img
+                  src={`${BASE_URL}/${profile.data.userProfile.avatar}`}
+                  alt="avatar"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <IoPersonOutline
+                  className={`w-6 h-6 ${
+                    isFullyScrolled || isWhiteLogoPathname
+                      ? "text-white"
+                      : "text-gray-600"
+                  }`}
+                />
+              )}
             </div>
           </div>
         ) : (

@@ -26,7 +26,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useGetCarSpecsConditionsClient } from "@/api/carSpecsClient/useGetCarConditionsClient";
 import { useGetCarMarksClient } from "@/api/carMarks/useGetCarMarksClient";
 import { useGetRegions } from "@/api/regions/useGetRegions";
-import { useGetSaleTypeClient } from "@/api/carSpecsClient/useGetSaleTypeClient";
+import { useGetOfferTypesClient } from "@/api/carSpecsClient/useGetOfferTypesClient";
 import { useGetDriveTypeClient } from "@/api/carSpecsClient/useGetDriveTypeClient";
 import { useGetTransmissionClient } from "@/api/carSpecsClient/useGetTransmissionClient";
 import { useGetColorsClient } from "@/api/carSpecsClient/useGetColorsClient";
@@ -87,7 +87,7 @@ const CarDetailsForm = ({
   const { data: conditions } = useGetCarSpecsConditionsClient(i18n.language);
   const { data: carMarks } = useGetCarMarksClient(1, 100, i18n.language);
   const { data: regions } = useGetRegions(i18n.language);
-  const { data: saleTypes } = useGetSaleTypeClient(i18n.language);
+  const { data: offerTypes } = useGetOfferTypesClient(i18n.language);
   const { data: driveTypes } = useGetDriveTypeClient(i18n.language);
   const { data: transmissions } = useGetTransmissionClient(i18n.language);
   const { data: colors } = useGetColorsClient(i18n.language);
@@ -335,8 +335,8 @@ const CarDetailsForm = ({
 
       {/* Тип предложения */}
       <Select
-        value={formData.saleTypeId}
-        onValueChange={(value) => handleInputChange("saleTypeId", value)}
+        value={formData.offerTypeId}
+        onValueChange={(value) => handleInputChange("offerTypeId", value)}
       >
         <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
           <div className="flex flex-col gap-2 items-start w-full min-w-0 pr-8">
@@ -347,7 +347,7 @@ const CarDetailsForm = ({
           </div>
         </SelectTrigger>
         <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-          {saleTypes?.data.rows.map((ot) => (
+          {offerTypes?.data.rows.map((ot) => (
             <SelectItem
               key={ot.id}
               value={ot.id}

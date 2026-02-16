@@ -44,6 +44,7 @@ const AllCars = () => {
     : undefined;
   const characteristicIds = searchParams.getAll("characteristicIds");
   const characteristicItemIds = searchParams.getAll("characteristicItemIds");
+  const offerTypeId = searchParams.get("offerTypeId") || undefined;
   const dealerId = searchParams.get("dealerId") || undefined;
 
   const { data: posts, isLoading: postsLoading } = useGetPosts({
@@ -64,6 +65,7 @@ const AllCars = () => {
     priceTo: priceTo,
     characteristicIds: characteristicIds.length > 0 ? characteristicIds : undefined,
     characteristicItemIds: characteristicItemIds.length > 0 ? characteristicItemIds : undefined,
+    offerTypeId,
     dealerId,
     "Accept-Language": i18n.language,
   });

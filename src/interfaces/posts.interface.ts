@@ -22,6 +22,7 @@ export interface PostsFilters {
   colorId?: string;
   characteristicIds?: string[];
   characteristicItemIds?: string[];
+  offerTypeId?: string;
   dealerId?: string;
   "Accept-Language"?: string;
 }
@@ -97,7 +98,7 @@ export interface NewPostReq {
   tags?: string[];
   engineVolume: number;
   regionId: string;
-  saleTypeId: string;
+  offerTypeId: string;
   cityId: string;
   carMarkId: string;
   carModelId: string;

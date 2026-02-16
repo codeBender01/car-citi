@@ -139,6 +139,7 @@
     "driveType": "Тип привода",
     "transmission": "Коробка передач",
     "fuelType": "Тип топлива",
+    "offerType": "Тип предложения",
     "color": "Цвет",
     "interiorColor": "Цвет интерьера",
     "doors": "Двери",

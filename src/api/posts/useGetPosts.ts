@@ -27,6 +27,7 @@ export const useGetPosts = ({
   colorId,
   characteristicIds,
   characteristicItemIds,
+  offerTypeId,
   dealerId,
   "Accept-Language": acceptLanguage,
 }: PostsFilters = {}) => {
@@ -56,6 +57,7 @@ export const useGetPosts = ({
       colorId,
       characteristicIds,
       characteristicItemIds,
+      offerTypeId,
       dealerId,
       acceptLanguage,
     ],
@@ -85,6 +87,7 @@ export const useGetPosts = ({
           colorId,
           characteristicIds,
           characteristicItemIds,
+          offerTypeId,
           dealerId,
         },
         headers: acceptLanguage
