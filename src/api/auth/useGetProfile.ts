@@ -8,19 +8,19 @@ export const useGetProfile = () => {
 
   return useQuery({
     queryFn: async (): Promise<ApiResponse<ProfileRes>> => {
+      const currentToken = localStorage.getItem("accessToken");
       const { data } = await apiClient.get<ApiResponse<ProfileRes>>(
         "/auth/profile",
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${currentToken}`,
           },
         }
       );
       return data;
     },
-    queryKey: ["getCurrentUser"],
+    queryKey: ["getCurrentUser", token],
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     retry: false,
     enabled: !!token,
   });

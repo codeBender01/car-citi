@@ -2,6 +2,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import { BsArrowUpRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import type { OneCarMark } from "@/interfaces/carMarks.interface";
 import { BASE_URL } from "@/api";
 
@@ -15,6 +16,7 @@ interface BrandsSectionProps {
 
 const BrandsSection = ({ carMarks }: BrandsSectionProps) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const brandsToDisplay = carMarks && carMarks.length > 0 ? carMarks : null;
 
   const handleBrandClick = (brandId?: string) => {
@@ -26,16 +28,16 @@ const BrandsSection = ({ carMarks }: BrandsSectionProps) => {
   };
 
   return (
-    <div className="mt-[70px] md:mt-[120px] lg:mt-[300px] mb-10 md:mb-[150px] w-[90%] mx-auto">
+    <div className="mt-[70px] mb-10 md:mb-[150px] w-[90%] mx-auto">
       <div className="flex items-center justify-between">
         <div className="font-rale text-[26px] md:text-[40px] text-textPrimary font-bold">
-          Познакомьтесь с нашими партнерами
+          {t("home.brands")}
         </div>
         <div
           onClick={() => navigate("/all-brands")}
           className="hidden md:flex cursor-pointer items-center gap-2 font-dm font-medium hover:text-primary transition-colors"
         >
-          Посмотреть все
+          {t("common.viewAll")}
           <BsArrowUpRight />
         </div>
       </div>
@@ -70,7 +72,7 @@ const BrandsSection = ({ carMarks }: BrandsSectionProps) => {
                       {item.name}
                     </div>
                     <div className="text-xs text-gray-500">
-                      {item.carModels?.length || 0} моделей
+                      {item.carModels?.length || 0} {t("home.models")}
                     </div>
                   </div>
                 </SwiperSlide>
@@ -114,7 +116,7 @@ const BrandsSection = ({ carMarks }: BrandsSectionProps) => {
                   {item.name}
                 </div>
                 <div className="text-xs text-gray-500">
-                  {item.carModels?.length || 0} моделей
+                  {item.carModels?.length || 0} {t("home.models")}
                 </div>
               </li>
             ))

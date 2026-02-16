@@ -47,11 +47,20 @@
     "dealersTitle": "Ýerli awtoulag satyjylary we iň gowy teklipler",
     "dealersDescription": "Biz barlanlan satyjylar we hususy eýeler bilen hyzmatdaşlyk edýäris, diňe hakyky we täze yglanlar ýerleşdirmäge kömek edýäris. CarCiti tarapyndan barlanan her awtoulag ileri tutulýan ýerleşmäni we alyjylardan ýokary ynamyň gazanýar. Siz öz sebitiňizde iň gowy teklipleri görýärsiňiz — galp maglumatlar, aýlanmalar we gizlin problemalar ýok.",
     "newSecurityLevel": "CarCiti — awtoulag satyn almakda täze howpsuzlyk derejesi",
+    "newSecurityLevelDesc": "Satyn almazdan ozal awtoulagyň hakyky ýagdaýyny bilmek möhümdir. Biz awtoulagy ähli parametrler boýunça barlaýarys we size töwekgelçiliksiz dogry karar kabul etmäge kömek edýäris.",
+    "securityPoint1": "Doly tehniki barlag",
+    "securityPoint2": "Gizlin kemçilikleri we ýol hadysalaryny anyklamak",
+    "securityPoint3": "Hakyky bazar bahasyny bahalandyrmak",
+    "securityPoint4": "Hünärmenlerden maslahatly hasabat",
+    "submitCarCheck": "Awtoulag barlagyna arza ber",
     "priceEvaluationDescription": "Türkmenistan bazaryndaky häzirki islegini, ýagdaýyny we geçilen ýoluny göz öňünde tutup, awtoulagyňyzyň obýektiw bazar bahasyny kesgitlemäge kömek ederis. Hiç hili çaklamalar we peseltmeler ýok — diňe dogry we täze baha.",
     "orderEvaluation": "Awtoulag bahalandyrmagyny sargyt et",
     "evaluationPoint1": "Hakyky bazara esaslanan baha — häzirki tekliplere görä",
     "evaluationPoint2": "Awtoulagyň ýagdaýyny göz öňünde tutmak — geçilen ýol, komplektasiýa, taryhy",
-    "evaluationPoint3": "Borçsyz — satmagy ýa-da satmagy öz başyňyza karar berýärsiňiz"
+    "evaluationPoint3": "Borçsyz — satmagy ýa-da satmagy öz başyňyza karar berýärsiňiz",
+    "brands": "Markalar",
+    "meetOurPartners": "Biziň hyzmatdaşlarymyz bilen tanyşyň",
+    "models": "model"
   },
   "whyUs": {
     "fullCycle": "A-dan Ż-ä çenli doly aýlaw",

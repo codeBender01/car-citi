@@ -8,8 +8,9 @@ import { useTranslation } from "react-i18next";
 import SearchForm from "./ui/SearchForm";
 import CarsCarousel from "./ui/CarsCarousel";
 import BrandsSection from "./ui/BrandsSection";
+import PartnersSection from "./ui/PartnersSection";
 import CarCard from "@/components/CarCard";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import NewsBlock from "./ui/NewsBlock";
 import { types } from "./lib/types";
 import { getWhyUs } from "./lib/whyUs";
@@ -17,12 +18,11 @@ import { getWhyUs } from "./lib/whyUs";
 import "swiper/css";
 
 import hero from "@/assets/home/hero.png";
-import diag from "@assets/images/diagnostic.png";
-import logoBig from "@/assets/home/logoBig.png";
-import logoMed from "@assets/home/logoMedium.png";
-import check1 from "@assets/home/check1.png";
-import check2 from "@assets/home/check2.png";
-import check3 from "@assets/home/check3.png";
+import aspect from "@/assets/home/aspect.png";
+// import logoMed from "@assets/home/logoMedium.png";
+// import check1 from "@assets/home/check1.png";
+// import check2 from "@assets/home/check2.png";
+// import check3 from "@assets/home/check3.png";
 import DealersBanner from "@/components/DealersBanner";
 
 import {
@@ -30,8 +30,8 @@ import {
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
 import { BsArrowUpRight } from "react-icons/bs";
-import LogoSection from "@/svgs/LogoSection";
-import GreenCheck from "@/svgs/GreenCheck";
+// import LogoSection from "@/svgs/LogoSection";
+// import GreenCheck from "@/svgs/GreenCheck";
 
 import StatsSection from "./ui/StatSection";
 
@@ -39,6 +39,7 @@ import { useGetHomeClient } from "@/api/home/useGetHomeClient";
 import { useGetBanners } from "@/api/banners/useGetAllBanners";
 import { useGetCarMarksClient } from "@/api/carMarks/useGetCarMarksClient";
 import { useGetSubcategoriesClient } from "@/api/carSpecsClient/useGetSubcategoriesClient";
+import { useGetUsers } from "@/api/auth/useGetUsers";
 import { BASE_URL } from "@/api";
 import i18n from "@/i18n";
 
@@ -60,6 +61,7 @@ const Home = () => {
   const { data: banners } = useGetBanners(1, 100);
   const { data: carMarks } = useGetCarMarksClient(1, 5, i18n.language);
   const { data: subcategories } = useGetSubcategoriesClient(i18n.language);
+  const { data: businessUsers } = useGetUsers(1, 5, "Business");
 
   const navigate = useNavigate();
   const whyUs = getWhyUs(t);
@@ -152,8 +154,9 @@ const Home = () => {
           </div>
         </div>
         <SearchForm />
+        <BrandsSection carMarks={carMarks?.data.rows} />
 
-        <div className="mt-[72px] md:mt-[120px] xl:mt-[200px] w-[90%] mx-auto">
+        <div className="mt-[72px] md:mt-[120px] w-[90%] mx-auto">
           <div className="flex items-center justify-between">
             <div className="font-rale text-[26px] md:text-[40px] text-textPrimary font-bold">
               {t("home.exploreAllCars")}
@@ -214,7 +217,10 @@ const Home = () => {
           <div className="font-rale text-[26px] md:text-[40px] text-textPrimary font-bold">
             {t("home.searchByBodyType")}
           </div>
-          <div className="hidden lg:flex items-center gap-2 font-dm font-medium">
+          <div
+            onClick={() => navigate("/all-cars")}
+            className="hidden cursor-pointer lg:flex items-center gap-2 font-dm font-medium"
+          >
             {t("common.viewAll")}
             <BsArrowUpRight />
           </div>
@@ -251,40 +257,53 @@ const Home = () => {
 
         <BrandsSection carMarks={carMarks?.data.rows} />
 
-        <div className="mt-[75px] md:mt-[120px]">
-          <div className="font-rale text-[26px] md:text-[40px] text-center text-textPrimary font-bold">
-            {t("home.weConsiderAllAspects")}
-          </div>
-          <ul className="mt-10 grid grid-cols-1 md:grid-cols-3 md:gap-4 md:min-h-[400px]">
-            <li className="h-[345px] md:h-full overflow-hidden md:rounded-2xl">
-              <img src={diag} alt="" className="w-full h-full object-cover" />
-            </li>
-            <li className="flex h-[345px] md:h-auto flex-col justify-between bg-primary text-white p-5 md:rounded-2xl">
-              <div className="text-[32px] font-rale font-bold">
-                {t("home.newSecurityLevel")}
-              </div>
-              <div className="flex items-center gap-2 font-dm font-medium">
-                {t("common.learnMore")}
-                <BsArrowUpRight />
-              </div>
-            </li>
-            <li className="flex h-[345px] md:h-auto flex-col relative justify-between bg-black text-white p-5 md:rounded-2xl overflow-hidden">
-              <div className="text-[32px] font-rale font-bold relative z-10">
-                «{t("whyUs.fullCycle")}»
-              </div>
-              <div className="flex items-center gap-2 font-dm font-medium relative z-10">
-                {t("common.learnMore")}
-                <BsArrowUpRight />
-              </div>
+        <PartnersSection dealers={businessUsers?.data?.users} />
 
-              <div className="absolute bottom-[-10%] right-0 w-[80%]">
-                <img src={logoBig} alt="" />
-              </div>
-            </li>
-          </ul>
+        <div className="mt-[75px] md:mt-[120px] relative rounded-2xl overflow-hidden">
+          <img
+            src={aspect}
+            alt=""
+            className="md:absolute md:inset-0 w-full h-[300px] md:h-full object-cover"
+          />
+          <div className="relative z-10 flex flex-col md:flex-row items-center md:py-[50px] md:px-[30px]">
+            <div
+              className="flex-1 p-8 md:p-12 lg:p-16 md:rounded-2xl"
+              style={{ backgroundColor: "#FFFFFFE5" }}
+            >
+              <h2 className="font-rale font-bold text-[26px] md:text-[36px] text-textPrimary leading-tight">
+                {t("home.newSecurityLevel")}
+              </h2>
+              <p className="mt-4 text-sm md:text-base text-textPrimary/70 font-dm max-w-lg">
+                {t("home.newSecurityLevelDesc")}
+              </p>
+              <ul className="mt-6 space-y-3 font-dm text-sm md:text-base text-textPrimary">
+                {[
+                  t("home.securityPoint1"),
+                  t("home.securityPoint2"),
+                  t("home.securityPoint3"),
+                  t("home.securityPoint4"),
+                ].map((point, idx) => (
+                  <li key={idx} className="flex items-center gap-3">
+                    <span className="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-white text-xs shrink-0">
+                      &#10003;
+                    </span>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => navigate("/contact-us")}
+                className="mt-8 bg-primary text-white px-6 py-3 rounded-full font-dm font-medium flex items-center gap-2 hover:opacity-90 transition-opacity"
+              >
+                {t("home.submitCarCheck")}
+                <BsArrowUpRight />
+              </button>
+            </div>
+            <div className="hidden md:block flex-1" />
+          </div>
         </div>
 
-        <div className="mt-[75px]  md:mt-[120px] lg:mt-[300px] relative">
+        <div className="mt-[75px]  md:mt-[120px]  relative">
           <div className="font-rale text-[26px] md:text-[40px] relative z-10 text-center text-textPrimary font-bold">
             {t("home.whyChooseUs")}
           </div>
@@ -309,7 +328,7 @@ const Home = () => {
           </ul>
         </div>
 
-        <div className="mt-[200px] relative hidden lg:flex justify-between">
+        {/* <div className="mt-[200px] relative hidden lg:flex justify-between">
           <div className="flex w-[45%] gap-[45px]">
             <div className="hidden xl:flex flex-col gap-[58px] w-[50%]">
               <img
@@ -363,7 +382,7 @@ const Home = () => {
               <BsArrowUpRight />
             </Button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* <div className="bg-textPrimary py-10 md:py-20 lg:py-[110px] mt-10 px-10 lg:px-[120px] 2xl:px-[200px] lg:mt-[230px]">

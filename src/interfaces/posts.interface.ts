@@ -76,6 +76,7 @@ export interface OnePost {
   isFavorite?: boolean;
   verifiedStatus: string;
   isActive: boolean;
+  mileage: number;
   fuelType?: {
     id: string;
     name: string;

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import car1 from "@assets/images/car1.png";
@@ -29,6 +29,7 @@ const CarCard = ({ car }: CarCardProps) => {
   const swiperRef = useRef<SwiperType | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const addToFavorites = useAddPostToFavorites();
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const handleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -58,7 +59,7 @@ const CarCard = ({ car }: CarCardProps) => {
     });
   };
 
-  const getCarImages = () => {
+  const getCarImages = (): { hashblur: string; url: string }[] => {
     if (!car.images) return [];
 
     if (Array.isArray(car.images)) {
@@ -91,12 +92,14 @@ const CarCard = ({ car }: CarCardProps) => {
     swiperRef.current.slideTo(clampedIndex);
   };
 
+  console.log(car);
+
   return (
     <div
       onClick={() => {
         navigate("/car-details/" + car.id);
       }}
-      className="rounded-2xl flex flex-col w-full md:max-w-[330px] bg-white shadow-md border border-headerBorder"
+      className={`rounded-2xl flex flex-col w-full md:max-w-[330px] bg-white shadow-md border-2 ${car.verifiedStatus === "verified" ? "border-primary" : "border-headerBorder"}`}
     >
       <div
         ref={containerRef}
@@ -122,23 +125,36 @@ const CarCard = ({ car }: CarCardProps) => {
         </div>
 
         {images.length > 0 ? (
-          <Swiper
-            spaceBetween={0}
-            slidesPerView={1}
-            onSwiper={(swiper) => (swiperRef.current = swiper)}
-            allowTouchMove={false}
-            className="h-full"
-          >
-            {images.map((image, idx) => (
-              <SwiperSlide key={idx}>
-                <img
-                  src={`${BASE_URL}/${image.url}`}
-                  alt={car.carModel.name}
-                  className="w-full h-full object-cover rounded-t-2xl"
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          <>
+            <Swiper
+              spaceBetween={0}
+              slidesPerView={1}
+              onSwiper={(swiper) => (swiperRef.current = swiper)}
+              onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+              allowTouchMove={false}
+              className="h-full"
+            >
+              {images.map((image, idx) => (
+                <SwiperSlide key={idx}>
+                  <img
+                    src={`${BASE_URL}/${image.url}`}
+                    alt={car.carModel.name}
+                    className="w-full h-full object-cover rounded-t-2xl"
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            {images.length > 1 && (
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1">
+                {images.map((_, idx) => (
+                  <div
+                    key={idx}
+                    className={`h-2 rounded-full transition-all duration-300 ${idx === activeIndex ? "w-4 bg-white" : "w-2 bg-white/50"}`}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         ) : (
           <img
             src={car1}
@@ -157,6 +173,7 @@ const CarCard = ({ car }: CarCardProps) => {
         <div className="grid grid-cols-2 mt-6 gap-y-7">
           <div className="flex items-center gap-2 text-sm text-textPrimary font-dm">
             <Speedometer />
+            {"mileage" in car && car.mileage ? car.mileage : ""} km
           </div>
           {/* <div className="flex items-center gap-2 text-sm text-textPrimary font-dm">
             <Fuel />
@@ -168,7 +185,7 @@ const CarCard = ({ car }: CarCardProps) => {
           </div>
           <div className="flex items-center gap-2 text-sm text-textPrimary font-dm">
             <Calendar />
-            {dayjs(car.issueYear).format("DD.MM.YYYY")}
+            {dayjs(car.issueYear).format("YYYY")}
           </div>
         </div>
 

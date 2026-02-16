@@ -7,7 +7,11 @@ import { Button } from "@/components/ui/button";
 import { MdLocationOn, MdEmail, MdPhone } from "react-icons/md";
 import { FaTelegramPlane, FaWhatsapp, FaInstagram } from "react-icons/fa";
 import { useSendFeedback } from "@/api/feedback.ts/useSendFeedback";
-import { formatPhoneNumber, validatePhoneNumber, cleanPhoneNumber } from "@/lib/phoneUtils";
+import {
+  formatPhoneNumber,
+  validatePhoneNumber,
+  cleanPhoneNumber,
+} from "@/lib/phoneUtils";
 import axios from "axios";
 
 import hero from "@assets/contactUs.png";
@@ -269,21 +273,6 @@ const ContactUs = () => {
 
             <div className="flex flex-col gap-6">
               {/* Address */}
-              <div className="flex items-start gap-4">
-                <div className="bg-primary rounded-full p-3 shrink-0">
-                  <MdLocationOn className="text-white" size={24} />
-                </div>
-                <div className="font-dm">
-                  <p className="font-bold text-[15px] mb-1">
-                    {t("contact.info.address")}
-                  </p>
-                  <p className="text-textSecondary text-[15px]">
-                    Magtymguly şaýoly, No:88,
-                    <br />
-                    Bagtyýarlyk etraby, Ashgabat
-                  </p>
-                </div>
-              </div>
 
               {/* Email */}
               <div className="flex items-start gap-4">
@@ -304,22 +293,6 @@ const ContactUs = () => {
               </div>
 
               {/* Phone */}
-              <div className="flex items-start gap-4">
-                <div className="bg-primary rounded-full p-3 shrink-0">
-                  <MdPhone className="text-white" size={24} />
-                </div>
-                <div className="font-dm">
-                  <p className="font-bold text-[15px] mb-1">
-                    {t("contact.info.phone")}
-                  </p>
-                  <a
-                    href="tel:+905338884706"
-                    className="text-textSecondary text-[15px] hover:text-primary transition-colors"
-                  >
-                    +90 (533) 888 47 06
-                  </a>
-                </div>
-              </div>
 
               {/* Social Media */}
               <div className="mt-4">
