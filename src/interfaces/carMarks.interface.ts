@@ -37,6 +37,7 @@ export interface OneCarModel {
   nameTk: string;
   nameRu: string;
   id: string;
+  carmodelEquipments?: { id: string; name: string }[];
 }
 
 export interface CarModelsClientRes {

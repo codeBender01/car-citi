@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import LabeledInput from "@/components/LabeledInput";
 import { Button } from "@/components/ui/button";
-import { MdLocationOn, MdEmail, MdPhone } from "react-icons/md";
-import { FaTelegramPlane, FaWhatsapp, FaInstagram } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+
+// import { FaTelegramPlane, FaWhatsapp, FaInstagram } from "react-icons/fa";
 import { useSendFeedback } from "@/api/feedback.ts/useSendFeedback";
 import {
   formatPhoneNumber,
@@ -24,35 +26,37 @@ const ContactUs = () => {
     message: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const captchaRef = useRef<HCaptcha>(null);
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
   const sendFeedback = useSendFeedback();
 
-  const offices = [
-    {
-      id: 1,
-      cityKey: "cities.ashgabat",
-      address: "Magtymguly şaýoly, No:88, Bagtyýarlyk etraby",
-      phone: "+993 (12) 123-45-67",
-      email: "ashgabat@carciti.com",
-    },
-    {
-      id: 2,
-      cityKey: "cities.turkmenbashi",
-      address: "Lorem ipsum dolor sit amet",
-      phone: "+993 (422) 123-45-67",
-      email: "turkmenabat@carciti.com",
-    },
-    {
-      id: 3,
-      cityKey: "cities.mary",
-      address: "Lorem ipsum dolor sit amet",
-      phone: "+993 (522) 123-45-67",
-      email: "mary@carciti.com",
-    },
-  ];
+  // const offices = [
+  //   {
+  //     id: 1,
+  //     cityKey: "cities.ashgabat",
+  //     address: "Magtymguly şaýoly, No:88, Bagtyýarlyk etraby",
+  //     phone: "+993 (12) 123-45-67",
+  //     email: "ashgabat@carciti.com",
+  //   },
+  //   {
+  //     id: 2,
+  //     cityKey: "cities.turkmenbashi",
+  //     address: "Lorem ipsum dolor sit amet",
+  //     phone: "+993 (422) 123-45-67",
+  //     email: "turkmenabat@carciti.com",
+  //   },
+  //   {
+  //     id: 3,
+  //     cityKey: "cities.mary",
+  //     address: "Lorem ipsum dolor sit amet",
+  //     phone: "+993 (522) 123-45-67",
+  //     email: "mary@carciti.com",
+  //   },
+  // ];
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -76,6 +80,10 @@ const ContactUs = () => {
 
     if (!formData.message.trim()) {
       newErrors.message = t("contact.errors.messageRequired");
+    }
+
+    if (!captchaToken) {
+      newErrors.captcha = t("contact.errors.captchaRequired");
     }
 
     setErrors(newErrors);
@@ -109,6 +117,8 @@ const ContactUs = () => {
         message: "",
       });
       setErrors({});
+      setCaptchaToken(null);
+      captchaRef.current?.resetCaptcha();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         navigate("/auth");
@@ -252,9 +262,29 @@ const ContactUs = () => {
                 </span>
               )}
 
+              <div>
+                <HCaptcha
+                  ref={captchaRef}
+                  sitekey={import.meta.env.VITE_HCAPTCHA_SITE_KEY}
+                  languageOverride={i18n.language}
+                  onVerify={(token) => {
+                    setCaptchaToken(token);
+                    if (errors.captcha) {
+                      setErrors((prev) => ({ ...prev, captcha: "" }));
+                    }
+                  }}
+                  onExpire={() => setCaptchaToken(null)}
+                />
+                {errors.captcha && (
+                  <span className="text-red-500 text-sm mt-1 ml-2">
+                    {errors.captcha}
+                  </span>
+                )}
+              </div>
+
               <Button
                 type="submit"
-                disabled={sendFeedback.isPending}
+                disabled={sendFeedback.isPending || !captchaToken}
                 size="none"
                 className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl flex items-center justify-center gap-2.5 py-4 px-[25px] w-full md:w-fit hover:opacity-90 disabled:opacity-50 transition-opacity"
               >
@@ -299,7 +329,7 @@ const ContactUs = () => {
                 <p className="font-bold text-[15px] mb-3 font-dm">
                   {t("contact.info.social")}
                 </p>
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
                   <a
                     href="#"
                     className="bg-primary/10 hover:bg-primary w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-colors group"
@@ -327,7 +357,7 @@ const ContactUs = () => {
                       size={20}
                     />
                   </a>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -335,7 +365,7 @@ const ContactUs = () => {
       </div>
 
       {/* Offices Section */}
-      <div className="px-4 md:px-12 lg:px-[120px] 2xl:px-[118px] pb-[120px]">
+      {/* <div className="px-4 md:px-12 lg:px-[120px] 2xl:px-[118px] pb-[120px]">
         <h2 className="text-[28px] md:text-[40px] font-rale font-bold mb-8 md:mb-12">
           {t("contact.offices.title")}
         </h2>
@@ -382,7 +412,7 @@ const ContactUs = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

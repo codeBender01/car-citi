@@ -9,9 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FiEdit, FiTrash2, FiArrowLeft } from "react-icons/fi";
+import { FiEdit, FiTrash2, FiArrowLeft, FiSettings } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { AddCarModelModal } from "./ui/AddCarModelModal";
+import { ModelEquipmentModal } from "./ui/ModelEquipmentModal";
 import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 import { useGetOneCarMark } from "@/api/carMarks/useGetOneCarMark";
@@ -27,6 +28,9 @@ const CarModels = () => {
   const removeCarModel = useRemoveCarModel();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [equipmentModalOpen, setEquipmentModalOpen] = useState(false);
+  const [selectedModelForEquipment, setSelectedModelForEquipment] =
+    useState<OneCarModel | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [modelToDelete, setModelToDelete] = useState<OneCarModel | null>(null);
   const [newCarModel, setNewCarModel] = useState<NewCarModel>({
@@ -37,6 +41,8 @@ const CarModels = () => {
   });
 
   const { data: carMark } = useGetOneCarMark(carMarkId || "", 1, 10);
+
+  console.log(carMark);
 
   const handleEdit = (model: OneCarModel) => {
     setNewCarModel({
@@ -142,11 +148,31 @@ const CarModels = () => {
         onSubmit={handleSubmitCarModel}
       />
 
+      {selectedModelForEquipment && (
+        <ModelEquipmentModal
+          open={equipmentModalOpen}
+          onOpenChange={setEquipmentModalOpen}
+          modelId={selectedModelForEquipment.id}
+          modelName={
+            selectedModelForEquipment.nameRu || selectedModelForEquipment.name
+          }
+          currentEquipments={
+            carMark?.data?.carModels?.find(
+              (m) => m.id === selectedModelForEquipment.id
+            )?.carmodelEquipments || []
+          }
+        />
+      )}
+
       <ConfirmDeleteDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleConfirmedDelete}
-        itemName={modelToDelete ? `${modelToDelete.nameRu} / ${modelToDelete.nameTk}` : ''}
+        itemName={
+          modelToDelete
+            ? `${modelToDelete.nameRu} / ${modelToDelete.nameTk}`
+            : ""
+        }
         itemType="модель"
         isLoading={removeCarModel.isPending}
       />
@@ -181,6 +207,17 @@ const CarModels = () => {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedModelForEquipment(model);
+                          setEquipmentModalOpen(true);
+                        }}
+                        className="p-2 text-green-600 hover:bg-green-50 bg-transparent rounded-lg transition-colors"
+                        title="Комплектации"
+                      >
+                        <FiSettings className="w-4 h-4" />
+                      </Button>
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();

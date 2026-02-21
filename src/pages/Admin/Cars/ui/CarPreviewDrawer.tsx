@@ -54,7 +54,7 @@ const CarPreviewDrawer = ({ car, onClose, onStatusChange }: CarPreviewDrawerProp
                       <img
                         src={`${BASE_URL}/${img.url}`}
                         alt={`${car.carMark?.name} ${car.carModel?.name} - ${idx + 1}`}
-                        className="w-full h-[400px] object-cover"
+                        className="w-full h-[400px] object-contain bg-black"
                       />
                     </SwiperSlide>
                   ))}
@@ -82,7 +82,7 @@ const CarPreviewDrawer = ({ car, onClose, onStatusChange }: CarPreviewDrawerProp
                     : "https://via.placeholder.com/800x400"
                 }
                 alt={`${car.carMark?.name} ${car.carModel?.name}`}
-                className="w-full h-[400px] object-cover"
+                className="w-full h-[400px] object-contain bg-black"
               />
             )}
 
@@ -138,15 +138,119 @@ const CarPreviewDrawer = ({ car, onClose, onStatusChange }: CarPreviewDrawerProp
                     </span>
                   </div>
                 )}
+                {car.mileage != null && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm text-textGray font-dm">Пробег</span>
+                    <span className="text-sm font-medium text-textSecondary font-dm">
+                      {car.mileage.toLocaleString()} km
+                    </span>
+                  </div>
+                )}
+                {car.engineVolume != null && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm text-textGray font-dm">Объем двигателя</span>
+                    <span className="text-sm font-medium text-textSecondary font-dm">
+                      {car.engineVolume}L
+                    </span>
+                  </div>
+                )}
+                {car.driveType?.name && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm text-textGray font-dm">Тип привода</span>
+                    <span className="text-sm font-medium text-textSecondary font-dm">
+                      {car.driveType.name}
+                    </span>
+                  </div>
+                )}
+                {car.carCondition?.name && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm text-textGray font-dm">Состояние</span>
+                    <span className="text-sm font-medium text-textSecondary font-dm">
+                      {car.carCondition.name}
+                    </span>
+                  </div>
+                )}
+                {car.color?.name && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm text-textGray font-dm">Цвет</span>
+                    <span className="text-sm font-medium text-textSecondary font-dm flex items-center gap-2">
+                      {car.color.hex && (
+                        <span
+                          className="inline-block w-4 h-4 rounded-full border border-headerBorder"
+                          style={{ backgroundColor: car.color.hex }}
+                        />
+                      )}
+                      {car.color.name}
+                    </span>
+                  </div>
+                )}
+                {car.region?.name && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm text-textGray font-dm">Регион</span>
+                    <span className="text-sm font-medium text-textSecondary font-dm">
+                      {car.region.name}
+                    </span>
+                  </div>
+                )}
+                {car.city?.name && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm text-textGray font-dm">Город</span>
+                    <span className="text-sm font-medium text-textSecondary font-dm">
+                      {car.city.name}
+                    </span>
+                  </div>
+                )}
+                {car.offerType?.name && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm text-textGray font-dm">Тип предложения</span>
+                    <span className="text-sm font-medium text-textSecondary font-dm">
+                      {car.offerType.name}
+                    </span>
+                  </div>
+                )}
+                {car.phone && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm text-textGray font-dm">Телефон</span>
+                    <a
+                      href={`tel:${car.phone}`}
+                      className="text-sm font-medium text-primary font-dm hover:underline"
+                    >
+                      {car.phone}
+                    </a>
+                  </div>
+                )}
+                {car.vin && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm text-textGray font-dm">VIN</span>
+                    <span className="text-sm font-medium text-textSecondary font-dm">
+                      {car.vin}
+                    </span>
+                  </div>
+                )}
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm text-textGray font-dm">Верификация</span>
+                  <span className={`text-sm font-medium font-dm ${car.verifiedStatus === "verified" ? "text-green-600" : "text-yellow-600"}`}>
+                    {car.verifiedStatus === "verified" ? "Верифицирован" : "Не верифицирован"}
+                  </span>
+                </div>
               </div>
 
-              {car.characteristics &&
-                car.characteristics.length > 0 && (
+              {car.damage && (
+                <div className="flex flex-col gap-1 mt-2">
+                  <span className="text-sm text-textGray font-dm">Описание</span>
+                  <p className="text-sm font-medium text-textSecondary font-dm whitespace-pre-wrap">
+                    {car.damage}
+                  </p>
+                </div>
+              )}
+
+              {car.carCharacteristics &&
+                car.carCharacteristics.length > 0 && (
                   <div className="flex flex-col gap-3 mt-2">
                     <h3 className="font-dm text-lg font-semibold text-textSecondary">
                       Характеристики
                     </h3>
-                    {car.characteristics.map((char) => (
+                    {car.carCharacteristics.map((char) => (
                       <div key={char.id} className="flex flex-col gap-2">
                         <span className="text-sm font-medium text-textGray font-dm">
                           {char.name}

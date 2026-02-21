@@ -1,3 +1,5 @@
+import type { OneCarMarkClient } from "./home.interface";
+
 export interface SaveSearchReq {
   characteristicIds?: string[];
   characteristicItemIds?: string[];
@@ -21,10 +23,21 @@ export interface SaveSearchReq {
 }
 
 export interface SaveSearchRes extends SaveSearchReq {
+  id: string;
   userId: string;
+  created: string;
+  regions: string[];
+  characteristics: string[];
+  characteristicItems: string[];
+  carmark?: OneCarMarkClient;
+}
+
+export interface SavedSearchItem {
+  count: number;
+  savedSearche: SaveSearchRes;
 }
 
 export interface SaveSearchList {
-  rows: SaveSearchRes[];
+  rows: SavedSearchItem[];
   count: number;
 }

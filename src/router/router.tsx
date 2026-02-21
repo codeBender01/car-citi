@@ -16,6 +16,9 @@ const AutoDealers = lazy(() => import("@pages/AutoDealers"));
 const MyPosts = lazy(() => import("@pages/MyPosts"));
 const Favorites = lazy(() => import("@pages/Favorites"));
 const SavedSearch = lazy(() => import("@pages/SavedSearch"));
+const SavedSearchResults = lazy(
+  () => import("@pages/SavedSearch/ui/SavedSearchResults"),
+);
 const Messages = lazy(() => import("@pages/Messages"));
 const Profile = lazy(() => import("@pages/Profile"));
 const AddCar = lazy(() => import("@pages/AddCar"));
@@ -24,6 +27,7 @@ const Saved = lazy(() => import("@pages/Saved"));
 const NewsClient = lazy(() => import("@pages/News"));
 const NewsDetail = lazy(() => import("@pages/NewsDetail"));
 const ContactUs = lazy(() => import("@pages/ContactUs"));
+const CarDiagnostics = lazy(() => import("@pages/CarDiagnostics"));
 
 // Admin pages
 const AdminLogin = lazy(() => import("@pages/Admin/Login"));
@@ -53,6 +57,7 @@ const CharacteristicChildren = lazy(
   () => import("@pages/Admin/CarSpecs/Characteristics/Children"),
 );
 const Colors = lazy(() => import("@pages/Admin/CarSpecs/Color"));
+const CarEquipment = lazy(() => import("@pages/Admin/CarSpecs/Equipment"));
 const AllSubcategories = lazy(
   () => import("@pages/Admin/CarSpecs/AllSubcategories"),
 );
@@ -62,6 +67,10 @@ const Stats = lazy(() => import("@pages/Admin/Stats"));
 const AdminCars = lazy(() => import("@pages/Admin/Cars"));
 const CarRequests = lazy(() => import("@pages/Admin/CarRequests"));
 const Admins = lazy(() => import("@pages/Admin/Admins"));
+const CarFax = lazy(() => import("@pages/Admin/CarFax"));
+const CarDiagnosticsAdmin = lazy(
+  () => import("@pages/Admin/CarDiagnosticsAdmin"),
+);
 
 export default function Router() {
   const routes = useRoutes([
@@ -100,6 +109,10 @@ export default function Router() {
         {
           path: "/auto-dealers",
           element: <AutoDealers />,
+        },
+        {
+          path: "/car-diagnostics",
+          element: <CarDiagnostics />,
         },
         {
           path: "/saved",
@@ -146,6 +159,10 @@ export default function Router() {
         {
           path: "saved-search",
           element: <SavedSearch />,
+        },
+        {
+          path: "saved-search/:id",
+          element: <SavedSearchResults />,
         },
         {
           path: "messages",
@@ -242,6 +259,10 @@ export default function Router() {
           element: <Colors />,
         },
         {
+          path: "car-specs/equipment",
+          element: <CarEquipment />,
+        },
+        {
           path: "car-specs/subcategories",
           element: <AllSubcategories />,
         },
@@ -268,6 +289,14 @@ export default function Router() {
         {
           path: "admins",
           element: <Admins />,
+        },
+        {
+          path: "carfax",
+          element: <CarFax />,
+        },
+        {
+          path: "car-diagnostics",
+          element: <CarDiagnosticsAdmin />,
         },
       ],
     },

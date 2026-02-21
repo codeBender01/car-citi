@@ -59,7 +59,7 @@ const Home = () => {
 
   const { data: homeData } = useGetHomeClient();
   const { data: banners } = useGetBanners(1, 100);
-  const { data: carMarks } = useGetCarMarksClient(1, 5, i18n.language);
+  const { data: carMarks } = useGetCarMarksClient(1, 10, i18n.language);
   const { data: subcategories } = useGetSubcategoriesClient(i18n.language);
   const { data: businessUsers } = useGetUsers(1, 5, "Business");
 
@@ -83,6 +83,8 @@ const Home = () => {
   };
 
   const activeCars = getActiveCars();
+
+  console.log(subcategories);
 
   return (
     <div className="pt-[75px]">
@@ -255,8 +257,6 @@ const Home = () => {
           })}
         </ul>
 
-        <BrandsSection carMarks={carMarks?.data.rows} />
-
         <PartnersSection dealers={businessUsers?.data?.users} />
 
         <div className="mt-[75px] md:mt-[120px] relative rounded-2xl overflow-hidden">
@@ -292,7 +292,7 @@ const Home = () => {
                 ))}
               </ul>
               <button
-                onClick={() => navigate("/contact-us")}
+                onClick={() => navigate("/car-diagnostics")}
                 className="mt-8 bg-primary text-white px-6 py-3 rounded-full font-dm font-medium flex items-center gap-2 hover:opacity-90 transition-opacity"
               >
                 {t("home.submitCarCheck")}

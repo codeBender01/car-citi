@@ -51,10 +51,10 @@ const CarDetailsForm = ({
   const [activeCarModels, setActiveCarModels] = useState<OneCarModel[]>([]);
   const [selectedCarMark, setSelectedCarMark] = useState("");
 
-  // Generate years from 2000 to current year
+  // Generate years from 1995 to current year
   const currentYear = new Date().getFullYear();
   const years = Array.from(
-    { length: currentYear - 2000 + 1 },
+    { length: currentYear - 1995 + 1 },
     (_, i) => currentYear - i,
   );
 
@@ -121,8 +121,6 @@ const CarDetailsForm = ({
     }
   }, [selectedCarMark, carMark]);
 
-  console.log(activeCarModels);
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <div className="col-span-full relative w-full min-h-[60px]">
@@ -130,11 +128,11 @@ const CarDetailsForm = ({
           type="text"
           value={formData.title}
           onChange={(e) => {
-            if (e.target.value.length <= 50) {
+            if (e.target.value.length <= 100) {
               handleInputChange("title", e.target.value);
             }
           }}
-          maxLength={50}
+          maxLength={100}
           className="w-full h-full px-4 pt-7 pb-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale focus:outline-none focus:border-[#7B3FF2] focus:ring-2 focus:ring-[#7B3FF2]/20 placeholder:text-base"
         />
         <span className="absolute left-4 top-3 text-sm font-medium text-gray-500 font-rale pointer-events-none">
@@ -217,7 +215,7 @@ const CarDetailsForm = ({
             <SelectValue className="truncate" placeholder="Выберите год" />
           </div>
         </SelectTrigger>
-        <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20 max-h-[300px]">
+        <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20 max-h-[200px] overflow-y-auto">
           {years.map((year) => (
             <SelectItem
               key={year}

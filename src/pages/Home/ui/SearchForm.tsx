@@ -200,7 +200,8 @@ const SearchForm = () => {
     { id: "new" as const, label: t("common.new") },
   ];
 
-  const years = ["2024", "2023", "2022", "2021", "2020", "2019"];
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: currentYear - 1995 + 1 }, (_, i) => String(currentYear - i));
   const engineVolumes = ["1.0-1.5", "1.6-2.0", "2.1-3.0", "3.0+"];
 
   return (
@@ -332,7 +333,7 @@ const SearchForm = () => {
                     <SelectValue placeholder={t("filters.chooseYear")} />
                   </div>
                 </SelectTrigger>
-                <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
+                <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20 max-h-[200px] overflow-y-auto">
                   {years.map((y) => (
                     <SelectItem
                       key={y}

@@ -1,6 +1,11 @@
 import React from "react";
 import { HiOutlineLocationMarker } from "react-icons/hi";
-import { IoNewspaperOutline, IoChatbubblesOutline } from "react-icons/io5";
+import {
+  IoNewspaperOutline,
+  IoChatbubblesOutline,
+  IoDocumentTextOutline,
+  IoMedkitOutline,
+} from "react-icons/io5";
 import { VscFeedback } from "react-icons/vsc";
 import { BiLogOut } from "react-icons/bi";
 import { FaQuestion } from "react-icons/fa";
@@ -65,6 +70,10 @@ export const adminNavs: AdminNav[] = [
       {
         name: "Цвет",
         path: "/admin/car-specs/color",
+      },
+      {
+        name: "Комплектация",
+        path: "/admin/car-specs/equipment",
       },
     ],
   },
@@ -147,6 +156,18 @@ export const adminNavs: AdminNav[] = [
     icon: <HiOutlineChartBar className="w-5 h-5" />,
     path: "/admin/stats",
     roles: ["admin"],
+  },
+  {
+    text: "Диагностика",
+    icon: <IoMedkitOutline className="w-5 h-5" />,
+    path: "/admin/car-diagnostics",
+    roles: ["admin", "moderator"],
+  },
+  {
+    text: "Карфакс",
+    icon: <IoDocumentTextOutline className="w-5 h-5" />,
+    path: "/admin/carfax",
+    roles: ["admin", "moderator"],
   },
   {
     text: "Выход",

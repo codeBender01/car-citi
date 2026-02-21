@@ -6,7 +6,8 @@ import type { ApiResponse } from "@/interfaces/apiResponse.interface";
 export const useGetSimilar = (language: string = "ru", id: string) => {
   const token = localStorage.getItem("accessToken");
   return useQuery<ApiResponse<PostsList>>({
-    queryKey: ["getSimilarPosts"],
+    queryKey: ["getSimilarPosts", id, language],
+    enabled: !!id,
     queryFn: async () => {
       const { data } = await apiClient.get("/posts/similar/" + id, {
         headers: {

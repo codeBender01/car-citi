@@ -71,7 +71,6 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
   );
   const [subcategory] = useState(searchParams.get("subcategoryId") || "");
   const [yearFrom, setYearFrom] = useState(searchParams.get("yearFrom") || "");
-  const [yearTo, setYearTo] = useState(searchParams.get("yearTo") || "");
   const [minPrice, setMinPrice] = useState(
     searchParams.get("priceFrom") || "0",
   );
@@ -180,7 +179,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     if (offerType) params.set("offerTypeId", offerType);
     if (subcategory) params.set("subcategoryId", subcategory);
     if (yearFrom) params.set("yearFrom", yearFrom);
-    if (yearTo) params.set("yearTo", yearTo);
+
     if (minPrice && minPrice !== "0") params.set("priceFrom", minPrice);
     if (maxPrice && maxPrice !== "100000") params.set("priceTo", maxPrice);
     for (const id of selectedChars) params.append("characteristicIds", id);
@@ -200,7 +199,6 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     offerType,
     subcategory,
     yearFrom,
-    yearTo,
     minPrice,
     maxPrice,
     selectedChars,
@@ -229,18 +227,10 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
       );
   }, [regions, citySearch]);
 
-  const years = [
-    "2024",
-    "2023",
-    "2022",
-    "2021",
-    "2020",
-    "2019",
-    "2018",
-    "2017",
-    "2016",
-    "2015",
-  ];
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: currentYear - 1995 + 1 }, (_, i) =>
+    String(currentYear - i),
+  );
 
   const handleSaveSearch = async () => {
     const payload: Record<string, any> = {};
@@ -257,11 +247,10 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     if (color) payload.colorId = color;
     if (subcategory) payload.subcategoryId = subcategory;
     if (yearFrom) payload.yearFrom = yearFrom;
-    if (yearTo) payload.yearTo = yearTo;
+    if (yearFrom) payload.To = yearFrom;
     if (minPrice && minPrice !== "0") payload.priceFrom = Number(minPrice);
     if (maxPrice && maxPrice !== "100000") payload.priceTo = Number(maxPrice);
-    if (selectedChars.length > 0)
-      payload.characteristicIds = selectedChars;
+    if (selectedChars.length > 0) payload.characteristicIds = selectedChars;
     if (selectedCharItems.length > 0)
       payload.characteristicItemIds = selectedCharItems;
 
@@ -494,7 +483,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
         <div className="border-b border-grayBorder my-5 -mx-5"></div>
 
         {/* Year Range */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <div className="relative">
             <Select value={yearFrom} onValueChange={setYearFrom}>
               <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
@@ -505,7 +494,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
                   <SelectValue placeholder="Год" />
                 </div>
               </SelectTrigger>
-              <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
+              <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20 max-h-[200px] overflow-y-auto">
                 {years.map((year) => (
                   <SelectItem
                     key={year}
@@ -522,41 +511,6 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   setYearFrom("");
-                }}
-                className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
-              >
-                <IoCloseCircle size={20} />
-              </button>
-            )}
-          </div>
-
-          <div className="relative">
-            <Select value={yearTo} onValueChange={setYearTo}>
-              <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
-                <div className="flex flex-col gap-2 items-start w-full">
-                  <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                    Макс. год
-                  </span>
-                  <SelectValue placeholder="Год" />
-                </div>
-              </SelectTrigger>
-              <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                {years.map((year) => (
-                  <SelectItem
-                    key={year}
-                    value={`${year}-12-31`}
-                    className="text-base font-rale cursor-pointer"
-                  >
-                    {year}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {yearTo && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setYearTo("");
                 }}
                 className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
               >

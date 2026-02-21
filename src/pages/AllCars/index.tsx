@@ -16,11 +16,14 @@ import {
 } from "@/components/ui/sheet";
 
 import { useGetPosts } from "@/api/posts";
+import { useGetSimilar } from "@/api/posts/useGetSimilar";
 
 const AllCars = () => {
   const [searchParams] = useSearchParams();
   const { i18n, t } = useTranslation();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const similarTo = searchParams.get("similarTo") || undefined;
 
   // Get all filter parameters from URL
   const brand = searchParams.get("carMarkId") || undefined;
@@ -47,7 +50,7 @@ const AllCars = () => {
   const offerTypeId = searchParams.get("offerTypeId") || undefined;
   const dealerId = searchParams.get("dealerId") || undefined;
 
-  const { data: posts, isLoading: postsLoading } = useGetPosts({
+  const { data: filteredPosts, isLoading: filteredLoading } = useGetPosts({
     carMarkId: brand,
     carModelId: model,
     regionId: regionIds.length > 0 ? regionIds : undefined,
@@ -69,6 +72,14 @@ const AllCars = () => {
     dealerId,
     "Accept-Language": i18n.language,
   });
+
+  const { data: similarPosts, isLoading: similarLoading } = useGetSimilar(
+    i18n.language,
+    similarTo || "",
+  );
+
+  const posts = similarTo ? similarPosts : filteredPosts;
+  const postsLoading = similarTo ? similarLoading : filteredLoading;
 
   const totalCount = posts?.data?.count || 0;
   const displayedCount = posts?.data?.rows?.length || 0;

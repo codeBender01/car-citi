@@ -10,6 +10,7 @@ import CarImages from "./ui/CarImages";
 
 import CarChars from "./ui/CarCharacteristics";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
@@ -26,6 +27,7 @@ import dayjs from "dayjs";
 
 const CarDetails = () => {
   const [expandedChars, setExpandedChars] = useState<string[]>([]);
+  const [showPhone, setShowPhone] = useState(false);
 
   const { id } = useParams();
   const { i18n, t } = useTranslation();
@@ -36,7 +38,10 @@ const CarDetails = () => {
     );
   };
 
-  const { data: oneCar } = useGetOnePost(i18n.language, id as string);
+  const { data: oneCar, isLoading } = useGetOnePost(
+    i18n.language,
+    id as string,
+  );
   const { data: similarPosts } = useGetSimilar(i18n.language, id as string);
   const { toast } = useToast();
   const addToFavorites = useAddPostToFavorites();
@@ -44,7 +49,6 @@ const CarDetails = () => {
   const car = oneCar?.data;
 
   const serviceOptions = getServiceOptions(t, car?.verifiedStatus);
-
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -88,7 +92,13 @@ const CarDetails = () => {
     }
   };
 
-  console.log(car);
+  if (isLoading) {
+    return (
+      <div className="pt-8 lg:pt-[120px] xl:pt-[180px] flex items-center justify-center min-h-[50vh]">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
 
   return (
     <div className="pt-8 lg:pt-[120px] xl:pt-[180px] px-0 lg:px-10 xl:px-20 2xl:px-[118px]">
@@ -100,16 +110,11 @@ const CarDetails = () => {
         <Link to="/all-cars" className="text-primary hover:underline">
           {t("carDetailsPage.breadcrumb.carsForSale")}
         </Link>{" "}
-        /{" "}
-        <span>
-          {car?.carMark?.name} {car?.carModel?.name}
-        </span>
+        / <span>{car?.title}</span>
       </div>
-      <div className="lg:flex hidden h2 mt-5">
-        {car?.carMark?.name}, {car?.carModel?.name}
-      </div>
+      <div className="lg:flex hidden h2 mt-5">{car?.title}</div>
       <p className="font-dm text-base lg:flex hidden">
-        {car?.transmission?.name} • {dayjs(car?.issueYear).format("DD.MM.YYYY")}
+        {car?.transmission?.name} • {dayjs(car?.issueYear).format("YYYY")}
       </p>
       <div className="mt-5 flex justify-between gap-4 xl:gap-0">
         <div className="w-full lg:w-[65%]">
@@ -133,7 +138,7 @@ const CarDetails = () => {
             </div>
             <p className="font-dm text-base lg:hidden flex">
               {car?.transmission?.name} •{" "}
-              {dayjs(car?.issueYear).format("DD.MM.YYYY")}
+              {dayjs(car?.issueYear).format("YYYY")}
             </p>
           </div>
           <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
@@ -142,13 +147,49 @@ const CarDetails = () => {
             </div>
             <p className="mt-6 lg:mt-10 text-base font-light">{car?.damage}</p>
           </div>
-          {car?.characteristics && car.characteristics.length > 0 && (
+          <div className="lg:hidden bg-white border border-grayBorder mx-6 p-6 mt-[15px] rounded-2xl font-dm">
+            <div className="flex gap-4 text-textPrimary">
+              <span>{t("carDetailsPage.price")}</span>
+            </div>
+            <div className="font-dm text-[30px] my-5 font-bold">
+              {car?.carPrice?.price
+                ? `${car.carPrice.price.toLocaleString()} TMT`
+                : ""}
+            </div>
+            <div>{t("carDetailsPage.noNegotiation")}</div>
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-out ${
+                showPhone
+                  ? "max-h-20 opacity-100 mt-6 mb-3"
+                  : "max-h-0 opacity-0 mt-0 mb-0"
+              }`}
+            >
+              <a
+                href={`tel:${car?.phone}`}
+                className="text-primary font-dm text-lg font-bold hover:underline"
+              >
+                {car?.phone}
+              </a>
+            </div>
+            <Button
+              size="none"
+              className={`text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] cursor-pointer rounded-xl flex items-center ${showPhone ? "" : "mt-6"} gap-2.5 py-4 px-[25px] w-fit`}
+              onClick={() => setShowPhone((prev) => !prev)}
+            >
+              <IoPricetagOutline />
+              {t("carDetailsPage.makeOffer")}
+            </Button>
+          </div>
+          <div className="lg:hidden mx-6 mt-[15px]">
+            <CarChars car={car} />
+          </div>
+          {/* {car?.carCharacteristics && car.carCharacteristics.length > 0 && (
             <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
               <div className="text-[22px] md:text-[26px]">
                 {t("carDetailsPage.features")}
               </div>
               <div className="mt-6 lg:mt-10 md:flex grid grid-cols-1 sm:grid-cols-2 md:gap-0 gap-8 justify-between">
-                {car.characteristics
+                {car.carCharacteristics
                   .filter((char) => char.items && char.items.length > 0)
                   .map((s) => {
                     return (
@@ -174,14 +215,14 @@ const CarDetails = () => {
                   })}
               </div>
             </div>
-          )}
-          {car?.characteristics && car.characteristics.length > 0 && (
+          )} */}
+          {car?.carCharacteristics && car.carCharacteristics.length > 0 && (
             <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
               <div className="text-[22px] md:text-[26px]">
                 {t("carDetailsPage.technicalSpecs")}
               </div>
               <div className="mt-6 md:mt-10 flex justify-between flex-col">
-                {car.characteristics
+                {car.carCharacteristics
                   .filter((c) => c.items && c.items.length > 0)
                   .map((c, index, arr) => {
                     const isExpanded = expandedChars.includes(c.id);
@@ -271,9 +312,24 @@ const CarDetails = () => {
                 : ""}
             </div>
             <div>{t("carDetailsPage.noNegotiation")}</div>
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-out ${
+                showPhone
+                  ? "max-h-20 opacity-100 mt-10 mb-3"
+                  : "max-h-0 opacity-0 mt-0 mb-0"
+              }`}
+            >
+              <a
+                href={`tel:${car?.phone}`}
+                className="text-primary font-dm text-lg font-bold hover:underline"
+              >
+                {car?.phone}
+              </a>
+            </div>
             <Button
               size="none"
-              className="text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] cursor-pointer rounded-xl flex items-center mt-10 gap-2.5 py-4 px-[25px] w-fit"
+              className={`text-white bg-primary hover:bg-white hover:text-primary font-dm text-[15px] cursor-pointer rounded-xl flex items-center ${showPhone ? "" : "mt-10"} gap-2.5 py-4 px-[25px] w-fit`}
+              onClick={() => setShowPhone((prev) => !prev)}
             >
               <IoPricetagOutline />
               {t("carDetailsPage.makeOffer")}
@@ -322,24 +378,29 @@ const CarDetails = () => {
           </div> */}
         </div>
       </div>
-      <div className="px-6 lg:px-0 mt-20 md:mt-[200px] w-full">
-        <div className="flex items-center justify-between">
-          <div className="font-rale text-[40px] text-textPrimary font-bold">
-            {t("carDetailsPage.similarListings")}
+      {similarPosts && similarPosts.data.rows.length > 0 && (
+        <div className="px-6 lg:px-0 mt-20 md:mt-[200px] w-full">
+          <div className="flex items-center justify-between">
+            <div className="font-rale text-[40px] text-textPrimary font-bold">
+              {t("carDetailsPage.similarListings")}
+            </div>
+            <Link
+              to={`/all-cars?similarTo=${id}`}
+              className="flex cursor-pointer items-center gap-2 font-dm font-medium"
+            >
+              {t("carDetailsPage.viewAll")}
+              <BsArrowUpRight />
+            </Link>
           </div>
-          <div className="flex items-center gap-2 font-dm font-medium">
-            {t("carDetailsPage.viewAll")}
-            <BsArrowUpRight />
-          </div>
-        </div>
 
-        <div className="px-6 bg-amber-50">
-          <CarsCarousel
-            posts={similarPosts ? similarPosts.data.rows : []}
-            totalCount={similarPosts?.data.count}
-          />
+          <div className="px-6 bg-amber-50">
+            <CarsCarousel
+              posts={similarPosts.data.rows}
+              totalCount={similarPosts.data.count}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

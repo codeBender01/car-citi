@@ -55,6 +55,7 @@ export interface OneCarModelClient {
 export interface HomeCarModel {
   carMark: OneCarMarkClient;
   carModel: OneCarModelClient;
+  title: string;
   carPrice: {
     customPrice: string;
     prefixPrice: string;

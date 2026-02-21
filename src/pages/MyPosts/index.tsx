@@ -20,22 +20,23 @@ import { useToast } from "@/hooks/use-toast";
 import dayjs from "dayjs";
 
 const MyPosts = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const { toast } = useToast();
   const [selectedCar, setSelectedCar] = useState("Audi A3");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: ownPosts, isLoading } = useGetOwnPosts(i18n.language);
+  const ITEMS_PER_PAGE = 10;
+
+  const { data: ownPosts, isLoading } = useGetOwnPosts(
+    i18n.language,
+    currentPage,
+    ITEMS_PER_PAGE,
+  );
   const deletePost = useDeletePost();
 
-  const ITEMS_PER_PAGE = 10;
   const posts = ownPosts?.data?.rows || [];
   const totalItems = ownPosts?.data?.count || 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedPosts = posts.slice(startIndex, endIndex);
 
   const handleDelete = async (id: string) => {
     try {
@@ -98,7 +99,7 @@ const MyPosts = () => {
               КП
             </p>
             <p className="font-dm font-medium text-base text-primary leading-7">
-              Тип топлива
+              Статус
             </p>
             <p className="font-dm font-medium text-base text-primary leading-7">
               Действие
@@ -113,7 +114,7 @@ const MyPosts = () => {
         ) : (
           <>
             <div className="space-y-3">
-              {paginatedPosts.map((post) => (
+              {posts.map((post) => (
                 <div
                   key={post.id}
                   className="bg-white rounded-2xl px-3 md:px-9 py-5 border-b border-grayBorder hover:shadow-md transition-shadow"
@@ -133,10 +134,7 @@ const MyPosts = () => {
                         className="w-[135px] h-[110px] rounded-lg object-cover"
                       />
                       <span className="font-dm text-sm text-textSecondary line-clamp-2">
-                        {post.carMark?.name} {post.carModel?.name}{" "}
-                        {post.issueYear
-                          ? dayjs(post.issueYear).format("DD.MM.YYYY")
-                          : ""}
+                        {post.title}
                       </span>
                     </div>
 
@@ -146,7 +144,7 @@ const MyPosts = () => {
 
                     <span className="font-dm text-sm text-textSecondary">
                       {post.issueYear
-                        ? dayjs(post.issueYear).format("DD.MM.YYYY")
+                        ? dayjs(post.issueYear).format("YYYY")
                         : "-"}
                     </span>
 
@@ -155,7 +153,7 @@ const MyPosts = () => {
                     </span>
 
                     <span className="font-dm text-sm text-textSecondary">
-                      {post.fuelType?.name || "-"}
+                      {post.status ? t(`myPosts.status.${post.status}`) : "-"}
                     </span>
 
                     <div className="flex items-center gap-3">

@@ -55,6 +55,7 @@ export interface OnePost {
     price: number;
   };
   id: string;
+  title: string;
   images: {
     images: {
       hashblur: string;
@@ -77,6 +78,7 @@ export interface OnePost {
   verifiedStatus: string;
   isActive: boolean;
   mileage: number;
+  phone: string;
   fuelType?: {
     id: string;
     name: string;
@@ -85,7 +87,38 @@ export interface OnePost {
     id: string;
     name: string;
   };
-  characteristics?: {
+  engineVolume?: number;
+  vin?: string;
+  color?: {
+    id: string;
+    name: string;
+    hex: string;
+  };
+  driveType?: {
+    id: string;
+    name: string;
+  };
+  carCondition?: {
+    id: string;
+    name: string;
+  };
+  region?: {
+    id: string;
+    name: string;
+  };
+  city?: {
+    id: string;
+    name: string;
+  };
+  carEquipment?: {
+    id: string;
+    name: string;
+  };
+  offerType?: {
+    id: string;
+    name: string;
+  };
+  carCharacteristics?: {
     id: string;
     name: string;
     items: {

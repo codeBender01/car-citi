@@ -184,6 +184,12 @@ export interface CarSpecsColorsList {
   rows: OneCarColor[];
 }
 
+export interface NewCarEquipment {
+  id: string;
+  nameTk: string;
+  nameRu: string;
+}
+
 export interface CarEquipmentList {
   count: number;
   rows: OneCarEquipment[];
@@ -191,6 +197,8 @@ export interface CarEquipmentList {
 
 export interface OneCarEquipment {
   id: string;
+  nameTk: string;
+  nameRu: string;
   name: string;
 }
 

@@ -5,6 +5,7 @@ import car1 from "@assets/images/car1.png";
 import Gearbox from "@/svgs/Gearbox";
 import Speedometer from "@/svgs/Speedometer";
 import Calendar from "@/svgs/Calendar";
+import { IoLocation } from "react-icons/io5";
 
 import { BsArrowUpRight, BsBookmark, BsBookmarkFill } from "react-icons/bs";
 import { HiShieldCheck } from "react-icons/hi";
@@ -92,14 +93,12 @@ const CarCard = ({ car }: CarCardProps) => {
     swiperRef.current.slideTo(clampedIndex);
   };
 
-  console.log(car);
-
   return (
     <div
       onClick={() => {
         navigate("/car-details/" + car.id);
       }}
-      className={`rounded-2xl flex flex-col w-full md:max-w-[330px] bg-white shadow-md border-2 ${car.verifiedStatus === "verified" ? "border-primary" : "border-headerBorder"}`}
+      className={`rounded-2xl flex flex-col w-full md:max-w-[330px] bg-white shadow-md border-5  ${car.verifiedStatus === "verified" ? "border-primary " : "border-white"}`}
     >
       <div
         ref={containerRef}
@@ -139,7 +138,7 @@ const CarCard = ({ car }: CarCardProps) => {
                   <img
                     src={`${BASE_URL}/${image.url}`}
                     alt={car.carModel.name}
-                    className="w-full h-full object-cover rounded-t-2xl"
+                    className="w-full h-full object-cover rounded-t-xl"
                   />
                 </SwiperSlide>
               ))}
@@ -164,17 +163,33 @@ const CarCard = ({ car }: CarCardProps) => {
         )}
       </div>
 
-      <div className="px-[30px] pb-5 text-textPrimary">
-        <div className="font-rale font-bold text-[20px] ">
-          {car.carModel.name}
+      <div className="px-[20px] pb-5 text-textPrimary grid grid-rows-[1fr_auto_auto] flex-grow">
+        <div>
+          <div className="font-rale font-bold text-[20px] mt-6">
+            {car.title}
+          </div>
+          <p className="line-clamp-1 text-sm font-dm "></p>
         </div>
-        <p className="line-clamp-1 text-sm font-dm "></p>
 
         <div className="grid grid-cols-2 mt-6 gap-y-7">
-          <div className="flex items-center gap-2 text-sm text-textPrimary font-dm">
-            <Speedometer />
-            {"mileage" in car && car.mileage ? car.mileage : ""} km
-          </div>
+          {"mileage" in car && car.mileage && (
+            <div className="flex items-center gap-2 text-sm text-textPrimary font-dm">
+              <Speedometer />
+              {car.mileage} km
+            </div>
+          )}
+
+          {"city" in car && car.city?.name && (
+            <div className="flex items-center gap-2 text-xs text-textPrimary font-dm">
+              <IoLocation className="shrink-0" />
+              <div className="line-clamp-1">
+                {"region" in car && car.region?.name
+                  ? `${car.region?.name}, `
+                  : ""}
+                {car.city.name}
+              </div>
+            </div>
+          )}
           {/* <div className="flex items-center gap-2 text-sm text-textPrimary font-dm">
             <Fuel />
             {car.fuelType.name}
@@ -189,12 +204,14 @@ const CarCard = ({ car }: CarCardProps) => {
           </div>
         </div>
 
-        <div className="my-6 h-0.5 w-full bg-headerBorder"></div>
-        <div className="flex items-center justify-between font-bold">
-          <div>{car.carPrice.price} TMT</div>
-          <div className="flex items-center cursor-pointer text-primary gap-2 font-dm font-medium">
-            Подробно
-            <BsArrowUpRight />
+        <div>
+          <div className="my-6 h-0.5 w-full bg-headerBorder"></div>
+          <div className="flex items-center justify-between font-bold">
+            <div>{car.carPrice.price} TMT</div>
+            <div className="flex items-center cursor-pointer text-primary gap-2 font-dm font-medium">
+              Подробно
+              <BsArrowUpRight />
+            </div>
           </div>
         </div>
       </div>
