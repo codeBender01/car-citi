@@ -177,7 +177,15 @@
     "engineVolume": "Объем двигателя",
     "chooseVolume": "Выберите объем",
     "chooseColor": "Выберите цвет",
-    "firstSelectBrand": "Сначала выберите марку"
+    "firstSelectBrand": "Сначала выберите марку",
+    "showMoreCount": "Показать еще {{count}}",
+    "found": "Найдено: {{count}} авто",
+    "searchSaved": "Поиск сохранён",
+    "loginRequired": "Необходимо авторизоваться",
+    "loginToSaveSearch": "Войдите в аккаунт, чтобы сохранить поиск",
+    "error": "Ошибка",
+    "saveSearchError": "Не удалось сохранить поиск",
+    "saving": "Сохранение..."
   },
   "cities": {
     "ashgabat": "Ашхабад",

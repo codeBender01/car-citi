@@ -65,7 +65,6 @@ const CarMarks = lazy(() => import("@pages/Admin/CarMarks"));
 const CarModels = lazy(() => import("@pages/Admin/CarMarks/Models"));
 const Stats = lazy(() => import("@pages/Admin/Stats"));
 const AdminCars = lazy(() => import("@pages/Admin/Cars"));
-const CarRequests = lazy(() => import("@pages/Admin/CarRequests"));
 const Admins = lazy(() => import("@pages/Admin/Admins"));
 const CarFax = lazy(() => import("@pages/Admin/CarFax"));
 const CarDiagnosticsAdmin = lazy(
@@ -146,6 +145,10 @@ export default function Router() {
         },
         {
           path: "add",
+          element: <AddCar />,
+        },
+        {
+          path: "edit/:id",
           element: <AddCar />,
         },
         {
@@ -282,10 +285,7 @@ export default function Router() {
           path: "cars",
           element: <AdminCars />,
         },
-        {
-          path: "car-requests",
-          element: <CarRequests />,
-        },
+
         {
           path: "admins",
           element: <Admins />,

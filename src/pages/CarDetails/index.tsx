@@ -42,6 +42,8 @@ const CarDetails = () => {
     i18n.language,
     id as string,
   );
+
+  console.log(oneCar);
   const { data: similarPosts } = useGetSimilar(i18n.language, id as string);
   const { toast } = useToast();
   const addToFavorites = useAddPostToFavorites();
@@ -137,8 +139,7 @@ const CarDetails = () => {
               {car?.carMark?.name}, {car?.carModel?.name}
             </div>
             <p className="font-dm text-base lg:hidden flex">
-              {car?.transmission?.name} •{" "}
-              {dayjs(car?.issueYear).format("YYYY")}
+              {car?.transmission?.name} • {dayjs(car?.issueYear).format("YYYY")}
             </p>
           </div>
           <div className="bg-white border border-grayBorder mx-6 lg:mx-0 p-6 lg:p-10 mt-[15px] md:mt-[30px] rounded-2xl font-dm">
@@ -223,7 +224,7 @@ const CarDetails = () => {
               </div>
               <div className="mt-6 md:mt-10 flex justify-between flex-col">
                 {car.carCharacteristics
-                  .filter((c) => c.items && c.items.length > 0)
+                  .filter((c) => c.items && c.items.some((item) => item.checked))
                   .map((c, index, arr) => {
                     const isExpanded = expandedChars.includes(c.id);
                     return (
@@ -253,7 +254,7 @@ const CarDetails = () => {
                               : "max-h-0 opacity-0"
                           }`}
                         >
-                          {c.items.map((item) => (
+                          {c.items.filter((item) => item.checked).map((item) => (
                             <div
                               key={item.id}
                               className="text-base flex items-center w-full gap-2.5"

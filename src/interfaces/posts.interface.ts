@@ -124,11 +124,13 @@ export interface OnePost {
     items: {
       id: string;
       name: string;
+      checked: boolean;
     }[];
   }[];
 }
 
 export interface NewPostReq {
+  id?: string;
   tags?: string[];
   engineVolume: number;
   regionId: string;

@@ -17,7 +17,6 @@ import { getWhyUs } from "./lib/whyUs";
 
 import "swiper/css";
 
-import hero from "@/assets/home/hero.png";
 import aspect from "@/assets/home/aspect.png";
 // import logoMed from "@assets/home/logoMedium.png";
 // import check1 from "@assets/home/check1.png";
@@ -84,8 +83,6 @@ const Home = () => {
 
   const activeCars = getActiveCars();
 
-  console.log(subcategories);
-
   return (
     <div className="pt-[75px]">
       <main className=" mt-2 lg:mt-[75px] lg:px-12 2xl:px-[118px]">
@@ -109,12 +106,12 @@ const Home = () => {
                     }}
                   >
                     <div className="absolute inset-0 bg-black/30 rounded-2xl" />
-                    <div className="relative z-10 text-[16px] md:text-xl lg:text-2xl text-primary font-rale">
+                    {/* <div className="relative z-10 text-[16px] md:text-xl lg:text-2xl text-primary font-rale">
                       {t("home.heroSubtitle")}
                     </div>
                     <h1 className="relative z-10 text-2xl md:text-[48px] mb-4 md:mb-0 lg:text-[70px] text-white font-rale font-bold">
                       {t("home.heroTitle")}
-                    </h1>
+                    </h1> */}
                   </div>
                 </SwiperSlide>
               ))
@@ -123,7 +120,6 @@ const Home = () => {
                 <div
                   className="w-full h-[420px] lg:h-[660px] lg:rounded-2xl flex items-center justify-end md:justify-center text-center flex-col relative"
                   style={{
-                    backgroundImage: `url(${hero})`,
                     backgroundPosition: "center",
                     backgroundSize: "cover",
                   }}
@@ -247,7 +243,6 @@ const Home = () => {
                   } as React.CSSProperties
                 }
               >
-                <div>{typeItem.num}</div>
                 <div className="flex items-center gap-2">
                   <div className="flex lg:hidden">{typeItem.icon}</div>
                   {subcategory?.name || typeItem.type}

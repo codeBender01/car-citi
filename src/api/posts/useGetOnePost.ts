@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { ApiResponse } from "@/interfaces/apiResponse.interface";
 import type { OnePost } from "@/interfaces/posts.interface";
 
-export const useGetOnePost = (language: string, id: string) => {
+export const useGetOnePost = (language: string, id: string | undefined) => {
   return useQuery({
     queryFn: async (): Promise<ApiResponse<OnePost>> => {
       const { data } = await apiClient.get<ApiResponse<OnePost>>(
@@ -18,6 +18,7 @@ export const useGetOnePost = (language: string, id: string) => {
       return data;
     },
     queryKey: ["getOnePost", id, language],
+    enabled: !!id,
     refetchOnWindowFocus: false,
   });
 };

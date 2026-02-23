@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { useGetOwnPosts } from "@/api/posts/useGetOwnPosts";
 import { useDeletePost } from "@/api/posts/useDeletePost";
@@ -22,6 +23,7 @@ import dayjs from "dayjs";
 const MyPosts = () => {
   const { i18n, t } = useTranslation();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [selectedCar, setSelectedCar] = useState("Audi A3");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -157,7 +159,10 @@ const MyPosts = () => {
                     </span>
 
                     <div className="flex items-center gap-3">
-                      <button className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-primary">
+                      <button
+                        onClick={() => navigate(`/dashboard/edit/${post.id}`)}
+                        className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-primary"
+                      >
                         <FiEdit2 size={18} />
                       </button>
                       <button
@@ -200,7 +205,10 @@ const MyPosts = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 justify-end">
-                      <button className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-primary">
+                      <button
+                        onClick={() => navigate(`/dashboard/edit/${post.id}`)}
+                        className="p-2 hover:bg-mainBg rounded-lg transition-colors text-textGray hover:text-primary"
+                      >
                         <FiEdit2 size={16} />
                       </button>
                       <button

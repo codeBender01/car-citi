@@ -17,9 +17,9 @@ export const useDeletePost = () => {
     },
     mutationKey: ["deletePost"],
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["getOwnPosts", "getAllPosts"],
-      });
+      queryClient.invalidateQueries({ queryKey: ["getOwnPosts"] });
+      queryClient.invalidateQueries({ queryKey: ["getAllPosts"] });
+      queryClient.invalidateQueries({ queryKey: ["getHomeClient"] });
     },
   });
 };

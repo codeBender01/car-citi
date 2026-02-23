@@ -12,7 +12,7 @@ import { FaQuestion } from "react-icons/fa";
 import { IoCarSport } from "react-icons/io5";
 import { TbBrandToyota } from "react-icons/tb";
 import { HiOutlineChartBar, HiOutlineUserGroup } from "react-icons/hi";
-import { MdDirectionsCar, MdPendingActions } from "react-icons/md";
+import { MdDirectionsCar } from "react-icons/md";
 import { MdViewCarousel } from "react-icons/md";
 
 interface SubPath {
@@ -140,12 +140,6 @@ export const adminNavs: AdminNav[] = [
     roles: ["admin", "moderator"],
   },
   {
-    text: "Заявки на проверку авто",
-    icon: <MdPendingActions className="w-5 h-5" />,
-    path: "/admin/car-requests",
-    roles: ["admin", "moderator"],
-  },
-  {
     text: "Сотрудники",
     icon: <HiOutlineUserGroup className="w-5 h-5" />,
     path: "/admin/admins",
@@ -158,7 +152,7 @@ export const adminNavs: AdminNav[] = [
     roles: ["admin"],
   },
   {
-    text: "Диагностика",
+    text: "Заявки на проверку авто",
     icon: <IoMedkitOutline className="w-5 h-5" />,
     path: "/admin/car-diagnostics",
     roles: ["admin", "moderator"],

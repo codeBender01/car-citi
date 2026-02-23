@@ -257,31 +257,21 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     try {
       await saveSearch.mutateAsync(payload);
       toast({
-        title:
-          i18n.language === "tk" ? "Gözleg ýatda saklandy" : "Поиск сохранён",
+        title: t("filters.searchSaved"),
         variant: "success",
       });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         toast({
-          title:
-            i18n.language === "tk"
-              ? "Hasaba girmeli"
-              : "Необходимо авторизоваться",
-          description:
-            i18n.language === "tk"
-              ? "Gözlegi ýatda saklamak üçin hasaba giriň"
-              : "Войдите в аккаунт, чтобы сохранить поиск",
+          title: t("filters.loginRequired"),
+          description: t("filters.loginToSaveSearch"),
           variant: "destructive",
         });
         return;
       }
       toast({
-        title: i18n.language === "tk" ? "Ýalňyşlyk" : "Ошибка",
-        description:
-          i18n.language === "tk"
-            ? "Gözlegi ýatda saklap bolmady"
-            : "Не удалось сохранить поиск",
+        title: t("filters.error"),
+        description: t("filters.saveSearchError"),
         variant: "destructive",
       });
     }
@@ -299,10 +289,10 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
             <MultiSearchableSelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
               <div className="flex flex-col gap-2 items-start w-full">
                 <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                  Регион / Город
+                  {t("filters.regionCity")}
                 </span>
                 <MultiSearchableSelectValue
-                  placeholder="Выберите город"
+                  placeholder={t("filters.chooseCity")}
                   getLabel={(id) => {
                     if (!regions?.data?.rows) return id;
                     for (const r of regions.data.rows) {
@@ -318,7 +308,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
             <MultiSearchableSelectContent
               className="rounded-xl bg-white border border-[#7B3FF2]/20"
               onSearchChange={setCitySearch}
-              searchPlaceholder="Поиск города..."
+              searchPlaceholder={t("filters.searchCity")}
             >
               {filteredRegions.length > 0 ? (
                 filteredRegions.map((region) => (
@@ -342,7 +332,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
                 ))
               ) : (
                 <div className="py-6 text-center text-sm text-gray-500">
-                  Город не найден
+                  {t("filters.cityNotFound")}
                 </div>
               )}
             </MultiSearchableSelectContent>
@@ -368,9 +358,9 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
             <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
               <div className="flex flex-col gap-2 items-start w-full">
                 <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                  Состояние
+                  {t("filters.condition")}
                 </span>
-                <SelectValue placeholder="Выберите состояние" />
+                <SelectValue placeholder={t("filters.chooseCondition")} />
               </div>
             </SelectTrigger>
             <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
@@ -489,9 +479,9 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
               <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
                 <div className="flex flex-col gap-2 items-start w-full">
                   <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                    Мин. год
+                    {t("filters.minYear")}
                   </span>
-                  <SelectValue placeholder="Год" />
+                  <SelectValue placeholder={t("filters.chooseYear")} />
                 </div>
               </SelectTrigger>
               <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20 max-h-[200px] overflow-y-auto">
@@ -528,9 +518,9 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
             <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
               <div className="flex flex-col gap-2 items-start w-full">
                 <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                  Тип привода
+                  {t("filters.driveType")}
                 </span>
-                <SelectValue placeholder="Выберите тип" />
+                <SelectValue placeholder={t("filters.chooseType")} />
               </div>
             </SelectTrigger>
             <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
@@ -562,7 +552,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
 
         {/* Price Range */}
         <div>
-          <div className="text-lg font-rale text-textPrimary mb-4">Цена</div>
+          <div className="text-lg font-rale text-textPrimary mb-4">{t("filters.price")}</div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="relative">
@@ -574,7 +564,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
                   setPriceRange([Number(e.target.value), priceRange[1]]);
                 }}
                 className="pl-7 pr-4 py-2.5 rounded-xl border border-grayBorder bg-white font-dm text-sm text-textPrimary"
-                placeholder="Мин. цена"
+                placeholder={t("filters.minPrice")}
               />
             </div>
 
@@ -588,7 +578,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
                   setPriceRange([priceRange[0], Number(e.target.value)]);
                 }}
                 className="pl-7 pr-4 py-2.5 rounded-xl border border-grayBorder bg-white font-dm text-sm text-textPrimary"
-                placeholder="Макс. цена"
+                placeholder={t("filters.maxPrice")}
               />
             </div>
           </div>
@@ -611,7 +601,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
         {/* Трансмиссия */}
         <div>
           <div className="text-lg font-rale text-textPrimary mb-4">
-            Коробка передач
+            {t("filters.transmission")}
           </div>
 
           <div className="flex flex-col gap-4">
@@ -637,7 +627,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
         {/* Тип топлива */}
         <div>
           <div className="text-lg font-rale text-textPrimary mb-4">
-            Тип топлива
+            {t("filters.fuelType")}
           </div>
 
           <div className="flex flex-col gap-4">
@@ -666,9 +656,9 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
             <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
               <div className="flex flex-col gap-2 items-start w-full">
                 <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                  Цвет
+                  {t("filters.color")}
                 </span>
-                <SelectValue placeholder="Выберите цвет" />
+                <SelectValue placeholder={t("filters.chooseColor")} />
               </div>
             </SelectTrigger>
             <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
@@ -739,7 +729,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
         {/* Характеристики */}
         <div>
           <div className="text-lg font-rale text-textPrimary mb-4">
-            Характеристики
+            {t("filters.characteristics")}
           </div>
 
           <div className="flex flex-col gap-4">
@@ -811,13 +801,13 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
 
         {chars?.data.rows && chars.data.rows.length > 8 && (
           <div className="font-dm text-base text-primary mt-5 cursor-pointer">
-            Показать еще {chars.data.rows.length - 8}
+            {t("filters.showMoreCount", { count: chars.data.rows.length - 8 })}
           </div>
         )}
       </div>
 
       <div className="text-base font-rale text-textPrimary">
-        Найдено: {postsLoading ? "..." : postsCount} авто
+        {postsLoading ? "..." : t("filters.found", { count: postsCount })}
       </div>
 
       <button
@@ -827,12 +817,8 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
       >
         <IoBookmarkOutline size={20} />
         {saveSearch.isPending
-          ? i18n.language === "tk"
-            ? "Saklanýar..."
-            : "Сохранение..."
-          : i18n.language === "tk"
-            ? "Gözleg sazlamalaryny ýatda sakla"
-            : "Сохранить поисковые настройки"}
+          ? t("filters.saving")
+          : t("filters.saveSearchSettings")}
       </button>
     </div>
   );

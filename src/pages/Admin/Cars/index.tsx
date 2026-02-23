@@ -229,9 +229,8 @@ const AdminCars = () => {
                       КП
                     </TableHead>
                     <TableHead className="font-dm font-medium text-base text-primary">
-                      Тип топлива
+                      Статус
                     </TableHead>
-
                     <TableHead className="font-dm font-medium text-base text-primary">
                       Вкл/Выкл
                     </TableHead>

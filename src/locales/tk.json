@@ -177,7 +177,15 @@
     "engineVolume": "Hereketlendirijiniň göwrümi",
     "chooseVolume": "Göwrümi saýla",
     "chooseColor": "Reňk saýla",
-    "firstSelectBrand": "Ilki bilen marka saýlaň"
+    "firstSelectBrand": "Ilki bilen marka saýlaň",
+    "showMoreCount": "Ýene {{count}} görkez",
+    "found": "Tapyldy: {{count}} awtoulag",
+    "searchSaved": "Gözleg ýatda saklandy",
+    "loginRequired": "Hasaba girmeli",
+    "loginToSaveSearch": "Gözlegi ýatda saklamak üçin hasaba giriň",
+    "error": "Ýalňyşlyk",
+    "saveSearchError": "Gözlegi ýatda saklap bolmady",
+    "saving": "Saklanýar..."
   },
   "cities": {
     "ashgabat": "Aşgabat",
