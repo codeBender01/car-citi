@@ -24,7 +24,10 @@ const Cities = () => {
   const { toast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [cityToDelete, setCityToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [cityToDelete, setCityToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [newCity, setNewCity] = useState<NewCity>({
@@ -35,7 +38,6 @@ const Cities = () => {
 
   const { data: region } = useGetOneRegion(id as string, currentPage, pageSize);
 
-  console.log(region);
   const addCity = useAddCityToTheRegion();
   const deleteCity = useRemoveCity();
 
@@ -120,7 +122,7 @@ const Cities = () => {
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleConfirmedDelete}
-        itemName={cityToDelete ? cityToDelete.name : ''}
+        itemName={cityToDelete ? cityToDelete.name : ""}
         itemType="город"
         isLoading={deleteCity.isPending}
       />
@@ -143,8 +145,8 @@ const Cities = () => {
                 key={city.id}
                 className="transition-all duration-200 hover:bg-primary/10"
               >
-                <TableCell className="font-medium">{city.name}</TableCell>
-                <TableCell className="font-medium">{city.name}</TableCell>
+                <TableCell className="font-medium">{city.nameTk}</TableCell>
+                <TableCell className="font-medium">{city.nameRu}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">
                   {region?.data?.name || "Нет региона"}
                 </TableCell>

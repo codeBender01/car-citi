@@ -35,6 +35,7 @@ import { useGetOfferTypesClient } from "@/api/carSpecsClient/useGetOfferTypesCli
 import { useGetPosts } from "@/api/posts";
 import { useGetCarMarksClient } from "@/api/carMarks/useGetCarMarksClient";
 import { useGetOneCarMarkClient } from "@/api/carMarks/useGetOneCarMarkClient";
+import { useGetTransmissionClient } from "@/api/carSpecsClient/useGetTransmissionClient";
 
 const SearchForm = () => {
   const { t, i18n } = useTranslation();
@@ -48,22 +49,39 @@ const SearchForm = () => {
   const [cityRegions, setCityRegions] = useState<string[]>([]);
   const [condition, setCondition] = useState("");
   const [driveType, setDriveType] = useState("");
+  const [transmission, setTransmission] = useState<string[]>([]);
   const [minPrice, setMinPrice] = useState("0");
-  const [maxPrice, setMaxPrice] = useState("100000");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
-  const [engineVolume, setEngineVolume] = useState("");
+  const [maxPrice, setMaxPrice] = useState("3000000");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
+  const [minPriceFocused, setMinPriceFocused] = useState(false);
+  const [maxPriceFocused, setMaxPriceFocused] = useState(false);
+
+  const formatPrice = (value: string) => {
+    const num = Number(value);
+    if (!num && num !== 0) return value;
+    if (num >= 1000000)
+      return num % 1000000 === 0
+        ? `${num / 1000000}M`
+        : `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000)
+      return num % 1000 === 0
+        ? `${num / 1000}K`
+        : `${(num / 1000).toFixed(1)}K`;
+    return value;
+  };
+  const [engineVolume, setEngineVolume] = useState<string[]>([]);
   const [color, setColor] = useState("");
-  const [offerType, setOfferType] = useState("");
+  const [offerType, setOfferType] = useState<string[]>([]);
 
   const [citySearch, setCitySearch] = useState("");
 
   const { data: regions } = useGetRegions(i18n.language);
   const { data: conditions } = useGetCarSpecsConditionsClient(i18n.language);
   const { data: driveTypes } = useGetDriveTypeClient(i18n.language);
-
   const { data: colors } = useGetColorsClient(i18n.language);
   const { data: subCats } = useGetSubcategoriesClient(i18n.language);
   const { data: offerTypes } = useGetOfferTypesClient(i18n.language);
+  const { data: transmissions } = useGetTransmissionClient(i18n.language);
   const { data: carMarks } = useGetCarMarksClient(1, 100, i18n.language);
   const { data: selectedCarMark } = useGetOneCarMarkClient(brand);
 
@@ -137,13 +155,21 @@ const SearchForm = () => {
   const { data: posts, isLoading: postsLoading } = useGetPosts({
     carMarkId: brand || undefined,
     carModelId: model || undefined,
-    regionId: resolvedLocations.regionIds.length > 0 ? resolvedLocations.regionIds : undefined,
-    cityId: resolvedLocations.cityIds.length > 0 ? resolvedLocations.cityIds : undefined,
+    regionId:
+      resolvedLocations.regionIds.length > 0
+        ? resolvedLocations.regionIds
+        : undefined,
+    cityId:
+      resolvedLocations.cityIds.length > 0
+        ? resolvedLocations.cityIds
+        : undefined,
     driveTypeId: driveType || undefined,
     carConditionId: condition || undefined,
     subcategoryId: bodyType || undefined,
     colorId: color || undefined,
-    offerTypeId: offerType || undefined,
+    transmissionId: transmission.length > 0 ? transmission : undefined,
+    engineVolume: engineVolume.length > 0 ? engineVolume : undefined,
+    offerTypeId: offerType.length > 0 ? offerType : undefined,
     yearFrom: parsedYear.yearFrom,
     yearTo: parsedYear.yearTo,
     priceFrom: minPrice ? Number(minPrice) : undefined,
@@ -163,14 +189,15 @@ const SearchForm = () => {
     if (condition) params.append("carConditionId", condition);
     if (bodyType) params.append("subcategoryId", bodyType);
     if (color) params.append("colorId", color);
-    if (offerType) params.append("offerTypeId", offerType);
-    if (engineVolume) params.append("engineVolume", engineVolume);
+    for (const id of transmission) params.append("transmissionId", id);
+    for (const id of offerType) params.append("offerTypeId", id);
+    for (const ev of engineVolume) params.append("engineVolume", ev);
 
     if (parsedYear.yearFrom) params.append("yearFrom", parsedYear.yearFrom);
     if (parsedYear.yearTo) params.append("yearTo", parsedYear.yearTo);
 
-    if (minPrice) params.append("priceFrom", minPrice);
-    if (maxPrice) params.append("priceTo", maxPrice);
+    params.append("priceFrom", minPrice || "0");
+    params.append("priceTo", maxPrice || "3000000");
 
     navigate(`/all-cars?${params.toString()}`);
   };
@@ -201,15 +228,20 @@ const SearchForm = () => {
   ];
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: currentYear - 1995 + 1 }, (_, i) => String(currentYear - i));
-  const engineVolumes = ["1.0-1.5", "1.6-2.0", "2.1-3.0", "3.0+"];
+  const years = Array.from({ length: currentYear - 1995 + 1 }, (_, i) =>
+    String(currentYear - i),
+  );
+  const engineVolumes = [
+    1.0, 1.2, 1.4, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.5, 2.7, 3.0, 3.5, 4.0, 4.5,
+    5.0, 5.5, 6.0,
+  ];
 
   return (
     <div
       className={`lg:mt-[-70px] relative z-30 bg-black lg:bg-white/40 shadow-lg lg:w-[90%] ${isExpanded ? "pb-10" : "pb-4"} lg:rounded-2xl mx-auto`}
     >
       <div className="flex relative rounded-2xl backdrop-blur-md h-[70px]">
-        <div className="flex justify-center lg:justify-start gap-8 lg:bg-[#FFFFFF33] px-8 pt-4 w-full lg:w-[75%] lg:rounded-tl-2xl">
+        <div className="flex justify-center lg:justify-start gap-8 lg:bg-[#FFFFFF33] px-8 pt-4 w-full lg:flex-1 lg:rounded-tl-2xl">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -227,7 +259,7 @@ const SearchForm = () => {
 
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="ml-auto w-[25%] cursor-pointer hidden lg:flex items-center justify-center font-rale font-medium text-[15px] text-white gap-2 hover:opacity-80 transition-opacity"
+          className="ml-auto px-8 cursor-pointer hidden lg:flex items-center justify-center font-rale font-medium text-[15px] text-white gap-2 hover:opacity-80 transition-opacity"
         >
           <div className="relative w-3.5 h-3.5 flex items-center justify-center">
             <div className="absolute w-3.5 h-0.5 bg-white rounded-lg"></div>
@@ -241,8 +273,8 @@ const SearchForm = () => {
         </button>
       </div>
 
-      <div className="flex">
-        <div className="p-[25px] lg:pt-2.5 pl-4 pr-6 bg-white lg:bg-transparent w-[90%] mx-auto rounded-2xl lg:rounded-none lg:w-[75%]">
+      <div>
+        <div className=" lg:pt-2.5 p-10 lg:py-0 px-6 bg-white lg:bg-transparent w-[95%] mt-2 mx-auto rounded-2xl lg:rounded-none">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-2.5">
             {/* Марка */}
             <div className="relative">
@@ -363,15 +395,17 @@ const SearchForm = () => {
                 {t("filters.price")}
               </div>
 
-              <div className="grid grid-cols-2 gap-2 mb-2">
+              <div className="grid grid-cols-2 gap-2 mb-6">
                 <div className="relative">
                   <Input
-                    type="number"
-                    value={minPrice}
+                    type={minPriceFocused ? "number" : "text"}
+                    value={minPriceFocused ? minPrice : formatPrice(minPrice)}
                     onChange={(e) => {
                       setMinPrice(e.target.value);
                       setPriceRange([Number(e.target.value), priceRange[1]]);
                     }}
+                    onFocus={() => setMinPriceFocused(true)}
+                    onBlur={() => setMinPriceFocused(false)}
                     className="w-full h-[40px] px-3 py-2 border border-[#E1E1E1] rounded-lg bg-white font-dm text-xs text-textPrimary"
                     placeholder={t("filters.minPrice")}
                   />
@@ -379,12 +413,14 @@ const SearchForm = () => {
 
                 <div className="relative">
                   <Input
-                    type="number"
-                    value={maxPrice}
+                    type={maxPriceFocused ? "number" : "text"}
+                    value={maxPriceFocused ? maxPrice : formatPrice(maxPrice)}
                     onChange={(e) => {
                       setMaxPrice(e.target.value);
                       setPriceRange([priceRange[0], Number(e.target.value)]);
                     }}
+                    onFocus={() => setMaxPriceFocused(true)}
+                    onBlur={() => setMaxPriceFocused(false)}
                     className="w-full h-[40px] px-3 py-2 border border-[#E1E1E1] rounded-lg bg-white font-dm text-xs text-textPrimary"
                     placeholder={t("filters.maxPrice")}
                   />
@@ -398,9 +434,9 @@ const SearchForm = () => {
                   setMinPrice(value[0].toString());
                   setMaxPrice(value[1].toString());
                 }}
-                max={100000}
-                step={1000}
-                className="w-full **:data-[slot=slider-track]:h-[2px] **:data-[slot=slider-track]:bg-headerBorder **:data-[slot=slider-range]:bg-textPrimary"
+                max={3000000}
+                step={10000}
+                className="w-full mb-4 **:data-[slot=slider-track]:h-[3px] **:data-[slot=slider-track]:bg-headerBorder **:data-[slot=slider-range]:bg-primary"
               />
             </div>
 
@@ -615,32 +651,43 @@ const SearchForm = () => {
 
                   {/* Тип предложения */}
                   <div className="relative">
-                    <Select value={offerType} onValueChange={setOfferType}>
-                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                    <MultiSearchableSelect
+                      values={offerType}
+                      onValuesChange={setOfferType}
+                    >
+                      <MultiSearchableSelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             {t("filters.offerType")}
                           </span>
-                          <SelectValue placeholder={t("filters.chooseType")} />
+                          <MultiSearchableSelectValue
+                            placeholder={t("filters.chooseType")}
+                            getLabel={(val) =>
+                              offerTypes?.data.rows.find((ot) => ot.id === val)
+                                ?.name || val
+                            }
+                          />
                         </div>
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                        {offerTypes?.data.rows.map((ot) => (
-                          <SelectItem
-                            key={ot.id}
-                            value={ot.id}
-                            className="text-base font-rale cursor-pointer"
-                          >
-                            {ot.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {offerType && (
+                      </MultiSearchableSelectTrigger>
+                      <MultiSearchableSelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
+                        <MultiSearchableSelectGroup>
+                          {offerTypes?.data.rows.map((ot) => (
+                            <MultiSearchableSelectItem
+                              key={ot.id}
+                              value={ot.id}
+                              className="text-base font-rale cursor-pointer"
+                            >
+                              {ot.name}
+                            </MultiSearchableSelectItem>
+                          ))}
+                        </MultiSearchableSelectGroup>
+                      </MultiSearchableSelectContent>
+                    </MultiSearchableSelect>
+                    {offerType.length > 0 && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          setOfferType("");
+                          setOfferType([]);
                         }}
                         className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
                       >
@@ -722,43 +769,52 @@ const SearchForm = () => {
                   </div> */}
 
                   {/* Трансмиссия */}
-                  {/* <div className="relative">
-                    <Select
-                      value={transmission}
-                      onValueChange={setTransmission}
+                  <div className="relative">
+                    <MultiSearchableSelect
+                      values={transmission}
+                      onValuesChange={setTransmission}
                     >
-                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <MultiSearchableSelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                            Трансмиссия
+                            Коробка передач
                           </span>
-                          <SelectValue placeholder="Выберите трансмиссию" />
+                          <MultiSearchableSelectValue
+                            placeholder="Выберите трансмиссию"
+                            getLabel={(val) =>
+                              transmissions?.data.rows.find(
+                                (t) => t.id === val
+                              )?.name || val
+                            }
+                          />
                         </div>
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                        {transmissions?.data.rows.map((trans) => (
-                          <SelectItem
-                            key={trans.id}
-                            value={trans.id}
-                            className="text-base font-rale cursor-pointer"
-                          >
-                            {trans.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {transmission && (
+                      </MultiSearchableSelectTrigger>
+                      <MultiSearchableSelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
+                        <MultiSearchableSelectGroup>
+                          {transmissions?.data.rows.map((trans) => (
+                            <MultiSearchableSelectItem
+                              key={trans.id}
+                              value={trans.id}
+                              className="text-base font-rale cursor-pointer"
+                            >
+                              {trans.name}
+                            </MultiSearchableSelectItem>
+                          ))}
+                        </MultiSearchableSelectGroup>
+                      </MultiSearchableSelectContent>
+                    </MultiSearchableSelect>
+                    {transmission.length > 0 && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          setTransmission("");
+                          setTransmission([]);
                         }}
                         className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
                       >
                         <IoCloseCircle size={20} />
                       </button>
                     )}
-                  </div> */}
+                  </div>
 
                   {/* Тип топлива
                   <div className="relative">
@@ -798,37 +854,40 @@ const SearchForm = () => {
 
                   {/* Объем двигателя */}
                   <div className="relative">
-                    <Select
-                      value={engineVolume}
-                      onValueChange={setEngineVolume}
+                    <MultiSearchableSelect
+                      values={engineVolume}
+                      onValuesChange={setEngineVolume}
                     >
-                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
+                      <MultiSearchableSelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
                         <div className="flex flex-col gap-2 items-start w-full">
                           <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                             {t("filters.engineVolume")}
                           </span>
-                          <SelectValue
+                          <MultiSearchableSelectValue
                             placeholder={t("filters.chooseVolume")}
+                            getLabel={(val) => `${val} L`}
                           />
                         </div>
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                        {engineVolumes.map((ev) => (
-                          <SelectItem
-                            key={ev}
-                            value={ev}
-                            className="text-base font-rale cursor-pointer"
-                          >
-                            {ev}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {engineVolume && (
+                      </MultiSearchableSelectTrigger>
+                      <MultiSearchableSelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
+                        <MultiSearchableSelectGroup>
+                          {engineVolumes.map((ev) => (
+                            <MultiSearchableSelectItem
+                              key={ev}
+                              value={String(ev.toFixed(1))}
+                              className="text-base font-rale cursor-pointer"
+                            >
+                              {ev.toFixed(1)} L
+                            </MultiSearchableSelectItem>
+                          ))}
+                        </MultiSearchableSelectGroup>
+                      </MultiSearchableSelectContent>
+                    </MultiSearchableSelect>
+                    {engineVolume.length > 0 && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          setEngineVolume("");
+                          setEngineVolume([]);
                         }}
                         className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
                       >
@@ -908,57 +967,22 @@ const SearchForm = () => {
                       </button>
                     )}
                   </div>
-
-                  {/* Двери */}
-                  {/* <div className="relative">
-                    <Select value={doors} onValueChange={setDoors}>
-                      <SelectTrigger className="relative w-full min-h-[90px] px-4 py-3 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 flex">
-                        <div className="flex flex-col gap-2 items-start w-full">
-                          <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
-                            Двери
-                          </span>
-                          <SelectValue placeholder="Выберите кол-во" />
-                        </div>
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-                        {doorOptions.map((door) => (
-                          <SelectItem
-                            key={door}
-                            value={door}
-                            className="text-base font-rale cursor-pointer"
-                          >
-                            {door}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {doors && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setDoors("");
-                        }}
-                        className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
-                      >
-                        <IoCloseCircle size={20} />
-                      </button>
-                    )}
-                  </div> */}
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="lg:block hidden w-[25%] mt-3">
-          <Button
-            size="none"
-            onClick={handleSearch}
-            className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl w-[90%] flex items-center gap-2.5 py-[22.5px] font-medium px-[25px]"
-          >
-            <CiSearch />
-            <div>{t("filters.searchCars")}</div>
-          </Button>
+            {/* Поиск авто - always visible on desktop */}
+            <div className="hidden lg:flex items-end col-start-4">
+              <Button
+                size="none"
+                onClick={handleSearch}
+                className="bg-primary text-white font-dm text-[15px] cursor-pointer rounded-xl w-full flex items-center justify-center gap-2.5 py-[22.5px] font-medium px-[25px]"
+              >
+                <CiSearch />
+                <div>{t("filters.searchCars")}</div>
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

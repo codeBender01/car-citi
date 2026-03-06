@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import ruFlag from "@/assets/home/ru.png";
+import tkmFlag from "@/assets/home/tkm.png";
+
 const languages = [
-  { code: "ru", name: "Русский", flag: "🇷🇺" },
-  { code: "tk", name: "Türkmençe", flag: "🇹🇲" },
+  { code: "ru", name: "Русский", flag: ruFlag },
+  { code: "tk", name: "Türkmençe", flag: tkmFlag },
 ];
 
 export const LanguageDropdown = () => {
@@ -32,7 +35,7 @@ export const LanguageDropdown = () => {
           className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-lg bg-gray-800 text-white hover:bg-gray-700 transition-colors"
         >
           <div className="flex items-center gap-3">
-            <span className="text-xl">{currentLanguage.flag}</span>
+            <img src={currentLanguage.flag} alt={currentLanguage.code} className="w-6 h-4 object-cover rounded-sm" />
             <span className="font-dm font-medium">{currentLanguage.name}</span>
           </div>
           <svg
@@ -70,7 +73,7 @@ export const LanguageDropdown = () => {
                   : "bg-gray-800 text-gray-300 hover:bg-gray-700"
               }`}
             >
-              <span className="text-xl">{lang.flag}</span>
+              <img src={lang.flag} alt={lang.code} className="w-6 h-4 object-cover rounded-sm" />
               <span className="font-dm font-medium">{lang.name}</span>
               {lang.code === i18n.language && (
                 <svg

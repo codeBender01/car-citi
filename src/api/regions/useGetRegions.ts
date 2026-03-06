@@ -13,11 +13,11 @@ export const useGetRegions = (lang: string) => {
           headers: {
             "Accept-Language": lang,
           },
-        }
+        },
       );
       return data;
     },
-    queryKey: ["getAllRegions"],
+    queryKey: ["getAllRegions", lang],
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

@@ -59,15 +59,18 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
   const [driveType, setDriveType] = useState(
     searchParams.get("driveTypeId") || "",
   );
-  const [transmission, setTransmission] = useState(
-    searchParams.get("transmissionId") || "",
+  const [transmission, setTransmission] = useState<string[]>(
+    searchParams.getAll("transmissionId"),
   );
   const [fuelType, setFuelType] = useState(
     searchParams.get("fuelTypeId") || "",
   );
   const [color, setColor] = useState(searchParams.get("colorId") || "");
-  const [offerType, setOfferType] = useState(
-    searchParams.get("offerTypeId") || "",
+  const [offerType, setOfferType] = useState<string[]>(
+    searchParams.getAll("offerTypeId"),
+  );
+  const [engineVolume, setEngineVolume] = useState<string[]>(
+    searchParams.getAll("engineVolume"),
   );
   const [subcategory] = useState(searchParams.get("subcategoryId") || "");
   const [yearFrom, setYearFrom] = useState(searchParams.get("yearFrom") || "");
@@ -75,12 +78,23 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     searchParams.get("priceFrom") || "0",
   );
   const [maxPrice, setMaxPrice] = useState(
-    searchParams.get("priceTo") || "100000",
+    searchParams.get("priceTo") || "3000000",
   );
   const [priceRange, setPriceRange] = useState([
     Number(searchParams.get("priceFrom") || 0),
-    Number(searchParams.get("priceTo") || 100000),
+    Number(searchParams.get("priceTo") || 3000000),
   ]);
+  const [minPriceFocused, setMinPriceFocused] = useState(false);
+  const [maxPriceFocused, setMaxPriceFocused] = useState(false);
+
+  const formatPrice = (value: string) => {
+    const num = Number(value);
+    if (!num && num !== 0) return value;
+    if (num >= 1000000) return num % 1000000 === 0 ? `${num / 1000000}M` : `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return num % 1000 === 0 ? `${num / 1000}K` : `${(num / 1000).toFixed(1)}K`;
+    return value;
+  };
+
   const [citySearch, setCitySearch] = useState("");
   const [selectedChars, setSelectedChars] = useState<string[]>(() =>
     searchParams.getAll("characteristicIds"),
@@ -99,6 +113,11 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
   const { data: offerTypes } = useGetOfferTypesClient(i18n.language);
   const { data: carMarks } = useGetCarMarksClient(1, 100, i18n.language);
   const { data: selectedCarMark } = useGetOneCarMarkClient(brand);
+
+  const engineVolumes = [
+    1.0, 1.2, 1.4, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.5, 2.7, 3.0, 3.5, 4.0,
+    4.5, 5.0, 5.5, 6.0,
+  ];
 
   useEffect(() => {
     if (brand) {
@@ -173,15 +192,16 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     for (const id of resolvedLocations.cityIds) params.append("cityId", id);
     if (fuelType) params.set("fuelTypeId", fuelType);
     if (driveType) params.set("driveTypeId", driveType);
-    if (transmission) params.set("transmissionId", transmission);
+    for (const id of transmission) params.append("transmissionId", id);
     if (condition) params.set("carConditionId", condition);
     if (color) params.set("colorId", color);
-    if (offerType) params.set("offerTypeId", offerType);
+    for (const id of offerType) params.append("offerTypeId", id);
+    for (const ev of engineVolume) params.append("engineVolume", ev);
     if (subcategory) params.set("subcategoryId", subcategory);
     if (yearFrom) params.set("yearFrom", yearFrom);
 
-    if (minPrice && minPrice !== "0") params.set("priceFrom", minPrice);
-    if (maxPrice && maxPrice !== "100000") params.set("priceTo", maxPrice);
+    params.set("priceFrom", minPrice || "0");
+    params.set("priceTo", maxPrice || "3000000");
     for (const id of selectedChars) params.append("characteristicIds", id);
     for (const id of selectedCharItems)
       params.append("characteristicItemIds", id);
@@ -197,6 +217,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
     condition,
     color,
     offerType,
+    engineVolume,
     subcategory,
     yearFrom,
     minPrice,
@@ -243,7 +264,7 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
       payload.cityId = resolvedLocations.cityIds[0];
     if (condition) payload.carConditionId = condition;
     if (driveType) payload.driveTypeId = driveType;
-    if (transmission) payload.transmissionId = transmission;
+    if (transmission.length > 0) payload.transmissionId = transmission;
     if (color) payload.colorId = color;
     if (subcategory) payload.subcategoryId = subcategory;
     if (yearFrom) payload.yearFrom = yearFrom;
@@ -557,12 +578,14 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="relative">
               <Input
-                type="number"
-                value={minPrice}
+                type={minPriceFocused ? "number" : "text"}
+                value={minPriceFocused ? minPrice : formatPrice(minPrice)}
                 onChange={(e) => {
                   setMinPrice(e.target.value);
                   setPriceRange([Number(e.target.value), priceRange[1]]);
                 }}
+                onFocus={() => setMinPriceFocused(true)}
+                onBlur={() => setMinPriceFocused(false)}
                 className="pl-7 pr-4 py-2.5 rounded-xl border border-grayBorder bg-white font-dm text-sm text-textPrimary"
                 placeholder={t("filters.minPrice")}
               />
@@ -571,12 +594,14 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-textPrimary font-dm text-sm"></span>
               <Input
-                type="number"
-                value={maxPrice}
+                type={maxPriceFocused ? "number" : "text"}
+                value={maxPriceFocused ? maxPrice : formatPrice(maxPrice)}
                 onChange={(e) => {
                   setMaxPrice(e.target.value);
                   setPriceRange([priceRange[0], Number(e.target.value)]);
                 }}
+                onFocus={() => setMaxPriceFocused(true)}
+                onBlur={() => setMaxPriceFocused(false)}
                 className="pl-7 pr-4 py-2.5 rounded-xl border border-grayBorder bg-white font-dm text-sm text-textPrimary"
                 placeholder={t("filters.maxPrice")}
               />
@@ -590,9 +615,9 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
               setMinPrice(value[0].toString());
               setMaxPrice(value[1].toString());
             }}
-            max={100000}
-            step={1000}
-            className="w-full **:data-[slot=slider-track]:h-[3px] **:data-[slot=slider-track]:bg-headerBorder **:data-[slot=slider-range]:bg-textPrimary"
+            max={3000000}
+            step={10000}
+            className="w-full **:data-[slot=slider-track]:h-[3px] **:data-[slot=slider-track]:bg-headerBorder **:data-[slot=slider-range]:bg-primary"
           />
         </div>
 
@@ -608,9 +633,13 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
             {transmissions?.data.rows.map((trans) => (
               <div key={trans.id} className="flex items-center gap-3">
                 <Checkbox
-                  checked={transmission === trans.id}
+                  checked={transmission.includes(trans.id)}
                   onCheckedChange={(checked) => {
-                    setTransmission(checked ? trans.id : "");
+                    setTransmission(
+                      checked
+                        ? [...transmission, trans.id]
+                        : transmission.filter((id) => id !== trans.id)
+                    );
                   }}
                   className="w-5 h-5 data-[state=checked]:bg-[#0C1002]! data-[state=checked]:text-white! data-[state=checked]:border-[#0C1002]! border-[#0C1002]!"
                 />
@@ -646,6 +675,52 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
               </div>
             ))}
           </div>
+        </div>
+
+        <div className="border-b border-grayBorder my-5 -mx-5"></div>
+
+        {/* Объем двигателя */}
+        <div className="relative">
+          <MultiSearchableSelect
+            values={engineVolume}
+            onValuesChange={setEngineVolume}
+          >
+            <MultiSearchableSelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+              <div className="flex flex-col gap-2 items-start w-full">
+                <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
+                  {t("filters.engineVolume")}
+                </span>
+                <MultiSearchableSelectValue
+                  placeholder={t("filters.chooseVolume")}
+                  getLabel={(val) => `${val} L`}
+                />
+              </div>
+            </MultiSearchableSelectTrigger>
+            <MultiSearchableSelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
+              <MultiSearchableSelectGroup>
+                {engineVolumes.map((ev) => (
+                  <MultiSearchableSelectItem
+                    key={ev}
+                    value={String(ev.toFixed(1))}
+                    className="text-base font-rale cursor-pointer"
+                  >
+                    {ev.toFixed(1)} L
+                  </MultiSearchableSelectItem>
+                ))}
+              </MultiSearchableSelectGroup>
+            </MultiSearchableSelectContent>
+          </MultiSearchableSelect>
+          {engineVolume.length > 0 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setEngineVolume([]);
+              }}
+              className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
+            >
+              <IoCloseCircle size={20} />
+            </button>
+          )}
         </div>
 
         <div className="border-b border-grayBorder my-5 -mx-5"></div>
@@ -690,32 +765,43 @@ const Filters = ({ postsCount, postsLoading }: FiltersProps) => {
 
         {/* Тип предложения */}
         <div className="relative">
-          <Select value={offerType} onValueChange={setOfferType}>
-            <SelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+          <MultiSearchableSelect
+            values={offerType}
+            onValuesChange={setOfferType}
+          >
+            <MultiSearchableSelectTrigger className="relative w-full min-h-[60px] px-4 py-2.5 border border-[#E1E1E1] rounded-xl bg-white font-medium text-textPrimary font-rale shadow-none hover:border-[#E1E1E1] focus-visible:border-[#7B3FF2] focus-visible:ring-[#7B3FF2]/20 [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
               <div className="flex flex-col gap-2 items-start w-full">
                 <span className="text-sm font-medium text-gray-500 font-rale pointer-events-none">
                   {t("filters.offerType")}
                 </span>
-                <SelectValue placeholder={t("filters.chooseType")} />
+                <MultiSearchableSelectValue
+                  placeholder={t("filters.chooseType")}
+                  getLabel={(val) =>
+                    offerTypes?.data.rows.find((ot) => ot.id === val)?.name ||
+                    val
+                  }
+                />
               </div>
-            </SelectTrigger>
-            <SelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
-              {offerTypes?.data.rows.map((ot) => (
-                <SelectItem
-                  key={ot.id}
-                  value={ot.id}
-                  className="text-base font-rale cursor-pointer"
-                >
-                  {ot.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {offerType && (
+            </MultiSearchableSelectTrigger>
+            <MultiSearchableSelectContent className="rounded-xl bg-white border border-[#7B3FF2]/20">
+              <MultiSearchableSelectGroup>
+                {offerTypes?.data.rows.map((ot) => (
+                  <MultiSearchableSelectItem
+                    key={ot.id}
+                    value={ot.id}
+                    className="text-base font-rale cursor-pointer"
+                  >
+                    {ot.name}
+                  </MultiSearchableSelectItem>
+                ))}
+              </MultiSearchableSelectGroup>
+            </MultiSearchableSelectContent>
+          </MultiSearchableSelect>
+          {offerType.length > 0 && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setOfferType("");
+                setOfferType([]);
               }}
               className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
             >

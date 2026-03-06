@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,13 +8,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
 import { FiTrash2 } from "react-icons/fi";
+import { CiSearch } from "react-icons/ci";
+import { IoChevronDown } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { useGetCarSpecsEquipment } from "@/api/carSpecs/useGetCarSpecsEquipment";
 import { useUpsertModelEquipment } from "@/api/carMarks/useUpsertModelEquipment";
@@ -39,14 +40,28 @@ export const ModelEquipmentModal = ({
 }: ModelEquipmentModalProps) => {
   const { toast } = useToast();
   const [selectedEquipmentId, setSelectedEquipmentId] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const { data: allEquipment } = useGetCarSpecsEquipment(1, 100);
   const upsertEquipment = useUpsertModelEquipment();
   const removeEquipment = useRemoveModelEquipment();
 
-  const availableEquipments = allEquipment?.data.rows?.filter(
-    (eq: OneCarEquipment) =>
-      !currentEquipments.some((ce) => ce.id === eq.id)
-  ) || [];
+  const availableEquipments =
+    allEquipment?.data.rows?.filter(
+      (eq: OneCarEquipment) => !currentEquipments.some((ce) => ce.id === eq.id),
+    ) || [];
+
+  const filteredEquipments = useMemo(() => {
+    if (!searchQuery.trim()) return availableEquipments;
+    const query = searchQuery.toLowerCase();
+    return availableEquipments.filter((eq: OneCarEquipment) =>
+      eq.nameRu.toLowerCase().includes(query),
+    );
+  }, [availableEquipments, searchQuery]);
+
+  const selectedLabel = availableEquipments.find(
+    (eq: OneCarEquipment) => eq.id === selectedEquipmentId,
+  )?.nameRu;
 
   const handleAdd = async () => {
     if (!selectedEquipmentId) return;
@@ -105,21 +120,67 @@ export const ModelEquipmentModal = ({
 
         <div className="py-4 space-y-4">
           <div className="flex gap-2">
-            <Select
-              value={selectedEquipmentId}
-              onValueChange={setSelectedEquipmentId}
-            >
-              <SelectTrigger className="flex-1">
-                <SelectValue placeholder="Выберите комплектацию" />
-              </SelectTrigger>
-              <SelectContent>
-                {availableEquipments.map((eq: OneCarEquipment) => (
-                  <SelectItem key={eq.id} value={eq.id}>
-                    {eq.nameRu}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className="flex-1 flex items-center justify-between px-3 py-2 h-10 text-sm border border-gray-300 rounded-lg bg-white hover:border-gray-400 transition-colors"
+                >
+                  <span className={selectedLabel ? "text-gray-900" : "text-gray-500"}>
+                    {selectedLabel || "Выберите комплектацию"}
+                  </span>
+                  <IoChevronDown className="w-4 h-4 text-gray-500" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-[var(--radix-popover-trigger-width)] p-0"
+                align="start"
+                onOpenAutoFocus={(e) => e.preventDefault()}
+                onWheel={(e) => e.stopPropagation()}
+              >
+                <div className="p-2 border-b">
+                  <div className="relative">
+                    <CiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Input
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Поиск..."
+                      className="pl-8 h-8 text-sm bg-white border-gray-200"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="max-h-[200px] overflow-y-auto p-1"
+                  onWheel={(e) => e.stopPropagation()}
+                  onTouchMove={(e) => e.stopPropagation()}
+                >
+                  {filteredEquipments.length > 0 ? (
+                    filteredEquipments.map((eq: OneCarEquipment) => (
+                      <button
+                        key={eq.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedEquipmentId(eq.id);
+                          setSearchQuery("");
+                          setPopoverOpen(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                          eq.id === selectedEquipmentId
+                            ? "bg-primary/10 text-primary"
+                            : "hover:bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {eq.nameRu}
+                      </button>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500 text-center py-3">
+                      Ничего не найдено
+                    </p>
+                  )}
+                </div>
+              </PopoverContent>
+            </Popover>
             <button
               type="button"
               onClick={handleAdd}

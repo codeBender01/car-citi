@@ -42,8 +42,6 @@ const CarModels = () => {
 
   const { data: carMark } = useGetOneCarMark(carMarkId || "", 1, 10);
 
-  console.log(carMark);
-
   const handleEdit = (model: OneCarModel) => {
     setNewCarModel({
       id: model.id,
@@ -158,7 +156,7 @@ const CarModels = () => {
           }
           currentEquipments={
             carMark?.data?.carModels?.find(
-              (m) => m.id === selectedModelForEquipment.id
+              (m) => m.id === selectedModelForEquipment.id,
             )?.carmodelEquipments || []
           }
         />

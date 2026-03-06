@@ -7,7 +7,7 @@ export interface PostsFilters {
   carModelId?: string;
   fuelTypeId?: string;
   driveTypeId?: string;
-  transmissionId?: string;
+  transmissionId?: string[];
   carConditionId?: string;
   categoryId?: string;
   subcategoryId?: string;
@@ -22,7 +22,8 @@ export interface PostsFilters {
   colorId?: string;
   characteristicIds?: string[];
   characteristicItemIds?: string[];
-  offerTypeId?: string;
+  engineVolume?: string[];
+  offerTypeId?: string[];
   dealerId?: string;
   "Accept-Language"?: string;
 }

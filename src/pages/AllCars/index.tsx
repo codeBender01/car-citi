@@ -32,22 +32,19 @@ const AllCars = () => {
   const cityIds = searchParams.getAll("cityId");
   const condition = searchParams.get("carConditionId") || undefined;
   const driveType = searchParams.get("driveTypeId") || undefined;
-  const transmission = searchParams.get("transmissionId") || undefined;
+  const transmission = searchParams.getAll("transmissionId");
   const fuelType = searchParams.get("fuelTypeId") || undefined;
   const color = searchParams.get("colorId") || undefined;
   const category = searchParams.get("categoryId") || undefined;
   const subcategoryId = searchParams.get("subcategoryId") || undefined;
   const yearFrom = searchParams.get("yearFrom") || undefined;
   const yearTo = searchParams.get("yearTo") || undefined;
-  const priceFrom = searchParams.get("priceFrom")
-    ? Number(searchParams.get("priceFrom"))
-    : undefined;
-  const priceTo = searchParams.get("priceTo")
-    ? Number(searchParams.get("priceTo"))
-    : undefined;
+  const priceFrom = Number(searchParams.get("priceFrom") || 0);
+  const priceTo = Number(searchParams.get("priceTo") || 3000000);
   const characteristicIds = searchParams.getAll("characteristicIds");
   const characteristicItemIds = searchParams.getAll("characteristicItemIds");
-  const offerTypeId = searchParams.get("offerTypeId") || undefined;
+  const engineVolume = searchParams.getAll("engineVolume");
+  const offerTypeId = searchParams.getAll("offerTypeId");
   const dealerId = searchParams.get("dealerId") || undefined;
 
   const { data: filteredPosts, isLoading: filteredLoading } = useGetPosts({
@@ -57,7 +54,7 @@ const AllCars = () => {
     cityId: cityIds.length > 0 ? cityIds : undefined,
     fuelTypeId: fuelType,
     driveTypeId: driveType,
-    transmissionId: transmission,
+    transmissionId: transmission.length > 0 ? transmission : undefined,
     carConditionId: condition,
     categoryId: category,
     subcategoryId: subcategoryId,
@@ -68,7 +65,8 @@ const AllCars = () => {
     priceTo: priceTo,
     characteristicIds: characteristicIds.length > 0 ? characteristicIds : undefined,
     characteristicItemIds: characteristicItemIds.length > 0 ? characteristicItemIds : undefined,
-    offerTypeId,
+    engineVolume: engineVolume.length > 0 ? engineVolume : undefined,
+    offerTypeId: offerTypeId.length > 0 ? offerTypeId : undefined,
     dealerId,
     "Accept-Language": i18n.language,
   });

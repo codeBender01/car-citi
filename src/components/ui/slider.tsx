@@ -65,14 +65,11 @@ function Slider({
               y="1"
               width="27"
               height="27"
-              rx="13.5"
+              rx="5"
               fill="white"
-              stroke="#0C1002"
+              stroke="#88ba00"
               strokeWidth="2"
             />
-            <rect x="11" y="10" width="1" height="9" fill="#0C1002" />
-            <rect x="14" y="10" width="1" height="9" fill="#0C1002" />
-            <rect x="17" y="10" width="1" height="9" fill="#0C1002" />
           </svg>
         </SliderPrimitive.Thumb>
       ))}

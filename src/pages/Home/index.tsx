@@ -94,46 +94,23 @@ const Home = () => {
             loop={true}
             onSwiper={(swiper) => (swiperRef.current = swiper)}
           >
-            {banners?.data?.rows && banners.data.rows.length > 0 ? (
-              banners.data.rows.map((banner) => (
-                <SwiperSlide key={banner.id}>
-                  <div
-                    className="w-full h-[420px] lg:h-[660px] lg:rounded-2xl flex items-center justify-end md:justify-center text-center flex-col relative"
-                    style={{
-                      backgroundImage: `url(${BASE_URL}/${banner.image.url})`,
-                      backgroundPosition: "center",
-                      backgroundSize: "cover",
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-black/30 rounded-2xl" />
-                    {/* <div className="relative z-10 text-[16px] md:text-xl lg:text-2xl text-primary font-rale">
-                      {t("home.heroSubtitle")}
-                    </div>
-                    <h1 className="relative z-10 text-2xl md:text-[48px] mb-4 md:mb-0 lg:text-[70px] text-white font-rale font-bold">
-                      {t("home.heroTitle")}
-                    </h1> */}
-                  </div>
-                </SwiperSlide>
-              ))
-            ) : (
-              <SwiperSlide>
+            {banners?.data?.rows?.map((banner) => (
+              <SwiperSlide key={banner.id}>
                 <div
-                  className="w-full h-[420px] lg:h-[660px] lg:rounded-2xl flex items-center justify-end md:justify-center text-center flex-col relative"
+                  className="w-full h-[420px] lg:h-[660px] lg:rounded-2xl flex items-center justify-end md:justify-center text-center flex-col relative cursor-pointer"
                   style={{
+                    backgroundImage: `url(${BASE_URL}/${banner.image.url})`,
                     backgroundPosition: "center",
                     backgroundSize: "cover",
                   }}
-                >
-                  <div className="absolute inset-0 bg-black/30 rounded-2xl" />
-                  <div className="relative z-10 text-[16px] md:text-xl lg:text-2xl text-primary font-rale">
-                    {t("home.heroSubtitle")}
-                  </div>
-                  <h1 className="relative z-10 text-2xl md:text-[48px] mb-4 md:mb-0 lg:text-[70px] text-white font-rale font-bold">
-                    {t("home.heroTitle")}
-                  </h1>
-                </div>
+                  onClick={() => {
+                    if (banner.link) {
+                      window.open(banner.link, "_blank", "noopener,noreferrer");
+                    }
+                  }}
+                ></div>
               </SwiperSlide>
-            )}
+            ))}
           </Swiper>
 
           <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between items-center px-8 z-10 pointer-events-none">
@@ -235,15 +212,21 @@ const Home = () => {
                     navigate(`/all-cars?subcategoryId=${subcategory.id}`);
                   }
                 }}
-                className="h-[300px] bg-black! card-gradient lg:bg-none lg:w-auto w-full lg:block flex flex-row-reverse justify-between flex-1 rounded-2xl px-[30px] py-5 lg:py-[38px] text-white font-dm cursor-pointer"
-                style={
-                  {
-                    "--bg-image": `url(${typeItem.img})`,
-                    backgroundSize: "cover",
-                  } as React.CSSProperties
-                }
+                className="relative h-[300px] overflow-hidden lg:w-auto w-full lg:block flex flex-row-reverse justify-between flex-1 rounded-2xl px-[30px] py-5 lg:py-[38px] text-white font-dm cursor-pointer"
+                style={{
+                  backgroundImage: `url(${typeItem.img})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
               >
-                <div className="flex items-center gap-2">
+                <div
+                  className="absolute inset-0 rounded-2xl"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom, #222222B2, #22222200)",
+                  }}
+                />
+                <div className="relative flex items-center gap-2">
                   <div className="flex lg:hidden">{typeItem.icon}</div>
                   {subcategory?.name || typeItem.type}
                 </div>

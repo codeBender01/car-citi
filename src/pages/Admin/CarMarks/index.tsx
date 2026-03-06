@@ -175,7 +175,7 @@ const CarMarks = () => {
                 <TableHead className="font-semibold min-w-[200px]">
                   Модели
                 </TableHead>
-                <TableHead className="font-semibold text-right min-w-[120px]">
+                <TableHead className="font-semibold text-right min-w-[120px] sticky right-0 bg-white z-10">
                   Действия
                 </TableHead>
               </TableRow>
@@ -212,7 +212,7 @@ const CarMarks = () => {
                       ? carMark.carModels.map((model) => model.name).join(", ")
                       : "-"}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right sticky right-0 bg-white z-10">
                     <div className="flex items-center justify-end gap-2">
                       <Button
                         onClick={(e) => {

@@ -7,6 +7,8 @@ export interface OneRegion {
   cities: {
     id: string;
     name: string;
+    nameTk: string;
+    nameRu: string;
     regionId: string;
   }[];
   id: string;

@@ -78,30 +78,45 @@ const Footer = () => {
               </h3>
               <ul className="space-y-3 font-dm text-[15px]">
                 <li>
-                  <Link to="/auto-dealers" className="cursor-pointer hover:text-primary transition-colors">
+                  <Link
+                    to="/auto-dealers"
+                    className="cursor-pointer hover:text-primary transition-colors"
+                  >
                     Toyota
                   </Link>
                 </li>
 
                 <li>
-                  <Link to="/auto-dealers" className="cursor-pointer hover:text-primary transition-colors">
+                  <Link
+                    to="/auto-dealers"
+                    className="cursor-pointer hover:text-primary transition-colors"
+                  >
                     BMW
                   </Link>
                 </li>
 
                 <li>
-                  <Link to="/auto-dealers" className="cursor-pointer hover:text-primary transition-colors">
+                  <Link
+                    to="/auto-dealers"
+                    className="cursor-pointer hover:text-primary transition-colors"
+                  >
                     Mercedes Benz
                   </Link>
                 </li>
 
                 <li>
-                  <Link to="/auto-dealers" className="cursor-pointer hover:text-primary transition-colors">
+                  <Link
+                    to="/auto-dealers"
+                    className="cursor-pointer hover:text-primary transition-colors"
+                  >
                     Kia
                   </Link>
                 </li>
                 <li>
-                  <Link to="/auto-dealers" className="cursor-pointer hover:text-primary transition-colors">
+                  <Link
+                    to="/auto-dealers"
+                    className="cursor-pointer hover:text-primary transition-colors"
+                  >
                     Hyundai
                   </Link>
                 </li>
@@ -114,7 +129,7 @@ const Footer = () => {
                 {t("footer.carTypes.title")}
               </h3>
               <ul className="space-y-3 font-dm text-[15px]">
-                {subcategories?.data?.rows?.map((sub) => (
+                {subcategories?.data?.rows?.slice(0, 5).map((sub) => (
                   <li key={sub.id}>
                     <Link
                       to={`/all-cars?subcategoryId=${sub.id}`}

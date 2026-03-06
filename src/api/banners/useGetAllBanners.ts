@@ -24,5 +24,7 @@ export const useGetBanners = (page: number = 1, pageSize: number = 10) => {
     queryKey: ["getAllBanners", page, pageSize],
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 30,
   });
 };

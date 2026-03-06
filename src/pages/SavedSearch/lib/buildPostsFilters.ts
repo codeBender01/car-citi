@@ -8,7 +8,7 @@ export const buildPostsFilters = (search: SaveSearchRes | undefined) => {
     regionId: search.regionId?.length ? search.regionId : undefined,
     cityId: search.cityId || undefined,
     driveTypeId: search.driveTypeId || undefined,
-    transmissionId: search.transmissionId || undefined,
+    transmissionId: search.transmissionId ? [search.transmissionId] : undefined,
     carConditionId: search.carConditionId || undefined,
     subcategoryId: search.subcategoryId || undefined,
     yearFrom: search.yearFrom || undefined,
